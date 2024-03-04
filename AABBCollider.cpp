@@ -16,12 +16,12 @@ AABBCollider::AABBCollider(Tmpl8::vec2 position, int width, int height)
 
 
 
-int AABBCollider::GetWidth()
+int AABBCollider::GetWidth() const
 {
 	return m_Width;
 }
 
-int AABBCollider::GetHeight()
+int AABBCollider::GetHeight() const
 {
 	return m_Height;
 }

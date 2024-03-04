@@ -11,11 +11,15 @@ public:
 	/*deplete Bar;
 	replennish Bar;*/
 
-	Tmpl8::Sprite* GetSprite();
+	Tmpl8::Sprite* GetSprite() const;
 
-	Tmpl8::vec2 GetPos();
+	Tmpl8::vec2 GetPos() const;
+
 	void SetPos(Tmpl8::vec2 pos);
 	
+	Tmpl8::vec2 GetFillingPos1() const;
+	Tmpl8::vec2 GetFillingPos2() const;
+
 
 
 
@@ -27,9 +31,8 @@ private:
 	/*depledingBar;*/
 
 	Tmpl8::vec2 m_Pos;
+
 	
-
-
 
 
 };

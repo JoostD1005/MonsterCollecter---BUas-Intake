@@ -84,6 +84,11 @@ Surface::~Surface()
 	}
 }
 
+int Clamp(int x, int min, int max)
+{
+	return x < min ? min : x > max ? max : x;
+}
+
 void Surface::Clear( Pixel a_Color )
 {
 	int s = m_Width * m_Height;
@@ -199,6 +204,11 @@ void Surface::Box( int x1, int y1, int x2, int y2, Pixel c )
 
 void Surface::Bar( int x1, int y1, int x2, int y2, Pixel c )
 {
+	x1 = Clamp(x1, 0, m_Width - 1);
+	x2 = Clamp(x2, 0, m_Width - 1);
+	y1 = Clamp(y1, 0, m_Height - 1);
+	y2 = Clamp(y2, 0, m_Height - 1);
+
 	Pixel* a = x1 + y1 * m_Pitch + m_Buffer;
 	for ( int y = y1; y <= y2; y++ )
 	{

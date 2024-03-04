@@ -13,10 +13,10 @@
 namespace Tmpl8
 {
 
-	Button button1("assets/button1.png", 1, { 0,0 });
-	Button button2("assets/ball.png", 1, { 0, 230 });
-	Button button3("assets/target.tga", 1, { 0, 480 });
-	Button buttonSell("assets/sellButton1.tga", 1, { 700, 480 });
+	static	Button button1("assets/button1.png", 1, { 0,0 });
+	static Button button2("assets/ball.png", 1, { 0, 230 });
+	static Button button3("assets/target.tga", 1, { 0, 480 });
+	static Button buttonSell("assets/sellButton1.tga", 2, { 700, 480 });
 
 	
 	
@@ -71,7 +71,7 @@ namespace Tmpl8
 		{
 			if (monsters[i]->GetHunger() >= monsters[i]->GetStomach() || monsters[i]->GetThirst() >= monsters[i]->GetHydration())
 			{
-				screen->Clear(0xffffff);
+				//screen->Clear(0xffffff);
 				//Shutdown();
 			}
 		}
@@ -102,57 +102,66 @@ namespace Tmpl8
 		}
 
 		//spawn monster1 if button is clicked
-		if (cash > 10)
+		
+		if (CheckMouseCollision(button1.GetCollider()) == true)
 		{
-			if (CheckMouseCollision(button1.GetCollider()) == true)
+			if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
 			{
-
-				if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+				if (cash > 10)
 				{
 					CreateMonster(1);
 					std::cout << "\n" << monsters.size() << "\n";
 					cash = cash - 10;
 				}
 			}
-
+				
 		}
 
 
 		//spawn monster2 if button is clicked
-		if (cash > 20)
+		if (CheckMouseCollision(button2.GetCollider()) == true)
 		{
-			if (CheckMouseCollision(button2.GetCollider()) == true)
-			{
 
-				if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+			if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+			{
+				if (cash > 20)
 				{
 					CreateMonster(2);
 					cash = cash - 20;
 				}
 			}
 		}
+		
 
 		//spawn monster1 if button is clicked
-		if (cash > 30)
+		if (CheckMouseCollision(button3.GetCollider()) == true)
 		{
-			if (CheckMouseCollision(button3.GetCollider()) == true)
-			{
 
-				if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+			if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+			{
+				if (cash > 30)
 				{
 					CreateMonster(3);
 					cash = cash - 30;
 				}
 			}
 		}
+		
 	
 
 		prevButtonState = buttonState;
 
-		//-------------------------------------------Drawing------------------------------------------------------------------------
+		//-------------------------------------------Text------------------------------------------------------------------------
 	
-		std::string str = std::string("Cash: ").append(std::to_string(cash));
-		screen->Print(str.c_str(), 700, 5, 0xffffff);
+		std::string cashstr = std::string("Cash: ").append(std::to_string(cash));
+		screen->Print(cashstr.c_str(), 700, 5, 0xffffff);
+
+		std::string monsterstr = std::string("Monsters: ").append(std::to_string(monsters.size()));
+		screen->Print(monsterstr.c_str(), 700, 20, 0xffffff);
+
+
+
+		//-------------------------------------------Drawing------------------------------------------------------------------------
 
 			for (int i = 0; i < monsters.size(); i++)
 			{
@@ -164,6 +173,14 @@ namespace Tmpl8
 				monsters[i]->GetFoodBar().GetSprite()->Draw(screen, monsters[i]->GetFoodBarPos().x, monsters[i]->GetFoodBarPos().y);
 				monsters[i]->GetWaterBar().GetSprite()->Draw(screen, monsters[i]->GetWaterBarPos().x, monsters[i]->GetWaterBarPos().y);
 				
+				screen->Box(monsters[i]->GetCollider(), 0xff0000);
+				
+				float x1 = monsters[i]->GetFoodBar().GetFillingPos1().x;
+				float y1 = monsters[i]->GetFoodBar().GetFillingPos1().y;
+				float x2 = monsters[i]->GetFoodBar().GetFillingPos2().x;
+				float y2 = monsters[i]->GetFoodBar().GetFillingPos2().y;
+
+				screen->Bar(x1, y1, x2, y2, 0x00ff00);
 			}
 
 
@@ -175,10 +192,12 @@ namespace Tmpl8
 
 		if (CheckMouseCollision(buttonSell.GetCollider()) == true)
 		{
+			//buttonSell.GetSprite()->SetFrame(2);
 			buttonSell.GetSprite()->Draw(screen, buttonSell.GetPosition().x, buttonSell.GetPosition().y);
 		}
 		else
 		{
+			//buttonSell.GetSprite()->SetFrame(1);
 			buttonSell.GetSprite()->Draw(screen, buttonSell.GetPosition().x, buttonSell.GetPosition().y);
 		}
 		

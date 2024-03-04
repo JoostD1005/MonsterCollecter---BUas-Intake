@@ -31,8 +31,8 @@ public:
 	AABBCollider GetCollider() const;
 	FoodWaterBar GetFoodBar() const;
 	FoodWaterBar GetWaterBar() const;
-	Tmpl8::vec2 GetFoodBarPos();
-	Tmpl8::vec2 GetWaterBarPos();
+	Tmpl8::vec2 GetFoodBarPos() const;
+	Tmpl8::vec2 GetWaterBarPos() const;
 
 	void Hunger();
 	void Thirst();
@@ -45,7 +45,7 @@ public:
 
 	void SetPosition(const Tmpl8::vec2& pos);
 
-	Tmpl8::vec2 CentrePosition();
+	Tmpl8::vec2 CentrePosition() const;
 
 	//void SetAlive(bool alive);
 	 

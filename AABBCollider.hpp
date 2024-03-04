@@ -12,8 +12,8 @@ public:
 
 
 
-	int GetWidth();
-	int GetHeight();
+	int GetWidth() const;
+	int GetHeight() const;
 
 	Tmpl8::vec2 GetPosition() const;
 	Tmpl8::vec2 GetHalfSize();

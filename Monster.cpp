@@ -18,6 +18,8 @@ Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int t
 {
 
 	m_Collider.SetSize(m_pSprite->GetWidth(), m_pSprite->GetHeight());
+	m_FoodBar.SetPos(GetFoodBarPos());
+	m_WaterBar.SetPos(GetWaterBarPos());
 	
 	std::cout << "new Monster Created!\n" << m_Hunger << "\n" << m_Thirst << "\n" << m_EvoStage << "\n" << m_Cost << "\n" << m_Stomach << "\n" << m_Hydration << "\n";
 	std::cout << m_Position.x << ", " << m_Position.y << "\n";
@@ -91,7 +93,7 @@ FoodWaterBar Monster::GetWaterBar() const
 	return m_WaterBar;
 }
 
-Tmpl8::vec2 Monster::GetFoodBarPos()
+Tmpl8::vec2 Monster::GetFoodBarPos() const
 {
 
 	float monsterX =GetCollider().GetPosition().x;
@@ -108,7 +110,7 @@ Tmpl8::vec2 Monster::GetFoodBarPos()
 	return {barX,barY};
 }
 
-Tmpl8::vec2 Monster::GetWaterBarPos()
+Tmpl8::vec2 Monster::GetWaterBarPos() const
 {
 	float foodBarY = GetFoodBarPos().y;
 
@@ -158,7 +160,7 @@ void Monster::SetSprite(Tmpl8::Sprite* sprite)
 
 
 
-Tmpl8::vec2 Monster::CentrePosition()
+Tmpl8::vec2 Monster::CentrePosition() const
 {
 	Tmpl8::vec2 centrePos{ GetPosition().x + (GetSprite()->GetWidth() / 2), GetPosition().y + (GetSprite()->GetHeight() / 2) };
 

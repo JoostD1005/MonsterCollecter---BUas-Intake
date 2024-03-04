@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "AABBCollider.hpp"
+
 namespace Tmpl8 {
 
 constexpr int RedMask = 0xff0000;
@@ -63,6 +65,7 @@ public:
 	void BlendCopyTo( Surface* a_Dst, int a_X, int a_Y );
 	void ScaleColor( unsigned int a_Scale );
 	void Box( int x1, int y1, int x2, int y2, Pixel color );
+	void Box(const AABBCollider& aabb, Pixel color) { Box(aabb.GetPosition().x, aabb.GetPosition().y, aabb.GetPosition().x + aabb.GetWidth(), aabb.GetPosition().y + aabb.GetHeight(), color); }
 	void Bar( int x1, int y1, int x2, int y2, Pixel color );
 	void Resize( Surface* a_Orig );
 private:
