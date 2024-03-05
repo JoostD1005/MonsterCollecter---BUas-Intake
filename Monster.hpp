@@ -14,7 +14,7 @@ public:
 	//constructor & destructor
 
 	Monster(const char* fileName, unsigned int numFrames, int hunger = 0, int thirst = 0, int evoStage = 1, int cost = 0, int stomach = 0, int hydration = 0, int worth = 0);
-	Monster(int hunger = 0, int thirst = 0, int evoStage = 1, int cost = 0, int stomach = 0, int hydration = 0, int worth = 0);
+	//Monster(int hunger = 0, int thirst = 0, int evoStage = 1, int cost = 0, int stomach = 0, int hydration = 0, int worth = 0);
 
 	~Monster();
 
@@ -28,17 +28,15 @@ public:
 	int GetWorth() const;
 	Tmpl8::Sprite* GetSprite() const;
 	const Tmpl8::vec2& GetPosition() const;
-	AABBCollider GetCollider() const;
-	FoodWaterBar GetFoodBar() const;
-	FoodWaterBar GetWaterBar() const;
-	Tmpl8::vec2 GetFoodBarPos() const;
-	Tmpl8::vec2 GetWaterBarPos() const;
+	Tmpl8::vec2 GetSize() const;
+	const AABBCollider& GetCollider() const;
+	const FoodWaterBar& GetFoodBar() const;
+	const FoodWaterBar& GetWaterBar() const;
 
 	void Hunger();
 	void Thirst();
 
-
-	void SetSprite(Tmpl8::Sprite* sprite);
+//	void SetSprite(Tmpl8::Sprite* sprite);
 
 	void SetCollider(const AABBCollider collider);
 
@@ -54,10 +52,7 @@ public:
 	void DieOfThirst(int hydration, int thirst);
 	int Worth();
 	int Evolution(int time, int hunger, int thirst);
-
-	
-	
-
+    void Draw(Tmpl8::Surface* screen) const;
 
 private:
 	//Data members

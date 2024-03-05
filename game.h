@@ -26,7 +26,7 @@ public:
 
 	Tmpl8::vec2 GetMousePosition() { return { mousex, mousey }; }
 
-	bool CheckMouseCollision(AABBCollider object);
+	bool CheckMouseCollision(const AABBCollider& object);
 
 	Monster* CreateMonster(int typeOfMonster);
 

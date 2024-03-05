@@ -1,39 +1,26 @@
-
 #pragma once
 
 #include "template.h"
 
-
 class AABBCollider
 {
 public:
+	AABBCollider() = default;
+	AABBCollider(const Tmpl8::vec2& position, const Tmpl8::vec2& size);
 
-	AABBCollider(Tmpl8::vec2 position = {400,200}, int width = 0, int height = 0);
+	float GetWidth() const;
+	float GetHeight() const;
 
+	const Tmpl8::vec2& GetPosition() const;
+	Tmpl8::vec2 GetHalfSize() const;
 
+	void SetPosition(const Tmpl8::vec2& position);
 
-	int GetWidth() const;
-	int GetHeight() const;
+	void SetSize(float width, float height);
 
-	Tmpl8::vec2 GetPosition() const;
-	Tmpl8::vec2 GetHalfSize();
-
-	void SetPosition(Tmpl8::vec2 position);
-
-	void SetSize(int width, int height);
-	
-
-	bool CheckCollision(AABBCollider& other);
-
-	
-
-
+	bool CheckCollision(const AABBCollider& other) const;
 
 private:
-
-	int m_Height;
-	int m_Width;
-
-	Tmpl8::vec2 m_Position { 400.0f, 200.0f };
-	
+    Tmpl8::vec2 m_Size{ 0.0f };
+	Tmpl8::vec2 m_Position { 0.0f };
 };
