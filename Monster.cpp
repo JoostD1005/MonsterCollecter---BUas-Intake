@@ -1,8 +1,7 @@
 
 #include "Monster.hpp"
 #include "surface.h"
-
-
+#include <iostream>
 
 //Constructor.
 
@@ -70,6 +69,11 @@ int Monster::GetWorth() const
     return m_Worth;
 }
 
+int Monster::GetTimeSinceSpawn() const
+{
+    return m_TimeSinceSpawn;
+}
+
 const Tmpl8::vec2& Monster::GetPosition() const
 {
     return m_Collider.GetPosition();
@@ -134,11 +138,21 @@ Tmpl8::Sprite* Monster::GetSprite() const
 void Monster::Hunger()
 {
     m_Hunger++;
+    m_FoodBar.SetValue(static_cast<float>(m_Stomach - m_Hunger) / static_cast<float>(m_Stomach));
 }
 
 void Monster::Thirst()
 {
     m_Thirst++;
+    m_WaterBar.SetValue(static_cast<float>(m_Hydration - m_Thirst) / static_cast<float>(m_Hydration));
+
+ //   float value = (m_Hydration - m_Thirst) / m_Hydration;
+  //  m_WaterBar.SetValue(value);
+}
+
+void Monster::TimeSinceSpawn()
+{
+    m_TimeSinceSpawn++;
 }
 
 

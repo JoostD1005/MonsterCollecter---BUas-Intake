@@ -39,6 +39,7 @@ private:
 
 	
 	std::vector<Monster*> monsters;
+	std::vector<Button*> buttons;
 
 
 	float mousex;
@@ -61,6 +62,8 @@ private:
 	Monster* currentTarget = nullptr;
 
 	int cash = 25;
+
+
 
 
 };

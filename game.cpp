@@ -17,7 +17,7 @@ namespace Tmpl8
     static	Button button1("assets/button1.png", 1, { 0,0 });
     static Button button2("assets/ball.png", 1, { 0, 230 });
     static Button button3("assets/target.tga", 1, { 0, 480 });
-    static Button buttonSell("assets/sellButton1.tga", 2, { 700, 480 });
+    static Button buttonSell("assets/sellButton.tga", 2, { 700, 480 });
 
 
 
@@ -54,9 +54,13 @@ namespace Tmpl8
         {
             for (Monster* monster : monsters)
             {
-                monster->Hunger();
-                monster->Thirst();
-
+                monster->TimeSinceSpawn();
+                if (monster->GetTimeSinceSpawn() > 5)
+                {
+                    monster->Hunger();
+                    monster->Thirst();
+                }
+                
                 std::cout << monster->GetHunger() << ", " << monster->GetThirst() << "\n";
             }
 
@@ -170,21 +174,21 @@ namespace Tmpl8
         }
 
 
-        button1.GetSprite()->Draw(screen, button1.GetPosition().x, button1.GetPosition().y);
-        button2.GetSprite()->Draw(screen, button2.GetPosition().x, button2.GetPosition().y);
-        button3.GetSprite()->Draw(screen, button3.GetPosition().x, button3.GetPosition().y);
+        button1.Draw(screen);
+        button2.Draw(screen);
+        button3.Draw(screen);
 
 
 
         if (CheckMouseCollision(buttonSell.GetCollider()) == true)
         {
-            //buttonSell.GetSprite()->SetFrame(2);
-            buttonSell.GetSprite()->Draw(screen, buttonSell.GetPosition().x, buttonSell.GetPosition().y);
+            buttonSell.GetSprite()->SetFrame(1);
+            buttonSell.Draw(screen);
         }
         else
         {
-            //buttonSell.GetSprite()->SetFrame(1);
-            buttonSell.GetSprite()->Draw(screen, buttonSell.GetPosition().x, buttonSell.GetPosition().y);
+            buttonSell.GetSprite()->SetFrame(0);
+            buttonSell.Draw(screen);
         }
 
 
@@ -279,7 +283,7 @@ namespace Tmpl8
 
         if (typeOfMonster == 1)
         {
-            newMonster = new Monster("assets/slime1.tga", 2, 0, 0, 1, 100, 50, 50);
+            newMonster = new Monster("assets/slime.tga", 2, 0, 0, 1, 100, 50, 50);
         }
         else if (typeOfMonster == 2)
         {
