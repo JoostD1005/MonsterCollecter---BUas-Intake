@@ -1,73 +1,43 @@
-
 #include "AABBCollider.hpp"
 
-
-
-
-
-
-
-AABBCollider::AABBCollider(Tmpl8::vec2 position, int width, int height)
+AABBCollider::AABBCollider(const Tmpl8::vec2& position, const Tmpl8::vec2& size)
 {
 	m_Position = position;
-	m_Width = width;
-	m_Height = height;
+	m_Size = size;
 }
 
-
-
-int AABBCollider::GetWidth() const
+float AABBCollider::GetWidth() const
 {
-	return m_Width;
+	return m_Size.x;
 }
 
-int AABBCollider::GetHeight() const
+float AABBCollider::GetHeight() const
 {
-	return m_Height;
+	return m_Size.y;
 }
 
-Tmpl8::vec2 AABBCollider::GetPosition() const
+const Tmpl8::vec2& AABBCollider::GetPosition() const
 {
 	return m_Position;
 }
 
-
-
-
-Tmpl8::vec2 AABBCollider::GetHalfSize()
+Tmpl8::vec2 AABBCollider::GetHalfSize() const
 {
-	Tmpl8::vec2 halfSize = { static_cast<float>(m_Width / 2), static_cast<float>(m_Height / 2) };
-
-	return halfSize;
+	return m_Size * 0.5f;
 }
 
-
-
-
-
-void AABBCollider::SetPosition(Tmpl8::vec2 position)
+void AABBCollider::SetPosition(const Tmpl8::vec2& position)
 {
 	m_Position = position;
 }
 
-
-
-void AABBCollider::SetSize(int width, int height)
+void AABBCollider::SetSize(float width, float height)
 {
-	m_Width = width;
-	m_Height = height;
+	m_Size.x = width;
+	m_Size.y = height;
 }
 
-
-
-
-
-
-
-
-
-
-bool AABBCollider::CheckCollision(AABBCollider& other)
+bool AABBCollider::CheckCollision(const AABBCollider& other) const
 {
 	Tmpl8::vec2 otherPosition = other.GetPosition();
 	Tmpl8::vec2 otherHalfSize = other.GetHalfSize();
@@ -81,12 +51,7 @@ bool AABBCollider::CheckCollision(AABBCollider& other)
 	float intersectX = abs(deltaX) - (otherHalfSize.x + thisHalfSize.x);
 	float intersectY = abs(deltaY) - (otherHalfSize.y + thisHalfSize.y);
 
-	if (intersectX < 0.0f || intersectY < 0.0f)
-	{
-		return true;
-	}
-
-		return false;
+	return (intersectX < 0.0f || intersectY < 0.0f);
 }
 
 

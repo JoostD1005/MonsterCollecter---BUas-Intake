@@ -8,7 +8,7 @@ Button::Button(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos) :
 	m_pSprite{ new Tmpl8::Sprite(new Tmpl8::Surface(fileName), numFrames) }
 {
 	SetPosition(pos);
-	m_Collider.SetSize(m_pSprite->GetWidth(), m_pSprite->GetHeight());
+	m_Collider.SetSize( static_cast<float>( m_pSprite->GetWidth() ), static_cast<float>( m_pSprite->GetHeight() ) );
 }
 
 Button::~Button()

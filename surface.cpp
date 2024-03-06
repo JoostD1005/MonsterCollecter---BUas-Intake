@@ -217,6 +217,11 @@ void Surface::Bar( int x1, int y1, int x2, int y2, Pixel c )
 	}
 }
 
+void Surface::Bar(float x1, float y1, float x2, float y2, Pixel color)
+{
+	Bar(static_cast<int>(x1), static_cast<int>(y1), static_cast<int>(x2), static_cast<int>(y2), color);
+}
+
 void Surface::CopyTo( Surface* a_Dst, int a_X, int a_Y )
 {
 	Pixel* dst = a_Dst->GetBuffer();
@@ -275,7 +280,7 @@ void Surface::BlendCopyTo( Surface* a_Dst, int a_X, int a_Y )
 	}
 }
 
-void Surface::SetChar( int c, char* c1, char* c2, char* c3, char* c4, char* c5 )
+void Surface::SetChar( int c, const char* c1, const char* c2, const char* c3, const char* c4, const char* c5 )
 {
 	strcpy( s_Font[c][0], c1 );
 	strcpy( s_Font[c][1], c2 );

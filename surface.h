@@ -54,7 +54,7 @@ public:
 	void SetPitch( int a_Pitch ) { m_Pitch = a_Pitch; }
 	// Special operations
 	void InitCharset();
-	void SetChar( int c, char* c1, char* c2, char* c3, char* c4, char* c5 );
+	void SetChar( int c, const char* c1, const char* c2, const char* c3, const char* c4, const char* c5 );
 	void Centre( char* a_String, int y1, Pixel color );
 	void Print( const char* a_String, int x1, int y1, Pixel color );
 	void Clear( Pixel a_Color );
@@ -65,8 +65,17 @@ public:
 	void BlendCopyTo( Surface* a_Dst, int a_X, int a_Y );
 	void ScaleColor( unsigned int a_Scale );
 	void Box( int x1, int y1, int x2, int y2, Pixel color );
-	void Box(const AABBCollider& aabb, Pixel color) { Box(aabb.GetPosition().x, aabb.GetPosition().y, aabb.GetPosition().x + aabb.GetWidth(), aabb.GetPosition().y + aabb.GetHeight(), color); }
+	void Box(const AABBCollider& aabb, Pixel color)
+	{
+	    Box(static_cast<int>( aabb.GetPosition().x ),
+			static_cast<int>( aabb.GetPosition().y ),
+			static_cast<int>( aabb.GetPosition().x + aabb.GetWidth() ),
+			static_cast<int>( aabb.GetPosition().y + aabb.GetHeight() ),
+			color );
+	}
+
 	void Bar( int x1, int y1, int x2, int y2, Pixel color );
+	void Bar( float x1, float y1, float x2, float y2, Pixel color );
 	void Resize( Surface* a_Orig );
 private:
 	// Attributes
@@ -107,11 +116,11 @@ public:
 	void SetFlags( unsigned int a_Flags ) { m_Flags = a_Flags; }
 	void SetFrame( unsigned int a_Index ) { m_CurrentFrame = a_Index; }
 	unsigned int GetFlags() const { return m_Flags; }
-	int GetWidth() { return m_Width; }
-	int GetHeight() { return m_Height; }
-	Pixel* GetBuffer() { return m_Surface->GetBuffer(); }	
-	unsigned int Frames() { return m_NumFrames; }
-	Surface* GetSurface() { return m_Surface; }
+	int GetWidth() const { return m_Width; }
+	int GetHeight() const { return m_Height; }
+	Pixel* GetBuffer() const { return m_Surface->GetBuffer(); }	
+	unsigned int Frames() const { return m_NumFrames; }
+	Surface* GetSurface() const { return m_Surface; }
 private:
 	// Methods
 	void InitializeStartData();
