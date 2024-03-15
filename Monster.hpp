@@ -25,7 +25,7 @@ public:
 	int GetCost() const;
 	int GetStomach() const;
 	int GetHydration() const;
-	int GetWorth() const;
+	int GetWorth();
 	int GetTimeSinceSpawn() const;
 	Tmpl8::Sprite* GetSprite() const;
 	const Tmpl8::vec2& GetPosition() const;
@@ -52,7 +52,6 @@ public:
 	//Special Opperations
 	void DieOfHunger(int stomach, int hunger);
 	void DieOfThirst(int hydration, int thirst);
-	int Worth();
 	int Evolution(int time, int hunger, int thirst);
     void Draw(Tmpl8::Surface* screen) const;
 
@@ -64,7 +63,7 @@ private:
 	int m_Cost;
 	int m_Stomach;
 	int m_Hydration;
-	int m_Worth;
+	int m_Worth = 0;
 	bool m_Alive = true;
 	int m_TimeSinceSpawn = 0;
 

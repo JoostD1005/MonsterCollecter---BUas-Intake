@@ -46,6 +46,7 @@ private:
 	float mousey;
 
 	float time = 0.0f;
+	float frameTime = 0.0f;
 	int secondsPast = 0;
 
 	Tmpl8::vec2 previousMousePos;
@@ -61,7 +62,10 @@ private:
 
 	Monster* currentTarget = nullptr;
 
-	int cash = 25;
+	int cash = 500;
+
+	bool sellWindowcalled = false;
+	Tmpl8::Sprite* m_SellWindow = new Tmpl8::Sprite(new Tmpl8::Surface("assets/sellWindow.png"), 1);
 
 
 

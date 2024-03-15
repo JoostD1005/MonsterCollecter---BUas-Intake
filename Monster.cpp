@@ -64,8 +64,9 @@ int Monster::GetHydration() const
     return m_Hydration;
 }
 
-int Monster::GetWorth() const
+int Monster::GetWorth()
 {
+    m_Worth = (m_Cost - m_Thirst - m_Hunger) * m_EvoStage;
     return m_Worth;
 }
 
@@ -200,12 +201,7 @@ void Monster::DieOfThirst(int hydration, int thirst)
     }
 }
 
-int Monster::Worth()
-{
-    int worth = m_Worth;
-    worth = ((m_Stomach - m_Hunger) + (m_Hydration - m_Thirst) + m_Cost) * m_EvoStage;
-    return worth;
-}
+
 
 void Monster::Draw(Tmpl8::Surface* screen) const
 {

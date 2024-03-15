@@ -18,7 +18,7 @@ namespace Tmpl8
     static Button button2("assets/ball.png", 1, { 0, 230 });
     static Button button3("assets/target.tga", 1, { 0, 480 });
     static Button buttonSell("assets/sellButton.tga", 2, { 700, 480 });
-
+    static Button buttonSell2("assets/sellButton.tga", 2, { 368, 300 });
 
 
     void Game::Init()
@@ -70,6 +70,24 @@ namespace Tmpl8
 
             cash++;
 
+        }
+
+        frameTime = frameTime + deltaTime;
+        if (frameTime > 0.25f)
+        {
+            for (Monster* monster : monsters)
+            {
+                if (monster->GetSprite()->GetFrame() == 1)
+                {
+                    monster->GetSprite()->SetFrame(0);
+                }
+                else if (monster->GetSprite()->GetFrame() == 0)
+                {
+                    monster->GetSprite()->SetFrame(1);
+                }
+            }
+
+            frameTime = 0.0f;
         }
 
         for (const Monster* monster : monsters)
@@ -164,6 +182,12 @@ namespace Tmpl8
         std::string monsterstr = std::format("Monsters: {}", monsters.size()); // std::string("Monsters: ").append(std::to_string(monsters.size()));
         screen->Print(monsterstr.c_str(), 700, 20, 0xffffff);
 
+        if (currentTarget != nullptr)
+        {
+            std::string worthstr = std::format("Worth: {}", currentTarget->GetWorth()); // std::string("Monsters: ").append(std::to_string(monsters.size()));
+            screen->Print(worthstr.c_str(), 700, 35, 0xffffff);
+        }
+
 
 
         //-------------------------------------------Drawing------------------------------------------------------------------------
@@ -171,6 +195,7 @@ namespace Tmpl8
         for (const Monster* monster : monsters)
         {
             monster->Draw(screen);
+            screen->Box(monster->GetCollider(), 0x00ff00);
         }
 
 
@@ -180,10 +205,14 @@ namespace Tmpl8
 
 
 
-        if (CheckMouseCollision(buttonSell.GetCollider()) == true)
+        if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr)
         {
             buttonSell.GetSprite()->SetFrame(1);
             buttonSell.Draw(screen);
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                sellWindowcalled = true;
+            }
         }
         else
         {
@@ -192,6 +221,27 @@ namespace Tmpl8
         }
 
 
+
+        if (sellWindowcalled)
+        {
+            m_SellWindow->Draw(screen, 310, 166);
+            buttonSell2.Draw(screen);
+        }
+
+
+        if (CheckMouseCollision(buttonSell2.GetCollider()) == true)
+        {
+            buttonSell2.GetSprite()->SetFrame(1);
+
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                sellWindowcalled = false;
+            }
+        }
+        else
+        {
+            buttonSell2.GetSprite()->SetFrame(0);
+        }
 
 
 
@@ -283,15 +333,15 @@ namespace Tmpl8
 
         if (typeOfMonster == 1)
         {
-            newMonster = new Monster("assets/slime.tga", 2, 0, 0, 1, 100, 50, 50);
+            newMonster = new Monster("assets/Slime2.tga", 2, 0, 0, 1, 10, 25,25);
         }
         else if (typeOfMonster == 2)
         {
-            newMonster = new Monster("assets/ball.png", 1, 0, 0, 1, 200, 300, 300);
+            newMonster = new Monster("assets/Golem.tga", 2, 0, 0, 1, 20, 50, 50);
         }
         else if (typeOfMonster == 3)
         {
-            newMonster = new Monster("assets/target.tga", 1, 0, 0, 1, 300, 500, 500);
+            newMonster = new Monster("assets/target.tga", 1, 0, 0, 1, 30, 60, 60);
         }
         else
         {
