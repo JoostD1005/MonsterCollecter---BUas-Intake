@@ -12,6 +12,7 @@
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="FoodWaterBar.cpp" />
+    <ClCompile Include="Refiller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />

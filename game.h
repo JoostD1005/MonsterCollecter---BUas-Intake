@@ -6,7 +6,7 @@
 #include "template.h"
 #include "AABBCollider.hpp"
 #include "Button.hpp"
-
+#include "Refiller.hpp"
 namespace Tmpl8 {
 
 class Surface;
@@ -40,7 +40,7 @@ private:
 	
 	std::vector<Monster*> monsters;
 	std::vector<Button*> buttons;
-
+	std::vector<Refiller*> refillers;
 
 	float mousex;
 	float mousey;
@@ -61,6 +61,7 @@ private:
 	int prevButtonState = 0;
 
 	Monster* currentTarget = nullptr;
+	Refiller* refillerTarget = nullptr;
 
 	int cash = 500;
 

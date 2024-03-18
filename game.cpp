@@ -7,6 +7,7 @@
 #include <SDL.h>
 #include "AABBCollider.hpp"
 #include "Button.hpp"
+#include "Refiller.hpp"
 #include <string>
 #include <format>
 
@@ -15,14 +16,21 @@ namespace Tmpl8
 {
 
     static	Button button1("assets/button1.png", 1, { 0,0 });
-    static Button button2("assets/ball.png", 1, { 0, 230 });
-    static Button button3("assets/target.tga", 1, { 0, 480 });
-    static Button buttonSell("assets/sellButton.tga", 2, { 700, 480 });
+    static Button button2("assets/ball.png", 1, { 0, 130 });
+    static Button button3("assets/target.tga", 1, { 0, 230 });
+    static Button buttonSell("assets/sellButton.tga", 2, { 368, 480 });
     static Button buttonSell2("assets/sellButton.tga", 2, { 368, 300 });
+
+    static Refiller refiller("assets/food.png", 1, { 100, 400 });
 
 
     void Game::Init()
     {
+
+        Refiller* refill1 = new Refiller("assets/food.png", 1, { 100, 470 });
+        Refiller* refill2 = new Refiller("assets/water.png", 1, { 148, 470 });
+        refillers.push_back(refill1);
+        refillers.push_back(refill2);
     }
 
 
@@ -32,6 +40,11 @@ namespace Tmpl8
         for (Monster* monster : monsters)
         {
             delete monster;
+        }
+
+        for (Refiller* refiller : refillers)
+        {
+            delete refiller;
         }
 
         monsters.clear();
@@ -47,6 +60,7 @@ namespace Tmpl8
         //-----Time Past--------------------------------------------------------
 
         screen->Clear(0);
+        screen->Bar(0, 450, 800, 512, 0x4f2800);
         deltaTime = deltaTime / 1000;
 
         time = time + deltaTime;
@@ -54,12 +68,19 @@ namespace Tmpl8
         {
             for (Monster* monster : monsters)
             {
-                monster->TimeSinceSpawn();
-                if (monster->GetTimeSinceSpawn() > 5)
+                
+                if (monster->GetTimeSinceFood() > 5)
                 {
                     monster->Hunger();
+                }
+
+                if (monster->GetTimeSinceWater() > 5)
+                {
                     monster->Thirst();
                 }
+
+                monster->TimeSinceFood();
+                monster->TimeSinceWater();
                 
                 std::cout << monster->GetHunger() << ", " << monster->GetThirst() << "\n";
             }
@@ -102,12 +123,12 @@ namespace Tmpl8
 
 
 
-        //-------Checking Collisions-------------------------------------------------------------------------------------------
+        //===============Checking Collisions===========================================================
 
         const int buttonPressed = buttonState & ~prevButtonState;
         int buttonReleased = ~buttonState & prevButtonState;
 
-
+        //---------------------------------------Monster Movements With Mouse + collision------------------------------------------------
         if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
         {
             for (int i = 0; i < monsters.size(); i++)
@@ -124,6 +145,53 @@ namespace Tmpl8
         {
             currentTarget->SetPosition({ mousex - (currentTarget->GetSprite()->GetWidth() / 2), mousey - (currentTarget->GetSprite()->GetHeight() / 2) });
         }
+
+
+
+        //-----------------------------Reffillers Movement + collision----------------------------------------------------------------------------
+
+        if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+        {
+            for (int i = 0; i < refillers.size(); i++)
+            {
+                if (CheckMouseCollision(refillers[i]->GetCollider()) == true && refillerTarget == nullptr)
+                {
+                    refillerTarget = refillers[i];
+                    break;
+                }
+            }
+        }
+
+        if (refillerTarget != nullptr && isLeftButtonDown)
+        {
+            refillerTarget->SetPos({ mousex - (refillerTarget->GetSprite()->GetWidth() / 2), mousey - (refillerTarget->GetSprite()->GetHeight() / 2) });
+        }
+        
+        if (refillerTarget == nullptr)
+        {
+            for (Refiller* refiller : refillers)
+            {
+                refiller->SetPos(refiller->GetOriginalPos());
+            }
+        }
+
+        for (Monster* monster : monsters)
+        {
+            if (CheckMouseCollision(monster->GetCollider()) == true && refillerTarget != nullptr)
+            {
+                if (refillerTarget == refillers[0])
+                {
+                    monster->SetHunger(0);
+                }
+
+                if (refillerTarget == refillers[1])
+                {
+                    monster->SetThirst(0);
+                }
+            }
+        }
+
+        //--------------------------------------------------------------------------------------------------------------------
 
         //spawn monster1 if button is clicked
 
@@ -157,7 +225,7 @@ namespace Tmpl8
         }
 
 
-        //spawn monster1 if button is clicked
+        //spawn monster3 if button is clicked
         if (CheckMouseCollision(button3.GetCollider()) == true)
         {
 
@@ -199,20 +267,26 @@ namespace Tmpl8
             screen->Box(monster->GetCollider(), 0x00ff00);
         }
 
+        for (const Refiller* refiller : refillers)
+        {
+            refiller->Draw(screen);
+            screen->Box(refiller->GetCollider(), 0x00ff00);
+        }
 
         button1.Draw(screen);
         button2.Draw(screen);
         button3.Draw(screen);
+        
 
-
-
+        //--------------------------------------Selling Window-----------------------------------------------------
         if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr)
         {
             buttonSell.GetSprite()->SetFrame(1);
             buttonSell.Draw(screen);
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            if ((SDL_BUTTON_LMASK) != 0)
             {
                 sellWindowcalled = true;
+                currentTarget->SetPosition({static_cast<float>( 400 - (currentTarget->GetSprite()->GetWidth() / 2)),static_cast<float>(256 - (currentTarget->GetSprite()->GetHeight() / 2) )});
             }
         }
         else
@@ -230,7 +304,6 @@ namespace Tmpl8
             
         }
 
-
         if (CheckMouseCollision(buttonSell2.GetCollider()) == true)
         {
             buttonSell2.GetSprite()->SetFrame(1);
@@ -245,7 +318,7 @@ namespace Tmpl8
             buttonSell2.GetSprite()->SetFrame(0);
         }
 
-
+        //------------------------------------------------------------------------------------------------------------
 
         screen->Line(mousex, 0, mousex, 511, 0xff0000);
         screen->Line(0, mousey, 799, mousey, 0xff0000);
@@ -272,6 +345,7 @@ namespace Tmpl8
         case SDL_BUTTON_LEFT:
             isLeftButtonDown = false;
             currentTarget = nullptr;
+            refillerTarget = nullptr;
             break;
         case SDL_BUTTON_RIGHT:
             isRightButtonDown = false;

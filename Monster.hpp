@@ -27,7 +27,8 @@ public:
 	int GetHydration() const;
 	int GetWorth() const;
 	int GetNumFrames() const;
-	int GetTimeSinceSpawn() const;
+	int GetTimeSinceFood() const;
+	int GetTimeSinceWater() const;
 	Tmpl8::Sprite* GetSprite() const;
 	const Tmpl8::vec2& GetPosition() const;
 	Tmpl8::vec2 GetSize() const;
@@ -35,10 +36,14 @@ public:
 	const FoodWaterBar& GetFoodBar() const;
 	const FoodWaterBar& GetWaterBar() const;
 
+	void SetHunger(int newHunger);
+	void SetThirst(int newThirst);
+
 	void Hunger();
 	void Thirst();
 
-	void TimeSinceSpawn();
+	void TimeSinceFood();
+	void TimeSinceWater();
 //	void SetSprite(Tmpl8::Sprite* sprite);
 
 	void SetCollider(const AABBCollider collider);
@@ -66,7 +71,8 @@ private:
 	int m_Hydration;
 	int m_Worth = 0;
 	bool m_Alive = true;
-	int m_TimeSinceSpawn = 0;
+	int m_TimeSinceFood = 0;
+	int m_TimeSinceWater = 0;
 	int m_NumFrames;
 
 	 AABBCollider m_Collider;

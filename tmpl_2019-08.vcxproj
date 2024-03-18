@@ -231,6 +231,7 @@
     <ClCompile Include="FoodWaterBar.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="Refiller.cpp" />
     <ClCompile Include="surface.cpp" />
     <ClCompile Include="template.cpp" />
   </ItemGroup>

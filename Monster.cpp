@@ -75,9 +75,14 @@ int Monster::GetWorth() const
         return (m_Cost - m_Thirst - m_Hunger) * m_EvoStage;
 }
 
-int Monster::GetTimeSinceSpawn() const
+int Monster::GetTimeSinceFood() const
 {
-    return m_TimeSinceSpawn;
+    return m_TimeSinceFood;
+}
+
+int Monster::GetTimeSinceWater() const
+{
+    return m_TimeSinceWater;
 }
 
 const Tmpl8::vec2& Monster::GetPosition() const
@@ -105,6 +110,7 @@ const FoodWaterBar& Monster::GetWaterBar() const
     return m_WaterBar;
 }
 
+
 Tmpl8::Sprite* Monster::GetSprite() const
 {
     return m_pSprite;
@@ -126,10 +132,24 @@ void Monster::Thirst()
  //   float value = (m_Hydration - m_Thirst) / m_Hydration;
   //  m_WaterBar.SetValue(value);
 }
-
-void Monster::TimeSinceSpawn()
+void Monster::SetHunger(int newHunger)
 {
-    m_TimeSinceSpawn++;
+    m_Hunger = newHunger;
+}
+
+void Monster::SetThirst(int newThirst)
+{
+    m_Thirst = newThirst;
+}
+
+void Monster::TimeSinceFood()
+{
+    m_TimeSinceFood++;
+}
+
+void Monster::TimeSinceWater()
+{
+    m_TimeSinceWater++;
 }
 
 
