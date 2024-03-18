@@ -25,7 +25,8 @@ public:
 	int GetCost() const;
 	int GetStomach() const;
 	int GetHydration() const;
-	int GetWorth();
+	int GetWorth() const;
+	int GetNumFrames() const;
 	int GetTimeSinceSpawn() const;
 	Tmpl8::Sprite* GetSprite() const;
 	const Tmpl8::vec2& GetPosition() const;
@@ -66,6 +67,7 @@ private:
 	int m_Worth = 0;
 	bool m_Alive = true;
 	int m_TimeSinceSpawn = 0;
+	int m_NumFrames;
 
 	 AABBCollider m_Collider;
 	 FoodWaterBar m_FoodBar;

@@ -25,6 +25,7 @@
     <ClInclude Include="AABBCollider.hpp" />
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="FoodWaterBar.hpp" />
+    <ClInclude Include="Refiller.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

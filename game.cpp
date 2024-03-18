@@ -77,13 +77,14 @@ namespace Tmpl8
         {
             for (Monster* monster : monsters)
             {
-                if (monster->GetSprite()->GetFrame() == 1)
+                int i = 0;
+                if (monster->GetSprite()->GetFrame() < monster->GetNumFrames() - 1)
+                {
+                    monster->GetSprite()->SetFrame(i + 1);
+                }
+                else if (monster->GetSprite()->GetFrame() == monster->GetNumFrames() - 1)
                 {
                     monster->GetSprite()->SetFrame(0);
-                }
-                else if (monster->GetSprite()->GetFrame() == 0)
-                {
-                    monster->GetSprite()->SetFrame(1);
                 }
             }
 
@@ -226,6 +227,7 @@ namespace Tmpl8
         {
             m_SellWindow->Draw(screen, 310, 166);
             buttonSell2.Draw(screen);
+            
         }
 
 
@@ -333,7 +335,7 @@ namespace Tmpl8
 
         if (typeOfMonster == 1)
         {
-            newMonster = new Monster("assets/Slime2.tga", 2, 0, 0, 1, 10, 25,25);
+            newMonster = new Monster("assets/Slime.tga", 2, 0, 0, 1, 10, 25,25);
         }
         else if (typeOfMonster == 2)
         {
@@ -341,7 +343,7 @@ namespace Tmpl8
         }
         else if (typeOfMonster == 3)
         {
-            newMonster = new Monster("assets/target.tga", 1, 0, 0, 1, 30, 60, 60);
+            newMonster = new Monster("assets/Slime2.tga", 2, 0, 0, 1, 30, 60, 60);
         }
         else
         {

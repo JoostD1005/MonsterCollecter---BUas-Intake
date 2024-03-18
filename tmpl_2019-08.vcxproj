@@ -240,6 +240,7 @@
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Monster.hpp" />
+    <ClInclude Include="Refiller.hpp" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="template.h" />
   </ItemGroup>

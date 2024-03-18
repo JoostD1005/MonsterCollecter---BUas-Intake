@@ -13,7 +13,8 @@ Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int t
     m_Stomach(stomach),
     m_Hydration(hydration),
     m_Worth(worth),
-    m_pSprite{ new Tmpl8::Sprite(new Tmpl8::Surface(fileName), numFrames) }
+    m_pSprite{ new Tmpl8::Sprite(new Tmpl8::Surface(fileName), numFrames) },
+    m_NumFrames(numFrames)
 {
 
     m_Collider.SetSize(static_cast<float>( m_pSprite->GetWidth() ), static_cast<float>( m_pSprite->GetHeight() ) );
@@ -64,10 +65,14 @@ int Monster::GetHydration() const
     return m_Hydration;
 }
 
-int Monster::GetWorth()
+int Monster::GetNumFrames() const
 {
-    m_Worth = (m_Cost - m_Thirst - m_Hunger) * m_EvoStage;
-    return m_Worth;
+    return m_NumFrames;
+}
+
+int Monster::GetWorth() const
+{
+        return (m_Cost - m_Thirst - m_Hunger) * m_EvoStage;
 }
 
 int Monster::GetTimeSinceSpawn() const
@@ -99,35 +104,6 @@ const FoodWaterBar& Monster::GetWaterBar() const
 {
     return m_WaterBar;
 }
-
-//Tmpl8::vec2 Monster::GetFoodBarPos() const
-//{
-//
-//    float monsterX = GetCollider().GetPosition().x;
-//    float monsterY = GetCollider().GetPosition().y;
-//
-//    float monsterHeight = GetCollider().GetHeight();
-//
-//    float monsterCentre = CentrePosition().x;
-//    float barCentre = m_FoodBar.GetSprite()->GetWidth() / 2;
-//
-//    float barX = monsterCentre - barCentre;
-//    float barY = monsterY + monsterHeight + 5.0f;
-//
-//    return { barX,barY };
-//}
-//
-//Tmpl8::vec2 Monster::GetWaterBarPos() const
-//{
-//    float foodBarY = GetFoodBarPos().y;
-//
-//    float waterBarX = GetFoodBarPos().x;;
-//    float waterBarY = foodBarY + m_FoodBar.GetSprite()->GetHeight() + 3.0f;
-//
-//    return { waterBarX, waterBarY };
-//}
-//
-
 
 Tmpl8::Sprite* Monster::GetSprite() const
 {
