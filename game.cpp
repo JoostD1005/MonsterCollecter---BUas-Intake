@@ -15,13 +15,15 @@
 namespace Tmpl8
 {
 
-    static	Button button1("assets/button1.png", 1, { 0,0 });
-    static Button button2("assets/ball.png", 1, { 0, 130 });
-    static Button button3("assets/target.tga", 1, { 0, 230 });
-    static Button buttonSell("assets/sellButton.tga", 2, { 368, 480 });
+    static	Button button1("assets/button1.png", 1, { 700, 80 });
+    static Button button2("assets/ball.png", 1, { 700, 130 });
+    static Button button3("assets/target.tga", 1, { 700, 230 });
+
+    static Button buttonSell("assets/sellButton.tga", 2, { 368, 460 });
     static Button buttonSell2("assets/sellButton.tga", 2, { 368, 300 });
 
-    static Refiller refiller("assets/food.png", 1, { 100, 400 });
+    static Button buttonBuy("assets/buyButton.tga", 2, { 700, 460 });
+    static Button backButton1("assets/backButton.tga", 2, { 763, 35 });
 
 
     void Game::Init()
@@ -257,6 +259,8 @@ namespace Tmpl8
             screen->Print(worthstr.c_str(), 700, 35, 0xffffff);
         }
 
+        std::string ystr = std::format("y: {}", mousey); // std::string("Monsters: ").append(std::to_string(monsters.size()));
+        screen->Print(ystr.c_str(), 700, 45, 0xffffff);
 
 
         //-------------------------------------------Drawing------------------------------------------------------------------------
@@ -273,9 +277,8 @@ namespace Tmpl8
             screen->Box(refiller->GetCollider(), 0x00ff00);
         }
 
-        button1.Draw(screen);
-        button2.Draw(screen);
-        button3.Draw(screen);
+       
+        buttonBuy.Draw(screen);
         
 
         //--------------------------------------Selling Window-----------------------------------------------------
@@ -285,8 +288,8 @@ namespace Tmpl8
             buttonSell.Draw(screen);
             if ((SDL_BUTTON_LMASK) != 0)
             {
-                sellWindowcalled = true;
-                currentTarget->SetPosition({static_cast<float>( 400 - (currentTarget->GetSprite()->GetWidth() / 2)),static_cast<float>(256 - (currentTarget->GetSprite()->GetHeight() / 2) )});
+                sellWindowCalled = true;
+                currentTarget->SetPosition({ static_cast<float>(400 - (currentTarget->GetSprite()->GetWidth() / 2)),static_cast<float>(256 - (currentTarget->GetSprite()->GetHeight() / 2)) });
             }
         }
         else
@@ -297,11 +300,11 @@ namespace Tmpl8
 
 
 
-        if (sellWindowcalled)
+        if (sellWindowCalled)
         {
             m_SellWindow->Draw(screen, 310, 166);
             buttonSell2.Draw(screen);
-            
+
         }
 
         if (CheckMouseCollision(buttonSell2.GetCollider()) == true)
@@ -310,7 +313,7 @@ namespace Tmpl8
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
-                sellWindowcalled = false;
+                sellWindowCalled = false;
             }
         }
         else
@@ -319,17 +322,54 @@ namespace Tmpl8
         }
 
         //------------------------------------------------------------------------------------------------------------
+        
+        
+        //-------------------------Buy Window----------------------------------------------------
 
+        if (CheckMouseCollision(buttonBuy.GetCollider()) == true)
+        {
+            buttonBuy.GetSprite()->SetFrame(1);
+            buttonBuy.Draw(screen);
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                buyWindowCalled = true;
+            }
+        }
+        else
+        {
+            buttonBuy.GetSprite()->SetFrame(0);
+            buttonBuy.Draw(screen);
+        }
+
+
+        if (buyWindowCalled)
+        {
+            m_BuyWindow->Draw(screen, 670, 35);
+            backButton1.Draw(screen);
+            button1.Draw(screen);
+            button2.Draw(screen);
+            button3.Draw(screen);
+        }
+
+
+        if (CheckMouseCollision(backButton1.GetCollider()) == true)
+        {
+            backButton1.GetSprite()->SetFrame(1);
+
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                buyWindowCalled = false;
+            }
+        }
+        else
+        {
+            backButton1.GetSprite()->SetFrame(0);
+        }
+     
+
+        //------------------------------------------------------------------------------------------------
         screen->Line(mousex, 0, mousex, 511, 0xff0000);
         screen->Line(0, mousey, 799, mousey, 0xff0000);
-
-
-
-
-
-
-
-
     }
 
 
@@ -434,9 +474,6 @@ namespace Tmpl8
         return newMonster;
 
     }
-
-
-
 
 
 

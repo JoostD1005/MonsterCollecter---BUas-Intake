@@ -65,9 +65,11 @@ private:
 
 	int cash = 500;
 
-	bool sellWindowcalled = false;
+	bool sellWindowCalled = false;
 	Tmpl8::Sprite* m_SellWindow = new Tmpl8::Sprite(new Tmpl8::Surface("assets/sellWindow.png"), 1);
 
+	bool buyWindowCalled = false;
+	Tmpl8::Sprite* m_BuyWindow = new Tmpl8::Sprite(new Tmpl8::Surface("assets/buyWindow.png"), 1);
 
 
 
