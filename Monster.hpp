@@ -25,7 +25,6 @@ public:
 	int GetCost() const;
 	int GetStomach() const;
 	int GetHydration() const;
-	int GetWorth() const;
 	int GetNumFrames() const;
 	int GetTimeSinceFood() const;
 	int GetTimeSinceWater() const;
@@ -35,6 +34,8 @@ public:
 	const AABBCollider& GetCollider() const;
 	const FoodWaterBar& GetFoodBar() const;
 	const FoodWaterBar& GetWaterBar() const;
+
+	int GetWorth();
 
 	void SetHunger(int newHunger);
 	void SetThirst(int newThirst);

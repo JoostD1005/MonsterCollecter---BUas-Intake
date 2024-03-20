@@ -15,22 +15,22 @@
 namespace Tmpl8
 {
 
-    static	Button button1("assets/button1.png", 1, { 700, 80 });
-    static Button button2("assets/ball.png", 1, { 700, 130 });
-    static Button button3("assets/target.tga", 1, { 700, 230 });
+    static	Button button1("assets/Slime.tga", 2, { 700, 80 });
+    static Button button2("assets/Golem.tga", 2, { 700, 208 });
+    static Button button3("assets/Slime2.tga", 2, { 700, 336 });
 
-    static Button buttonSell("assets/sellButton.tga", 2, { 368, 460 });
+    static Button buttonSell("assets/sellButton.tga", 2, { 368, 472 });
     static Button buttonSell2("assets/sellButton.tga", 2, { 368, 300 });
 
-    static Button buttonBuy("assets/buyButton.tga", 2, { 700, 460 });
-    static Button backButton1("assets/backButton.tga", 2, { 763, 35 });
+    static Button buttonBuy("assets/buyButton.tga", 2, { 636, 472 });
+    static Button backButton1("assets/backButton.tga", 2, { 755, 52 });
 
 
     void Game::Init()
     {
 
-        Refiller* refill1 = new Refiller("assets/food.png", 1, { 100, 470 });
-        Refiller* refill2 = new Refiller("assets/water.png", 1, { 148, 470 });
+        Refiller* refill1 = new Refiller("assets/food.png", 1, { 100, 472 });
+        Refiller* refill2 = new Refiller("assets/water.png", 1, { 147, 472 });
         refillers.push_back(refill1);
         refillers.push_back(refill2);
     }
@@ -62,41 +62,46 @@ namespace Tmpl8
         //-----Time Past--------------------------------------------------------
 
         screen->Clear(0);
-        screen->Bar(0, 450, 800, 512, 0x4f2800);
+        screen->Bar(0, 450, 800, 512, 0xD9A066);
+        screen->Bar(0, 450, 800, 465, 0x8F563B);
         deltaTime = deltaTime / 1000;
 
         time = time + deltaTime;
         if (time > 1)
         {
-            for (Monster* monster : monsters)
+            if (freeze == false)
             {
-                
-                if (monster->GetTimeSinceFood() > 5)
+                for (Monster* monster : monsters)
                 {
-                    monster->Hunger();
+
+                    if (monster->GetTimeSinceFood() > 5)
+                    {
+                        monster->Hunger();
+                    }
+
+                    if (monster->GetTimeSinceWater() > 5)
+                    {
+                        monster->Thirst();
+                    }
+
+                    monster->TimeSinceFood();
+                    monster->TimeSinceWater();
+
+                    std::cout << monster->GetHunger() << ", " << monster->GetThirst() << "\n";
                 }
 
-                if (monster->GetTimeSinceWater() > 5)
-                {
-                    monster->Thirst();
-                }
 
-                monster->TimeSinceFood();
-                monster->TimeSinceWater();
-                
-                std::cout << monster->GetHunger() << ", " << monster->GetThirst() << "\n";
+                cash++;
+                time = 0.0f;
             }
 
-            time = 0.0f;
             secondsPast++;
             std::cout << secondsPast << "\n";
-
-            cash++;
 
         }
 
         frameTime = frameTime + deltaTime;
-        if (frameTime > 0.25f)
+        if (frameTime > 0.25f && freeze == false)
         {
             for (Monster* monster : monsters)
             {
@@ -114,15 +119,7 @@ namespace Tmpl8
             frameTime = 0.0f;
         }
 
-        for (const Monster* monster : monsters)
-        {
-            if (monster->GetHunger() >= monster->GetStomach() || monster->GetThirst() >= monster->GetHydration())
-            {
-                //screen->Clear(0xffffff);
-                //Shutdown();
-            }
-        }
-
+      
 
 
         //===============Checking Collisions===========================================================
@@ -143,7 +140,7 @@ namespace Tmpl8
             }
         }
 
-        if (currentTarget != nullptr && isLeftButtonDown)
+        if (currentTarget != nullptr && isLeftButtonDown && freeze == false)
         {
             currentTarget->SetPosition({ mousex - (currentTarget->GetSprite()->GetWidth() / 2), mousey - (currentTarget->GetSprite()->GetHeight() / 2) });
         }
@@ -164,7 +161,7 @@ namespace Tmpl8
             }
         }
 
-        if (refillerTarget != nullptr && isLeftButtonDown)
+        if (refillerTarget != nullptr && isLeftButtonDown && freeze == false)
         {
             refillerTarget->SetPos({ mousex - (refillerTarget->GetSprite()->GetWidth() / 2), mousey - (refillerTarget->GetSprite()->GetHeight() / 2) });
         }
@@ -197,7 +194,7 @@ namespace Tmpl8
 
         //spawn monster1 if button is clicked
 
-        if (CheckMouseCollision(button1.GetCollider()) == true)
+        if (CheckMouseCollision(button1.GetCollider()) == true && freeze == false)
         {
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
@@ -213,7 +210,7 @@ namespace Tmpl8
 
 
         //spawn monster2 if button is clicked
-        if (CheckMouseCollision(button2.GetCollider()) == true)
+        if (CheckMouseCollision(button2.GetCollider()) == true && freeze == false)
         {
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
@@ -228,7 +225,7 @@ namespace Tmpl8
 
 
         //spawn monster3 if button is clicked
-        if (CheckMouseCollision(button3.GetCollider()) == true)
+        if (CheckMouseCollision(button3.GetCollider()) == true && freeze == false)
         {
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
@@ -248,20 +245,22 @@ namespace Tmpl8
         //-------------------------------------------Text------------------------------------------------------------------------
 
         std::string cashstr = std::format("Cash: {}", cash); // std::string("Cash: ").append(std::to_string(cash));
-        screen->Print(cashstr.c_str(), 700, 5, 0xffffff);
+        screen->Print(cashstr.c_str(), 5, 5, 0xffffff, 2);
 
         std::string monsterstr = std::format("Monsters: {}", monsters.size()); // std::string("Monsters: ").append(std::to_string(monsters.size()));
-        screen->Print(monsterstr.c_str(), 700, 20, 0xffffff);
+        screen->Print(monsterstr.c_str(), 5, 20, 0xffffff, 2);
 
         if (currentTarget != nullptr)
         {
             std::string worthstr = std::format("Worth: {}", currentTarget->GetWorth()); // std::string("Monsters: ").append(std::to_string(monsters.size()));
-            screen->Print(worthstr.c_str(), 700, 35, 0xffffff);
+            screen->Print(worthstr.c_str(), 5, 35, 0xffffff, 2);
         }
 
-        std::string ystr = std::format("y: {}", mousey); // std::string("Monsters: ").append(std::to_string(monsters.size()));
-        screen->Print(ystr.c_str(), 700, 45, 0xffffff);
-
+        if (lastTarget != nullptr)
+        {
+            std::string worthstr = std::format("Worth last Target: {}", lastTarget->GetWorth()); // std::string("Monsters: ").append(std::to_string(monsters.size()));
+            screen->Print(worthstr.c_str(), 5, 60, 0xffffff, 2);
+        }
 
         //-------------------------------------------Drawing------------------------------------------------------------------------
 
@@ -282,14 +281,14 @@ namespace Tmpl8
         
 
         //--------------------------------------Selling Window-----------------------------------------------------
-        if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr)
+        if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr && freeze == false)
         {
             buttonSell.GetSprite()->SetFrame(1);
             buttonSell.Draw(screen);
             if ((SDL_BUTTON_LMASK) != 0)
             {
                 sellWindowCalled = true;
-                currentTarget->SetPosition({ static_cast<float>(400 - (currentTarget->GetSprite()->GetWidth() / 2)),static_cast<float>(256 - (currentTarget->GetSprite()->GetHeight() / 2)) });
+                currentTarget->SetPosition({ static_cast<float>(400 - (currentTarget->GetSprite()->GetWidth() / 2)),static_cast<float>(220 - (currentTarget->GetSprite()->GetHeight() / 2)) });
             }
         }
         else
@@ -305,14 +304,20 @@ namespace Tmpl8
             m_SellWindow->Draw(screen, 310, 166);
             buttonSell2.Draw(screen);
 
+            if (currentTarget == nullptr && lastTarget != nullptr)
+            {
+                lastTarget->Draw(screen);
+            }
+
         }
 
-        if (CheckMouseCollision(buttonSell2.GetCollider()) == true)
+        if (CheckMouseCollision(buttonSell2.GetCollider()) == true && freeze == false)
         {
             buttonSell2.GetSprite()->SetFrame(1);
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
+                Sell();
                 sellWindowCalled = false;
             }
         }
@@ -326,7 +331,7 @@ namespace Tmpl8
         
         //-------------------------Buy Window----------------------------------------------------
 
-        if (CheckMouseCollision(buttonBuy.GetCollider()) == true)
+        if (CheckMouseCollision(buttonBuy.GetCollider()) == true && freeze == false)
         {
             buttonBuy.GetSprite()->SetFrame(1);
             buttonBuy.Draw(screen);
@@ -349,6 +354,10 @@ namespace Tmpl8
             button1.Draw(screen);
             button2.Draw(screen);
             button3.Draw(screen);
+
+            screen->Print("cost: 10", 700, 144, 0x000000);
+            screen->Print("cost: 20", 700, 272, 0x000000);
+            screen->Print("cost: 30", 700, 400, 0x000000);
         }
 
 
@@ -366,8 +375,29 @@ namespace Tmpl8
             backButton1.GetSprite()->SetFrame(0);
         }
      
-
         //------------------------------------------------------------------------------------------------
+        //================================================================================================
+
+        //------------------check if monster Died---------------------------------------------------------
+        for (const Monster* monster : monsters)
+        {
+            if (monster->GetHunger() >= monster->GetStomach() || monster->GetThirst() >= monster->GetHydration())
+            {
+                screen->Print("A Monster Died...", (ScreenWidth - 340) / 2 + 1, (ScreenHeight - 20) / 2 + 1, 0x000000, 4);
+                screen->Print("A Monster Died...", (ScreenWidth - 340) / 2, (ScreenHeight - 20) / 2, 0xffffff, 4);
+
+                freeze = true;
+               
+                if (time >= 3)
+                {
+                    screen->Clear(0);
+                    screen->Print("Game Over", (ScreenWidth - 225) / 2, (ScreenHeight - 25) / 2, 0xffffff, 5);
+                }
+            }
+        }
+
+
+
         screen->Line(mousex, 0, mousex, 511, 0xff0000);
         screen->Line(0, mousey, 799, mousey, 0xff0000);
     }
@@ -384,6 +414,10 @@ namespace Tmpl8
         {
         case SDL_BUTTON_LEFT:
             isLeftButtonDown = false;
+            if (currentTarget != nullptr)
+            {
+                lastTarget = currentTarget;
+            }
             currentTarget = nullptr;
             refillerTarget = nullptr;
             break;
@@ -449,15 +483,15 @@ namespace Tmpl8
 
         if (typeOfMonster == 1)
         {
-            newMonster = new Monster("assets/Slime.tga", 2, 0, 0, 1, 10, 25,25);
+            newMonster = new Monster("assets/Slime.tga", 2, 0, 0, 1, 10, 5, 5, 10);
         }
         else if (typeOfMonster == 2)
         {
-            newMonster = new Monster("assets/Golem.tga", 2, 0, 0, 1, 20, 50, 50);
+            newMonster = new Monster("assets/Golem.tga", 2, 0, 0, 1, 20, 50, 50, 20);
         }
         else if (typeOfMonster == 3)
         {
-            newMonster = new Monster("assets/Slime2.tga", 2, 0, 0, 1, 30, 60, 60);
+            newMonster = new Monster("assets/Slime2.tga", 2, 0, 0, 1, 30, 60, 60, 30);
         }
         else
         {
@@ -476,6 +510,24 @@ namespace Tmpl8
     }
 
 
+    void Game::Sell()
+    {
+        if (lastTarget != nullptr)
+        {
+            cash = cash + lastTarget->GetWorth();
+        }
+
+        std::vector<Monster*>::iterator posInVector;
+
+        
+        posInVector = std::find(monsters.begin(), monsters.end(), lastTarget);
+
+        if (posInVector != monsters.end())
+        monsters.erase(posInVector);
+
+        delete lastTarget;
+        lastTarget = nullptr;
+    }
 
 
 

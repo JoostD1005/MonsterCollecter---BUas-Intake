@@ -30,6 +30,7 @@ public:
 
 	Monster* CreateMonster(int typeOfMonster);
 
+	void Sell();
 	
 
 
@@ -61,6 +62,7 @@ private:
 	int prevButtonState = 0;
 
 	Monster* currentTarget = nullptr;
+	Monster* lastTarget = nullptr;
 	Refiller* refillerTarget = nullptr;
 
 	int cash = 500;
@@ -70,6 +72,8 @@ private:
 
 	bool buyWindowCalled = false;
 	Tmpl8::Sprite* m_BuyWindow = new Tmpl8::Sprite(new Tmpl8::Surface("assets/buyWindow.png"), 1);
+
+	bool freeze = false;
 
 
 

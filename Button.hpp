@@ -29,8 +29,6 @@ public:
 	void Draw(Tmpl8::Surface* screen) const;
 
 
-
-
 private:
 
 	Tmpl8::vec2 m_Position;

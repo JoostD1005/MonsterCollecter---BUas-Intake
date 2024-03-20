@@ -70,9 +70,17 @@ int Monster::GetNumFrames() const
     return m_NumFrames;
 }
 
-int Monster::GetWorth() const
+int Monster::GetWorth()
 {
-        return (m_Cost - m_Thirst - m_Hunger) * m_EvoStage;
+    if (m_Worth > 0)
+    {
+        m_Worth = (m_Cost - m_Thirst - m_Hunger) * m_EvoStage;
+        return m_Worth;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 int Monster::GetTimeSinceFood() const
