@@ -35,12 +35,12 @@ Monster::~Monster()
 }
 
 //Get components to access private data members.
-int Monster::GetHunger() const
+float Monster::GetHunger() const
 {
     return m_Hunger;
 }
 
-int Monster::GetThirst() const
+float Monster::GetThirst() const
 {
     return m_Thirst;
 }
@@ -55,12 +55,12 @@ int Monster::GetCost() const
     return m_Cost;
 }
 
-int Monster::GetStomach() const
+float Monster::GetStomach() const
 {
     return m_Stomach;
 }
 
-int Monster::GetHydration() const
+float Monster::GetHydration() const
 {
     return m_Hydration;
 }
@@ -83,12 +83,12 @@ int Monster::GetWorth()
     }
 }
 
-int Monster::GetTimeSinceFood() const
+float Monster::GetTimeSinceFood() const
 {
     return m_TimeSinceFood;
 }
 
-int Monster::GetTimeSinceWater() const
+float Monster::GetTimeSinceWater() const
 {
     return m_TimeSinceWater;
 }
@@ -126,38 +126,50 @@ Tmpl8::Sprite* Monster::GetSprite() const
 
 //set datamembers.---------------------------------------------------------------------------
 
-void Monster::Hunger()
+void Monster::Hunger(float time)
 {
-    m_Hunger++;
-    m_FoodBar.SetValue(static_cast<float>(m_Stomach - m_Hunger) / static_cast<float>(m_Stomach));
+    SetHunger(m_Hunger + time);
 }
 
-void Monster::Thirst()
+void Monster::Thirst(float time)
 {
-    m_Thirst++;
-    m_WaterBar.SetValue(static_cast<float>(m_Hydration - m_Thirst) / static_cast<float>(m_Hydration));
-
- //   float value = (m_Hydration - m_Thirst) / m_Hydration;
-  //  m_WaterBar.SetValue(value);
+    SetThirst(m_Thirst + time);
+       
 }
-void Monster::SetHunger(int newHunger)
+void Monster::SetHunger(float newHunger)
 {
     m_Hunger = newHunger;
+    m_FoodBar.SetValue((m_Stomach - m_Hunger) / m_Stomach);
 }
 
-void Monster::SetThirst(int newThirst)
+void Monster::SetThirst(float newThirst)
 {
     m_Thirst = newThirst;
+    m_WaterBar.SetValue(static_cast<float>(m_Hydration - m_Thirst) / static_cast<float>(m_Hydration));
 }
 
-void Monster::TimeSinceFood()
+void Monster::SetTimeSinceFood(float time)
 {
-    m_TimeSinceFood++;
+    if (time == 0)
+    {
+        m_TimeSinceFood = 0;
+    }
+    else
+    {
+        m_TimeSinceFood = m_TimeSinceFood + time;
+    }
 }
 
-void Monster::TimeSinceWater()
+void Monster::SetTimeSinceWater(float time)
 {
-    m_TimeSinceWater++;
+    if (time == 0)
+    {
+        m_TimeSinceWater = 0;
+    }
+    else
+    {
+        m_TimeSinceWater = m_TimeSinceWater + time;
+    }
 }
 
 

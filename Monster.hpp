@@ -19,15 +19,15 @@ public:
 	~Monster();
 
 	//Member data access
-	int GetHunger() const;
-	int GetThirst() const;
+	float GetHunger() const;
+	float GetThirst() const;
 	int GetEvoStage() const;
 	int GetCost() const;
-	int GetStomach() const;
-	int GetHydration() const;
+	float GetStomach() const;
+	float GetHydration() const;
 	int GetNumFrames() const;
-	int GetTimeSinceFood() const;
-	int GetTimeSinceWater() const;
+	float GetTimeSinceFood() const;
+	float GetTimeSinceWater() const;
 	Tmpl8::Sprite* GetSprite() const;
 	const Tmpl8::vec2& GetPosition() const;
 	Tmpl8::vec2 GetSize() const;
@@ -37,14 +37,14 @@ public:
 
 	int GetWorth();
 
-	void SetHunger(int newHunger);
-	void SetThirst(int newThirst);
+	void SetHunger(float newHunger);
+	void SetThirst(float newThirst);
 
-	void Hunger();
-	void Thirst();
+	void Hunger(float time);
+	void Thirst(float time);
 
-	void TimeSinceFood();
-	void TimeSinceWater();
+	void SetTimeSinceFood(float time);
+	void SetTimeSinceWater(float time);
 //	void SetSprite(Tmpl8::Sprite* sprite);
 
 	void SetCollider(const AABBCollider collider);
@@ -64,16 +64,16 @@ public:
 
 private:
 	//Data members
-	int m_Hunger;
-	int m_Thirst;
+	float m_Hunger;
+	float m_Thirst;
 	int m_EvoStage;
 	int m_Cost;
-	int m_Stomach;
-	int m_Hydration;
+	float m_Stomach;
+	float m_Hydration;
 	int m_Worth = 0;
 	bool m_Alive = true;
-	int m_TimeSinceFood = 0;
-	int m_TimeSinceWater = 0;
+	float m_TimeSinceFood = 0;
+	float m_TimeSinceWater = 0;
 	int m_NumFrames;
 
 	 AABBCollider m_Collider;

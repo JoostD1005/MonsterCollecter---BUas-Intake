@@ -25,6 +25,8 @@ namespace Tmpl8
     static Button buttonBuy("assets/buyButton.tga", 2, { 636, 472 });
     static Button backButton1("assets/backButton.tga", 2, { 755, 52 });
 
+    static Button playAgainButton("assets/playAgainButton.tga", 2, { 150, 350 });
+
 
     void Game::Init()
     {
@@ -67,41 +69,43 @@ namespace Tmpl8
         deltaTime = deltaTime / 1000;
 
         time = time + deltaTime;
-        if (time > 1)
-        {
+        
             if (freeze == false)
             {
                 for (Monster* monster : monsters)
                 {
+                    monster->SetTimeSinceFood(time);
+                    monster->SetTimeSinceWater(time);
 
-                    if (monster->GetTimeSinceFood() > 5)
+                    if (monster->GetTimeSinceFood() > 2)
                     {
-                        monster->Hunger();
+                        monster->Hunger(time);
                     }
 
-                    if (monster->GetTimeSinceWater() > 5)
+                    if (monster->GetTimeSinceWater() > 2)
                     {
-                        monster->Thirst();
+                        monster->Thirst(time);
                     }
 
-                    monster->TimeSinceFood();
-                    monster->TimeSinceWater();
 
                     std::cout << monster->GetHunger() << ", " << monster->GetThirst() << "\n";
+
                 }
 
+                if (time > 1)
+                {
+                    cash++;
+                    time = 0.0f;
 
-                cash++;
-                time = 0.0f;
-            }
-
-            secondsPast++;
-            std::cout << secondsPast << "\n";
+                    secondsPast++;
+                    std::cout << secondsPast << "\n";
+                }
+            
 
         }
 
         frameTime = frameTime + deltaTime;
-        if (frameTime > 0.25f && freeze == false)
+        if (frameTime > 0.25f)
         {
             for (Monster* monster : monsters)
             {
@@ -153,7 +157,7 @@ namespace Tmpl8
         {
             for (int i = 0; i < refillers.size(); i++)
             {
-                if (CheckMouseCollision(refillers[i]->GetCollider()) == true && refillerTarget == nullptr)
+                if (CheckMouseCollision(refillers[i]->GetCollider()) == true)
                 {
                     refillerTarget = refillers[i];
                     break;
@@ -181,11 +185,13 @@ namespace Tmpl8
                 if (refillerTarget == refillers[0])
                 {
                     monster->SetHunger(0);
+                    monster->SetTimeSinceFood(0);
                 }
 
                 if (refillerTarget == refillers[1])
                 {
                     monster->SetThirst(0);
+                    monster->SetTimeSinceWater(0);
                 }
             }
         }
@@ -277,7 +283,7 @@ namespace Tmpl8
         }
 
        
-        buttonBuy.Draw(screen);
+        
         
 
         //--------------------------------------Selling Window-----------------------------------------------------
@@ -303,6 +309,8 @@ namespace Tmpl8
         {
             m_SellWindow->Draw(screen, 310, 166);
             buttonSell2.Draw(screen);
+            
+            freeze = true;
 
             if (currentTarget == nullptr && lastTarget != nullptr)
             {
@@ -311,7 +319,7 @@ namespace Tmpl8
 
         }
 
-        if (CheckMouseCollision(buttonSell2.GetCollider()) == true && freeze == false)
+        if (CheckMouseCollision(buttonSell2.GetCollider()) == true)
         {
             buttonSell2.GetSprite()->SetFrame(1);
 
@@ -319,6 +327,8 @@ namespace Tmpl8
             {
                 Sell();
                 sellWindowCalled = false;
+                freeze = false;
+                time = 0.0f;
             }
         }
         else
@@ -388,15 +398,37 @@ namespace Tmpl8
 
                 freeze = true;
                
-                if (time >= 3)
-                {
-                    screen->Clear(0);
-                    screen->Print("Game Over", (ScreenWidth - 225) / 2, (ScreenHeight - 25) / 2, 0xffffff, 5);
-                }
+              
             }
         }
 
+        //-------------------------------Game Over Screen--------------------------------------------------------------
+        if (time >= 3 && sellWindowCalled == false)
+        {
+            screen->Clear(0);
+            screen->Print("Game Over", (ScreenWidth - 225) / 2, (ScreenHeight - 25) / 2, 0xffffff, 5);
 
+            std::string monsterstr = std::format("you Collected {} Monsters!", monsters.size());
+            screen->Print(monsterstr.c_str(), (ScreenWidth - 500) / 2, ((ScreenHeight - 25) / 2) + 50, 0xffffff, 4);
+
+            playAgainButton.Draw(screen);
+
+        }
+
+        if (CheckMouseCollision(playAgainButton.GetCollider()) == true)
+        {
+            playAgainButton.GetSprite()->SetFrame(1);
+
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                Reset();
+            }
+        }
+        else
+        {
+            playAgainButton.GetSprite()->SetFrame(0);
+        }
+        //---------------------------------------------------------------------------------------
 
         screen->Line(mousex, 0, mousex, 511, 0xff0000);
         screen->Line(0, mousey, 799, mousey, 0xff0000);
@@ -529,6 +561,18 @@ namespace Tmpl8
         lastTarget = nullptr;
     }
 
+    void Game::Reset()
+    {
+        monsters.clear();
+        cash = 500;
+        time = 0.0f;
+        frameTime = 0.0f;
+        secondsPast = 0;
+        freeze = false;
+        sellWindowCalled = false;
+        buyWindowCalled = false;
+
+    }
 
 
 };

@@ -31,7 +31,7 @@ public:
 	Monster* CreateMonster(int typeOfMonster);
 
 	void Sell();
-	
+	void Reset();
 
 
 private:

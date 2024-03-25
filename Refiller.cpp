@@ -33,7 +33,7 @@ const Tmpl8::vec2& Refiller::GetPos() const
 
 void Refiller::SetPos(const Tmpl8::vec2& pos)
 {
-    m_Collider.SetPosition(pos); \
+    m_Collider.SetPosition(pos); 
         m_Pos = pos;
 }
 
