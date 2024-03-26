@@ -40,12 +40,15 @@ public:
 	void SetHunger(float newHunger);
 	void SetThirst(float newThirst);
 
-	void Hunger(float time);
-	void Thirst(float time);
+	void Hunger(float deltaTime);
+	void Thirst(float deltaTime);
 
 	void SetTimeSinceFood(float time);
 	void SetTimeSinceWater(float time);
-//	void SetSprite(Tmpl8::Sprite* sprite);
+
+	void TimeSinceFood(float deltaTime);
+	void TimeSinceWater(float deltaTime);
+
 
 	void SetCollider(const AABBCollider collider);
 

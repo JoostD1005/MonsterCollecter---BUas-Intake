@@ -74,17 +74,17 @@ namespace Tmpl8
             {
                 for (Monster* monster : monsters)
                 {
-                    monster->SetTimeSinceFood(time);
-                    monster->SetTimeSinceWater(time);
+                    monster->TimeSinceFood(deltaTime);
+                    monster->TimeSinceWater(deltaTime);
 
-                    if (monster->GetTimeSinceFood() > 2)
+                    if (monster->GetTimeSinceFood() > 2.0f)
                     {
-                        monster->Hunger(time);
+                        monster->Hunger(deltaTime);
                     }
 
-                    if (monster->GetTimeSinceWater() > 2)
+                    if (monster->GetTimeSinceWater() > 2.0f)
                     {
-                        monster->Thirst(time);
+                        monster->Thirst(deltaTime);
                     }
 
 
@@ -123,6 +123,25 @@ namespace Tmpl8
             frameTime = 0.0f;
         }
 
+        //-------------------------------------------Text------------------------------------------------------------------------
+
+        std::string cashstr = std::format("Cash: {}", cash); // print how moch cash
+        screen->Print(cashstr.c_str(), 5, 5, 0xffffff, 2);
+
+        std::string monsterstr = std::format("Monsters: {}", monsters.size());  // print size of monsters
+        screen->Print(monsterstr.c_str(), 5, 20, 0xffffff, 2);
+
+        if (currentTarget != nullptr) // print worth of currentTarget
+        {
+            std::string worthstr = std::format("Worth: {}", currentTarget->GetWorth());
+            screen->Print(worthstr.c_str(), 5, 35, 0xffffff, 2);
+        }
+
+        if (lastTarget != nullptr) // print worth of lastTarget
+        {
+            std::string worthstr = std::format("Worth last Target: {}", lastTarget->GetWorth());
+            screen->Print(worthstr.c_str(), 5, 60, 0xffffff, 2);
+        }
       
 
 
@@ -248,50 +267,27 @@ namespace Tmpl8
 
         prevButtonState = buttonState;
 
-        //-------------------------------------------Text------------------------------------------------------------------------
-
-        std::string cashstr = std::format("Cash: {}", cash); // std::string("Cash: ").append(std::to_string(cash));
-        screen->Print(cashstr.c_str(), 5, 5, 0xffffff, 2);
-
-        std::string monsterstr = std::format("Monsters: {}", monsters.size()); // std::string("Monsters: ").append(std::to_string(monsters.size()));
-        screen->Print(monsterstr.c_str(), 5, 20, 0xffffff, 2);
-
-        if (currentTarget != nullptr)
-        {
-            std::string worthstr = std::format("Worth: {}", currentTarget->GetWorth()); // std::string("Monsters: ").append(std::to_string(monsters.size()));
-            screen->Print(worthstr.c_str(), 5, 35, 0xffffff, 2);
-        }
-
-        if (lastTarget != nullptr)
-        {
-            std::string worthstr = std::format("Worth last Target: {}", lastTarget->GetWorth()); // std::string("Monsters: ").append(std::to_string(monsters.size()));
-            screen->Print(worthstr.c_str(), 5, 60, 0xffffff, 2);
-        }
-
         //-------------------------------------------Drawing------------------------------------------------------------------------
 
         for (const Monster* monster : monsters)
         {
             monster->Draw(screen);
-            screen->Box(monster->GetCollider(), 0x00ff00);
+            screen->Box(monster->GetCollider(), 0x00ff00); // colliderbox 
         }
 
         for (const Refiller* refiller : refillers)
         {
             refiller->Draw(screen);
-            screen->Box(refiller->GetCollider(), 0x00ff00);
+            screen->Box(refiller->GetCollider(), 0x00ff00); // colliderbox
         }
 
-       
-        
-        
 
         //--------------------------------------Selling Window-----------------------------------------------------
-        if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr && freeze == false)
+        if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr && freeze == false) // draw button on screen
         {
             buttonSell.GetSprite()->SetFrame(1);
             buttonSell.Draw(screen);
-            if ((SDL_BUTTON_LMASK) != 0)
+            if ((SDL_BUTTON_LMASK) != 0) // check if pressed
             {
                 sellWindowCalled = true;
                 currentTarget->SetPosition({ static_cast<float>(400 - (currentTarget->GetSprite()->GetWidth() / 2)),static_cast<float>(220 - (currentTarget->GetSprite()->GetHeight() / 2)) });
@@ -305,10 +301,16 @@ namespace Tmpl8
 
 
 
-        if (sellWindowCalled)
+        if (sellWindowCalled) // checks if sell window is called and draws it on the screen.
         {
             m_SellWindow->Draw(screen, 310, 166);
             buttonSell2.Draw(screen);
+
+            if (lastTarget != nullptr) // print worth of lastTarget
+            {
+                std::string worthstr = std::format("Worth: {}", lastTarget->GetWorth());
+                screen->Print(worthstr.c_str(), 350, 280, 0xffffff, 2);
+            }
             
             freeze = true;
 
@@ -319,7 +321,7 @@ namespace Tmpl8
 
         }
 
-        if (CheckMouseCollision(buttonSell2.GetCollider()) == true)
+        if (CheckMouseCollision(buttonSell2.GetCollider()) == true) // collision logic for sellButton 2
         {
             buttonSell2.GetSprite()->SetFrame(1);
 
@@ -357,7 +359,7 @@ namespace Tmpl8
         }
 
 
-        if (buyWindowCalled)
+        if (buyWindowCalled) // checks if buy window is called and draws the window
         {
             m_BuyWindow->Draw(screen, 670, 35);
             backButton1.Draw(screen);

@@ -126,14 +126,14 @@ Tmpl8::Sprite* Monster::GetSprite() const
 
 //set datamembers.---------------------------------------------------------------------------
 
-void Monster::Hunger(float time)
+void Monster::Hunger(float deltaTime)
 {
-    SetHunger(m_Hunger + time);
+    SetHunger(m_Hunger + deltaTime);
 }
 
-void Monster::Thirst(float time)
+void Monster::Thirst(float deltaTime)
 {
-    SetThirst(m_Thirst + time);
+    SetThirst(m_Thirst + deltaTime);
        
 }
 void Monster::SetHunger(float newHunger)
@@ -145,31 +145,27 @@ void Monster::SetHunger(float newHunger)
 void Monster::SetThirst(float newThirst)
 {
     m_Thirst = newThirst;
-    m_WaterBar.SetValue(static_cast<float>(m_Hydration - m_Thirst) / static_cast<float>(m_Hydration));
+    m_WaterBar.SetValue((m_Hydration - m_Thirst) / m_Hydration);
 }
 
 void Monster::SetTimeSinceFood(float time)
 {
-    if (time == 0)
-    {
-        m_TimeSinceFood = 0;
-    }
-    else
-    {
-        m_TimeSinceFood = m_TimeSinceFood + time;
-    }
+    m_TimeSinceFood = time;
 }
 
 void Monster::SetTimeSinceWater(float time)
 {
-    if (time == 0)
-    {
-        m_TimeSinceWater = 0;
-    }
-    else
-    {
-        m_TimeSinceWater = m_TimeSinceWater + time;
-    }
+    m_TimeSinceWater = time;
+}
+
+void Monster::TimeSinceFood(float deltaTime)
+{
+    m_TimeSinceFood = m_TimeSinceFood + deltaTime;
+}
+
+void Monster::TimeSinceWater(float deltaTime)
+{
+    m_TimeSinceWater = m_TimeSinceWater + deltaTime;
 }
 
 
@@ -190,10 +186,6 @@ void Monster::SetPosition(const Tmpl8::vec2& pos)
     m_FoodBar.SetPos({ c.x - m_FoodBar.GetWidth() / 2.0f, c.y + 15.0f });
 }
 
-//void Monster::SetSprite(Tmpl8::Sprite* sprite)
-//{
-//    m_pSprite = sprite;
-//}
 
 Tmpl8::vec2 Monster::CentrePosition() const
 {
