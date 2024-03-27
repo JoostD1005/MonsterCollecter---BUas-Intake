@@ -13,7 +13,7 @@ class Monster
 public:
 	//constructor & destructor
 
-	Monster(const char* fileName, unsigned int numFrames, int hunger = 0, int thirst = 0, int evoStage = 1, int cost = 0, int stomach = 0, int hydration = 0, int worth = 0);
+	Monster(const char* fileName, unsigned int numFrames, int hunger = 0, int thirst = 0, int evoStage = 1, int cost = 0, int stomach = 0, int hydration = 0, int timeNeededForEvo = 0 , int worth = 0);
 	//Monster(int hunger = 0, int thirst = 0, int evoStage = 1, int cost = 0, int stomach = 0, int hydration = 0, int worth = 0);
 
 	~Monster();
@@ -36,6 +36,9 @@ public:
 	const FoodWaterBar& GetWaterBar() const;
 
 	int GetWorth();
+
+
+	void TimeSinceSpawn();
 
 	void SetHunger(float newHunger);
 	void SetThirst(float newThirst);
@@ -62,14 +65,14 @@ public:
 	//Special Opperations
 	void DieOfHunger(int stomach, int hunger);
 	void DieOfThirst(int hydration, int thirst);
-	int Evolution(int time, int hunger, int thirst);
+	void Evolution();
     void Draw(Tmpl8::Surface* screen) const;
 
 private:
 	//Data members
 	float m_Hunger;
 	float m_Thirst;
-	int m_EvoStage;
+	int m_EvoStage = 1;
 	int m_Cost;
 	float m_Stomach;
 	float m_Hydration;
@@ -78,6 +81,8 @@ private:
 	float m_TimeSinceFood = 0;
 	float m_TimeSinceWater = 0;
 	int m_NumFrames;
+	int m_TimeSinceSpawn = 0;
+	int m_TimeNeededForEvo;
 
 	 AABBCollider m_Collider;
 	 FoodWaterBar m_FoodBar;

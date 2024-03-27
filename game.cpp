@@ -20,10 +20,11 @@ namespace Tmpl8
     static Button button3("assets/Slime2.tga", 2, { 700, 336 });
 
     static Button buttonSell("assets/sellButton.tga", 2, { 368, 472 });
-    static Button buttonSell2("assets/sellButton.tga", 2, { 368, 300 });
+    static Button sellButtonSellWindow("assets/sellButton.tga", 2, { 368, 300 });
+    static Button backButtonSellWindow("assets/backButton.tga", 2, { 443, 180 });
 
     static Button buttonBuy("assets/buyButton.tga", 2, { 636, 472 });
-    static Button backButton1("assets/backButton.tga", 2, { 755, 52 });
+    static Button backButtonBuyWindow("assets/backButton.tga", 2, { 755, 52 });
 
     static Button playAgainButton("assets/playAgainButton.tga", 2, { 150, 350 });
 
@@ -76,6 +77,7 @@ namespace Tmpl8
                 {
                     monster->TimeSinceFood(deltaTime);
                     monster->TimeSinceWater(deltaTime);
+                    monster->GetWorth();
 
                     if (monster->GetTimeSinceFood() > 2.0f)
                     {
@@ -99,6 +101,11 @@ namespace Tmpl8
 
                     secondsPast++;
                     std::cout << secondsPast << "\n";
+
+                    for (Monster* monster : monsters)
+                    {
+                        monster->TimeSinceSpawn();
+                    }
                 }
             
 
@@ -143,7 +150,11 @@ namespace Tmpl8
             screen->Print(worthstr.c_str(), 5, 60, 0xffffff, 2);
         }
       
+        std::string xstr = std::format("x: {}", mousex);  // print size of monsters
+        screen->Print(xstr.c_str(), 5, 80, 0xffffff, 1);
 
+        std::string ystr = std::format("y: {}", mousey);  // print size of monsters
+        screen->Print(ystr.c_str(), 50, 80, 0xffffff, 1);
 
         //===============Checking Collisions===========================================================
 
@@ -281,6 +292,7 @@ namespace Tmpl8
             screen->Box(refiller->GetCollider(), 0x00ff00); // colliderbox
         }
 
+        
 
         //--------------------------------------Selling Window-----------------------------------------------------
         if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr && freeze == false) // draw button on screen
@@ -304,7 +316,8 @@ namespace Tmpl8
         if (sellWindowCalled) // checks if sell window is called and draws it on the screen.
         {
             m_SellWindow->Draw(screen, 310, 166);
-            buttonSell2.Draw(screen);
+            sellButtonSellWindow.Draw(screen);
+            backButtonSellWindow.Draw(screen);
 
             if (lastTarget != nullptr) // print worth of lastTarget
             {
@@ -321,9 +334,24 @@ namespace Tmpl8
 
         }
 
-        if (CheckMouseCollision(buttonSell2.GetCollider()) == true) // collision logic for sellButton 2
+        if (CheckMouseCollision(backButtonSellWindow.GetCollider()) == true)
         {
-            buttonSell2.GetSprite()->SetFrame(1);
+            backButtonSellWindow.GetSprite()->SetFrame(1);
+
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                sellWindowCalled = false;
+                freeze = false;
+            }
+        }
+        else
+        {
+            backButtonBuyWindow.GetSprite()->SetFrame(0);
+        }
+
+        if (CheckMouseCollision(sellButtonSellWindow.GetCollider()) == true) // collision logic for sellButton 2
+        {
+            sellButtonSellWindow.GetSprite()->SetFrame(1);
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
@@ -335,7 +363,7 @@ namespace Tmpl8
         }
         else
         {
-            buttonSell2.GetSprite()->SetFrame(0);
+            sellButtonSellWindow.GetSprite()->SetFrame(0);
         }
 
         //------------------------------------------------------------------------------------------------------------
@@ -362,7 +390,7 @@ namespace Tmpl8
         if (buyWindowCalled) // checks if buy window is called and draws the window
         {
             m_BuyWindow->Draw(screen, 670, 35);
-            backButton1.Draw(screen);
+            backButtonBuyWindow.Draw(screen);
             button1.Draw(screen);
             button2.Draw(screen);
             button3.Draw(screen);
@@ -373,9 +401,9 @@ namespace Tmpl8
         }
 
 
-        if (CheckMouseCollision(backButton1.GetCollider()) == true)
+        if (CheckMouseCollision(backButtonBuyWindow.GetCollider()) == true)
         {
-            backButton1.GetSprite()->SetFrame(1);
+            backButtonBuyWindow.GetSprite()->SetFrame(1);
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
@@ -384,7 +412,7 @@ namespace Tmpl8
         }
         else
         {
-            backButton1.GetSprite()->SetFrame(0);
+            backButtonBuyWindow.GetSprite()->SetFrame(0);
         }
      
         //------------------------------------------------------------------------------------------------
@@ -517,15 +545,15 @@ namespace Tmpl8
 
         if (typeOfMonster == 1)
         {
-            newMonster = new Monster("assets/Slime.tga", 2, 0, 0, 1, 10, 5, 5, 10);
+            newMonster = new Monster("assets/Slime.tga", 2, 0, 0, 1, 10, 5, 5, 10, 10);
         }
         else if (typeOfMonster == 2)
         {
-            newMonster = new Monster("assets/Golem.tga", 2, 0, 0, 1, 20, 50, 50, 20);
+            newMonster = new Monster("assets/Golem.tga", 2, 0, 0, 1, 20, 50, 50, 20, 20);
         }
         else if (typeOfMonster == 3)
         {
-            newMonster = new Monster("assets/Slime2.tga", 2, 0, 0, 1, 30, 60, 60, 30);
+            newMonster = new Monster("assets/Slime2.tga", 2, 0, 0, 1, 30, 60, 60, 30, 30);
         }
         else
         {

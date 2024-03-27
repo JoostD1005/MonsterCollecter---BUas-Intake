@@ -5,7 +5,7 @@
 
 //Constructor.
 
-Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int thirst, int evoStage, int cost, int stomach, int hydration, int worth) :
+Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int thirst, int evoStage, int cost, int stomach, int hydration, int timeNeededForEvo, int worth) :
     m_Hunger(hunger),
     m_Thirst(thirst),
     m_EvoStage(evoStage),
@@ -13,6 +13,7 @@ Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int t
     m_Stomach(stomach),
     m_Hydration(hydration),
     m_Worth(worth),
+    m_TimeNeededForEvo(timeNeededForEvo),
     m_pSprite{ new Tmpl8::Sprite(new Tmpl8::Surface(fileName), numFrames) },
     m_NumFrames(numFrames)
 {
@@ -81,6 +82,11 @@ int Monster::GetWorth()
     {
         return 0;
     }
+}
+
+void Monster::TimeSinceSpawn()
+{
+    m_TimeSinceSpawn++;
 }
 
 float Monster::GetTimeSinceFood() const
@@ -206,6 +212,14 @@ void Monster::DieOfThirst(int hydration, int thirst)
     if (thirst >= hydration)
     {
         m_Alive = false;
+    }
+}
+
+void Monster::Evolution()
+{
+    if (m_TimeSinceSpawn > m_TimeNeededForEvo && m_Hunger == 0 && m_Thirst == 0 && m_EvoStage < 3) 
+    {
+        m_EvoStage++;
     }
 }
 
