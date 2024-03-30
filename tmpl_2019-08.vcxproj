@@ -228,22 +228,24 @@
   <ItemGroup>
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="Button.cpp" />
-    <ClCompile Include="FoodWaterBar.cpp" />
+    <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Refiller.cpp" />
     <ClCompile Include="surface.cpp" />
     <ClCompile Include="template.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABBCollider.hpp" />
-    <ClInclude Include="FoodWaterBar.hpp" />
+    <ClInclude Include="ProgressBar.hpp" />
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Monster.hpp" />
     <ClInclude Include="Refiller.hpp" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="template.h" />
+    <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="_readme.txt" />

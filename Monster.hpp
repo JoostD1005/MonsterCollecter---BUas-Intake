@@ -4,7 +4,7 @@
 #include "surface.h"
 #include "template.h"
 #include "AABBCollider.hpp"
-#include "FoodWaterBar.hpp"
+#include "ProgressBar.hpp"
 
 class Tmpl8::Sprite;
 
@@ -32,8 +32,8 @@ public:
 	const Tmpl8::vec2& GetPosition() const;
 	Tmpl8::vec2 GetSize() const;
 	const AABBCollider& GetCollider() const;
-	const FoodWaterBar& GetFoodBar() const;
-	const FoodWaterBar& GetWaterBar() const;
+	const ProgressBar& GetFoodBar() const;
+	const ProgressBar& GetWaterBar() const;
 
 	int GetWorth();
 
@@ -85,8 +85,8 @@ private:
 	int m_TimeNeededForEvo;
 
 	 AABBCollider m_Collider;
-	 FoodWaterBar m_FoodBar;
-	 FoodWaterBar m_WaterBar;
+	 ProgressBar m_FoodBar;
+	 ProgressBar m_WaterBar;
 
 
 	Tmpl8::vec2 m_Position;

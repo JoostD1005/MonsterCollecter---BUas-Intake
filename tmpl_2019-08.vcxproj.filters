@@ -11,8 +11,9 @@
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="Button.cpp" />
-    <ClCompile Include="FoodWaterBar.cpp" />
+    <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="Refiller.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -25,8 +26,9 @@
     <ClInclude Include="Monster.hpp" />
     <ClInclude Include="AABBCollider.hpp" />
     <ClInclude Include="Button.hpp" />
-    <ClInclude Include="FoodWaterBar.hpp" />
+    <ClInclude Include="ProgressBar.hpp" />
     <ClInclude Include="Refiller.hpp" />
+    <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

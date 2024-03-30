@@ -114,12 +114,12 @@ const AABBCollider& Monster::GetCollider() const
     return m_Collider;
 }
 
-const FoodWaterBar& Monster::GetFoodBar() const
+const ProgressBar& Monster::GetFoodBar() const
 {
     return m_FoodBar;
 }
 
-const FoodWaterBar& Monster::GetWaterBar() const
+const ProgressBar& Monster::GetWaterBar() const
 {
     return m_WaterBar;
 }
@@ -217,7 +217,12 @@ void Monster::DieOfThirst(int hydration, int thirst)
 
 void Monster::Evolution()
 {
-    if (m_TimeSinceSpawn > m_TimeNeededForEvo && m_Hunger == 0 && m_Thirst == 0 && m_EvoStage < 3) 
+    if (m_TimeSinceSpawn > m_TimeNeededForEvo && m_Hunger == 0 && m_Thirst == 0 && m_EvoStage < 2) 
+    {
+        m_EvoStage++;
+        m_TimeNeededForEvo =  m_TimeNeededForEvo * 3;
+    }
+    if (m_TimeSinceSpawn > m_TimeNeededForEvo && m_Hunger == 0 && m_Thirst == 0 && m_EvoStage < 3)
     {
         m_EvoStage++;
     }

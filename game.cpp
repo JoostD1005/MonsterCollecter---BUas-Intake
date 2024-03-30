@@ -77,6 +77,7 @@ namespace Tmpl8
                 {
                     monster->TimeSinceFood(deltaTime);
                     monster->TimeSinceWater(deltaTime);
+                    monster->Evolution();
                     monster->GetWorth();
 
                     if (monster->GetTimeSinceFood() > 2.0f)

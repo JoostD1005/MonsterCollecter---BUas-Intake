@@ -4,7 +4,7 @@
 #include "surface.h"
 
 
-class FoodWaterBar 
+class ProgressBar 
 {
 public:
 
