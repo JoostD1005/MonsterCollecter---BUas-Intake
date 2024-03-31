@@ -13,15 +13,19 @@ public:
 	~Window();
 
 	Tmpl8::vec2 GetPos() const;
+	Tmpl8::Sprite* GetSprite() const;
+
+	Tmpl8::vec2 GetBackButtonPos(); 
 	
 	bool GetCalled() const;
 	void SetCalled(bool called);
 protected:
 
-	Button* m_BackButton = new Button("assets/backButton.tga", 2, { 700, 80 });;
-	Tmpl8::vec2 m_Pos;
+	Button* m_BackButton = new Button("assets/backButton.tga", 2, GetBackButtonPos());
 	bool m_Called = false;
 
+	Tmpl8::vec2 m_Pos;
+	Tmpl8::Sprite* m_pSprite = nullptr;
 	
 };
 
