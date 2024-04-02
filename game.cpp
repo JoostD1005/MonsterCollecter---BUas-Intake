@@ -15,16 +15,16 @@
 namespace Tmpl8
 {
 
-    static	Button button1("assets/Slime.tga", 2, { 700, 80 });
-    static Button button2("assets/Golem.tga", 2, { 700, 208 });
-    static Button button3("assets/Slime2.tga", 2, { 700, 336 });
+   // static	Button button1("assets/Slime.tga", 2, { 700, 80 });
+   // static Button button2("assets/Golem.tga", 2, { 700, 208 });
+   // static Button button3("assets/Slime2.tga", 2, { 700, 336 });
 
     static Button buttonSell("assets/sellButton.tga", 2, { 368, 472 });
-    static Button sellButtonSellWindow("assets/sellButton.tga", 2, { 368, 300 });
-    static Button backButtonSellWindow("assets/backButton.tga", 2, { 443, 180 });
+ //   static Button sellButtonSellWindow("assets/sellButton.tga", 2, { 368, 300 });
+  //  static Button backButtonSellWindow("assets/backButton.tga", 2, { 443, 180 });
 
     static Button buttonBuy("assets/buyButton.tga", 2, { 636, 472 });
-    static Button backButtonBuyWindow("assets/backButton.tga", 2, { 755, 52 });
+   // static Button backButtonBuyWindow("assets/backButton.tga", 2, { 755, 52 });
 
     static Button playAgainButton("assets/playAgainButton.tga", 2, { 150, 350 });
 
@@ -231,7 +231,7 @@ namespace Tmpl8
 
         //spawn monster1 if button is clicked
 
-        if (CheckMouseCollision(button1.GetCollider()) == true && freeze == false)
+        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton1().GetCollider()) == true && freeze == false)
         {
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
@@ -247,7 +247,7 @@ namespace Tmpl8
 
 
         //spawn monster2 if button is clicked
-        if (CheckMouseCollision(button2.GetCollider()) == true && freeze == false)
+        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton2().GetCollider()) == true && freeze == false)
         {
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
@@ -262,7 +262,7 @@ namespace Tmpl8
 
 
         //spawn monster3 if button is clicked
-        if (CheckMouseCollision(button3.GetCollider()) == true && freeze == false)
+        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton3().GetCollider()) == true && freeze == false)
         {
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
@@ -316,9 +316,8 @@ namespace Tmpl8
 
         if (sellWindowCalled) // checks if sell window is called and draws it on the screen.
         {
-            m_SellWindow->Draw(screen, 310, 166);
-            sellButtonSellWindow.Draw(screen);
-            backButtonSellWindow.Draw(screen);
+            m_SellWindow.Draw(screen);
+        
 
             if (lastTarget != nullptr) // print worth of lastTarget
             {
@@ -335,9 +334,9 @@ namespace Tmpl8
 
         }
 
-        if (CheckMouseCollision(backButtonSellWindow.GetCollider()) == true)
+        if (CheckMouseCollision(m_SellWindow.GetBackButton().GetCollider()) == true) // function to back out of selling
         {
-            backButtonSellWindow.GetSprite()->SetFrame(1);
+            m_SellWindow.GetBackButton().GetSprite()->SetFrame(1);
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
@@ -347,12 +346,12 @@ namespace Tmpl8
         }
         else
         {
-            backButtonBuyWindow.GetSprite()->SetFrame(0);
+            m_SellWindow.GetBackButton().GetSprite()->SetFrame(0);
         }
 
-        if (CheckMouseCollision(sellButtonSellWindow.GetCollider()) == true) // collision logic for sellButton 2
+        if (CheckMouseCollision(m_SellWindow.GetSellButton().GetCollider()) == true) // collision logic for sellButton 2
         {
-            sellButtonSellWindow.GetSprite()->SetFrame(1);
+            m_SellWindow.GetSellButton().GetSprite()->SetFrame(1);
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
@@ -364,7 +363,7 @@ namespace Tmpl8
         }
         else
         {
-            sellButtonSellWindow.GetSprite()->SetFrame(0);
+            m_SellWindow.GetSellButton().GetSprite()->SetFrame(0);
         }
 
         //------------------------------------------------------------------------------------------------------------
@@ -390,21 +389,13 @@ namespace Tmpl8
 
         if (buyWindowCalled) // checks if buy window is called and draws the window
         {
-            m_BuyWindow->Draw(screen, 670, 35);
-            backButtonBuyWindow.Draw(screen);
-            button1.Draw(screen);
-            button2.Draw(screen);
-            button3.Draw(screen);
-
-            screen->Print("cost: 10", 700, 144, 0x000000);
-            screen->Print("cost: 20", 700, 272, 0x000000);
-            screen->Print("cost: 30", 700, 400, 0x000000);
+            m_BuyWindow.Draw(screen);
         }
 
 
-        if (CheckMouseCollision(backButtonBuyWindow.GetCollider()) == true)
+        if (CheckMouseCollision(m_BuyWindow.GetBackButton().GetCollider()) == true)
         {
-            backButtonBuyWindow.GetSprite()->SetFrame(1);
+            m_BuyWindow.GetBackButton().GetSprite()->SetFrame(1);
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
@@ -413,7 +404,7 @@ namespace Tmpl8
         }
         else
         {
-            backButtonBuyWindow.GetSprite()->SetFrame(0);
+            m_BuyWindow.GetBackButton().GetSprite()->SetFrame(0);
         }
      
         //------------------------------------------------------------------------------------------------

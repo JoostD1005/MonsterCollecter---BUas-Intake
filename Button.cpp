@@ -13,8 +13,6 @@ Button::Button(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos) :
 
 Button::~Button()
 {
-	delete m_pSprite;
-	m_pSprite = 0;
 }
 
 

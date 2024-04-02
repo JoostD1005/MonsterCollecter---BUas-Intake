@@ -7,6 +7,7 @@
 #include "AABBCollider.hpp"
 #include "Button.hpp"
 #include "Refiller.hpp"
+#include "Window.hpp"
 namespace Tmpl8 {
 
 class Surface;
@@ -68,10 +69,10 @@ private:
 	int cash = 500;
 
 	bool sellWindowCalled = false;
-	Tmpl8::Sprite* m_SellWindow = new Tmpl8::Sprite(new Tmpl8::Surface("assets/sellWindow.png"), 1);
-
+	SellWindow m_SellWindow = SellWindow("assets/sellWindow.png", 1, {310, 166} );
+	
 	bool buyWindowCalled = false;
-	Tmpl8::Sprite* m_BuyWindow = new Tmpl8::Sprite(new Tmpl8::Surface("assets/buyWindow.png"), 1);
+	BuyWindow m_BuyWindow = BuyWindow("assets/buyWindow.png", 1, { 670, 35 });
 
 	bool freeze = false;
 
