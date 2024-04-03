@@ -8,6 +8,7 @@
 #include "Button.hpp"
 #include "Refiller.hpp"
 #include "Window.hpp"
+#include "Label.hpp"
 namespace Tmpl8 {
 
 class Surface;
@@ -39,7 +40,7 @@ private:
 
 	Surface* screen;
 
-	
+
 	std::vector<Monster*> monsters;
 	std::vector<Button*> buttons;
 	std::vector<Refiller*> refillers;
@@ -69,12 +70,23 @@ private:
 	int cash = 500;
 
 	bool sellWindowCalled = false;
-	SellWindow m_SellWindow = SellWindow("assets/sellWindow.png", 1, {310, 166} );
-	
+	SellWindow m_SellWindow = SellWindow("assets/sellWindow.png", 1, { 310, 166 });
+
 	bool buyWindowCalled = false;
 	BuyWindow m_BuyWindow = BuyWindow("assets/buyWindow.png", 1, { 670, 35 });
 
 	bool freeze = false;
+
+	// Text
+	Label cashText = Label("cash", cash, { 5, 5 }, 0xffffff, 2);
+	Label monsterText = Label("monster", monsters.size(), { 5, 20 }, 0xffffff, 2);
+
+	Label xText = Label("x", mousex, { 5, 80 }, 0xffffff, 1);
+	Label yText = Label("y", mousey, { 50, 80 }, 0xffffff, 1);
+
+	//game over text
+	Label gameOverMonsterText = Label("you Collected {} Monsters!", monsters.size(), { (ScreenWidth - 500) / 2, ((ScreenHeight - 25) / 2) + 50 }, 0xffffff, 4);
+
 
 
 

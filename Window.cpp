@@ -2,9 +2,10 @@
 
 Window::Window(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos) :
     m_Pos(pos),
-    m_pSprite{ new Tmpl8::Sprite(new Tmpl8::Surface(fileName), numFrames) }
+    m_pSprite{ new Tmpl8::Sprite(new Tmpl8::Surface(fileName), numFrames) },
+    m_BackButton("assets/backButton.tga", 2)
 {
-    SetBackButtonPos();
+    m_BackButton.SetPosition({ m_Pos.x + m_pSprite->GetWidth() - 47, m_Pos.y + 15 });
 }
 
 Window::~Window()
@@ -23,15 +24,6 @@ Tmpl8::Sprite* Window::GetSprite() const
     return m_pSprite;
 }
 
-Tmpl8::vec2 Window::GetBackButtonPos() const
-{
-   return m_BackButtonPos;
-}
-
-void Window::SetBackButtonPos()
-{
-    m_BackButtonPos = { GetPos().x + GetSprite()->GetWidth() - 42, GetPos().y - 10 };
-}
 
 
 Button Window::GetBackButton() const
@@ -54,7 +46,7 @@ void Window::SetCalled(bool called)
 BuyWindow::BuyWindow(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos) :
     Window(fileName, numFrames, pos)
 {
-    SetBackButtonPos();
+  //  SetBackButtonPos();
 }
 
 void BuyWindow::Draw(Tmpl8::Surface* screen) const
@@ -93,7 +85,7 @@ Button BuyWindow::GetMonsterButton3() const
 SellWindow::SellWindow(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos) :
     Window(fileName, numFrames, pos)
 {
-    SetBackButtonPos();
+  //  SetBackButtonPos();
 }
 
 

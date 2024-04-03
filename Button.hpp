@@ -9,7 +9,7 @@ class Button
 {
 public:
 
-	Button(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos);
+	Button(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos = 0);
 	~Button();
 
 	Tmpl8::Sprite* GetSprite() const;
@@ -31,7 +31,6 @@ public:
 
 private:
 
-	Tmpl8::vec2 m_Position;
 	Tmpl8::Sprite* m_pSprite = nullptr;
 	AABBCollider m_Collider;
 

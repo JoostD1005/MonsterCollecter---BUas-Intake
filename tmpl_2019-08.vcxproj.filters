@@ -14,6 +14,7 @@
     <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="Refiller.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Label.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="ProgressBar.hpp" />
     <ClInclude Include="Refiller.hpp" />
     <ClInclude Include="Window.hpp" />
+    <ClInclude Include="Label.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

@@ -101,7 +101,7 @@ void Surface::Centre( char* a_String, int y1, Pixel color )
 	Print( a_String, x, y1, color );
 }
 
-void Surface::Print(const char* a_String, int x1, int y1, Pixel color, int width) // coppied from Boyko from the 3DGEP discord server.
+void Surface::Print(std::string_view a_String, int x1, int y1, Pixel color, int width) // coppied from Boyko from the 3DGEP discord server.
 {
 	if (!fontInitialized)
 	{
@@ -109,7 +109,7 @@ void Surface::Print(const char* a_String, int x1, int y1, Pixel color, int width
 		fontInitialized = true;
 	}
 	Pixel* t = m_Buffer + x1 + y1 * m_Pitch;
-	for (int i = 0; i < (int)(strlen(a_String)); i++, t += 6 * width)
+	for (int i = 0; i < (int)(a_String.size()); i++, t += 6 * width)
 	{
 		long pos = 0;
 		if ((a_String[i] >= 'A') && (a_String[i] <= 'Z')) pos = s_Transl[(unsigned short)(a_String[i] - ('A' - 'a'))];

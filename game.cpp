@@ -133,29 +133,29 @@ namespace Tmpl8
 
         //-------------------------------------------Text------------------------------------------------------------------------
 
-        std::string cashstr = std::format("Cash: {}", cash); // print how moch cash
-        screen->Print(cashstr.c_str(), 5, 5, 0xffffff, 2);
+        cashText.SetValue(cash);
+        cashText.Print(screen);
 
-        std::string monsterstr = std::format("Monsters: {}", monsters.size());  // print size of monsters
-        screen->Print(monsterstr.c_str(), 5, 20, 0xffffff, 2);
+        monsterText.SetValue(monsters.size());
+        monsterText.Print(screen);
 
         if (currentTarget != nullptr) // print worth of currentTarget
         {
-            std::string worthstr = std::format("Worth: {}", currentTarget->GetWorth());
-            screen->Print(worthstr.c_str(), 5, 35, 0xffffff, 2);
+            Label worthText = Label("Worth", currentTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
+            worthText.Print(screen);
         }
 
         if (lastTarget != nullptr) // print worth of lastTarget
         {
-            std::string worthstr = std::format("Worth last Target: {}", lastTarget->GetWorth());
-            screen->Print(worthstr.c_str(), 5, 60, 0xffffff, 2);
+            Label worthText = Label("Worth last", lastTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
+            worthText.Print(screen);
         }
       
-        std::string xstr = std::format("x: {}", mousex);  // print size of monsters
-        screen->Print(xstr.c_str(), 5, 80, 0xffffff, 1);
+        xText.SetValue(mousex);
+        yText.SetValue(mousey);
 
-        std::string ystr = std::format("y: {}", mousey);  // print size of monsters
-        screen->Print(ystr.c_str(), 50, 80, 0xffffff, 1);
+        xText.Print(screen);
+        yText.Print(screen);
 
         //===============Checking Collisions===========================================================
 
@@ -321,8 +321,7 @@ namespace Tmpl8
 
             if (lastTarget != nullptr) // print worth of lastTarget
             {
-                std::string worthstr = std::format("Worth: {}", lastTarget->GetWorth());
-                screen->Print(worthstr.c_str(), 350, 280, 0xffffff, 2);
+                screen->Print(std::format("Worth: {}", lastTarget->GetWorth()), 350, 280, 0xffffff, 2);
             }
             
             freeze = true;
@@ -429,9 +428,8 @@ namespace Tmpl8
         {
             screen->Clear(0);
             screen->Print("Game Over", (ScreenWidth - 225) / 2, (ScreenHeight - 25) / 2, 0xffffff, 5);
-
-            std::string monsterstr = std::format("you Collected {} Monsters!", monsters.size());
-            screen->Print(monsterstr.c_str(), (ScreenWidth - 500) / 2, ((ScreenHeight - 25) / 2) + 50, 0xffffff, 4);
+            gameOverMonsterText.SetValue(monsters.size());
+            gameOverMonsterText.Print(screen);
 
             playAgainButton.Draw(screen);
 

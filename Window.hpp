@@ -14,23 +14,19 @@ public:
 	Tmpl8::vec2 GetPos() const;
 	Tmpl8::Sprite* GetSprite() const;
 
-	Tmpl8::vec2 GetBackButtonPos() const; 
-	void SetBackButtonPos();
-
 	Button GetBackButton() const;
 	
 	bool GetCalled() const;
 	void SetCalled(bool called);
 protected:
-
-	Button m_BackButton = Button("assets/backButton.tga", 2, GetBackButtonPos());
-	bool m_Called = false;
-
 	Tmpl8::vec2 m_Pos;
-	Tmpl8::vec2 m_BackButtonPos;
 
 	Tmpl8::Sprite* m_pSprite = nullptr;
-	
+
+	Button m_BackButton;
+
+	bool m_Called = false;
+
 };
 
 
