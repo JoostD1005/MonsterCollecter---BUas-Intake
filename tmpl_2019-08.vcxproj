@@ -229,6 +229,7 @@
     <ClCompile Include="AABBCollider.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Label.cpp" />
+    <ClCompile Include="MonsterAI.cpp" />
     <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Monster.cpp" />
@@ -240,6 +241,7 @@
   <ItemGroup>
     <ClInclude Include="AABBCollider.hpp" />
     <ClInclude Include="Label.hpp" />
+    <ClInclude Include="MonsterAI.hpp" />
     <ClInclude Include="ProgressBar.hpp" />
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="game.h" />

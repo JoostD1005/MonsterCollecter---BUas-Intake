@@ -15,6 +15,7 @@
     <ClCompile Include="Refiller.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Label.cpp" />
+    <ClCompile Include="MonsterAI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -31,6 +32,7 @@
     <ClInclude Include="Refiller.hpp" />
     <ClInclude Include="Window.hpp" />
     <ClInclude Include="Label.hpp" />
+    <ClInclude Include="MonsterAI.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

@@ -68,12 +68,22 @@ private:
 	Refiller* refillerTarget = nullptr;
 
 	int cash = 500;
+	
+	Button playAgainButton = Button("assets/playAgainButton.tga", 2, { 150, 350 });
 
+	//-----------------------------------------------------------------------------------
+
+	Button buttonSell = Button("assets/sellButton.tga", 2, { 368, 472 });
 	bool sellWindowCalled = false;
 	SellWindow m_SellWindow = SellWindow("assets/sellWindow.png", 1, { 310, 166 });
 
+	//------------------------------------------------------------------------------------
+
+	Button buttonBuy = Button("assets/buyButton.tga", 2, { 636, 472 });
 	bool buyWindowCalled = false;
 	BuyWindow m_BuyWindow = BuyWindow("assets/buyWindow.png", 1, { 670, 35 });
+
+	//------------------------------------------------------------------------------------
 
 	bool freeze = false;
 
@@ -85,7 +95,7 @@ private:
 	Label yText = Label("y", mousey, { 50, 80 }, 0xffffff, 1);
 
 	//game over text
-	Label gameOverMonsterText = Label("you Collected {} Monsters!", monsters.size(), { (ScreenWidth - 500) / 2, ((ScreenHeight - 25) / 2) + 50 }, 0xffffff, 4);
+	Label gameOverMonsterText = Label("you Collected Monsters!", monsters.size(), { (ScreenWidth - 500) / 2, ((ScreenHeight - 25) / 2) + 50 }, 0xffffff, 4);
 
 
 

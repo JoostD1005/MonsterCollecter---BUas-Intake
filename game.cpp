@@ -15,18 +15,7 @@
 namespace Tmpl8
 {
 
-   // static	Button button1("assets/Slime.tga", 2, { 700, 80 });
-   // static Button button2("assets/Golem.tga", 2, { 700, 208 });
-   // static Button button3("assets/Slime2.tga", 2, { 700, 336 });
 
-    static Button buttonSell("assets/sellButton.tga", 2, { 368, 472 });
- //   static Button sellButtonSellWindow("assets/sellButton.tga", 2, { 368, 300 });
-  //  static Button backButtonSellWindow("assets/backButton.tga", 2, { 443, 180 });
-
-    static Button buttonBuy("assets/buyButton.tga", 2, { 636, 472 });
-   // static Button backButtonBuyWindow("assets/backButton.tga", 2, { 755, 52 });
-
-    static Button playAgainButton("assets/playAgainButton.tga", 2, { 150, 350 });
 
 
     void Game::Init()
@@ -147,8 +136,8 @@ namespace Tmpl8
 
         if (lastTarget != nullptr) // print worth of lastTarget
         {
-            Label worthText = Label("Worth last", lastTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
-            worthText.Print(screen);
+            Label worthLastText = Label("Worth last", lastTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
+            worthLastText.Print(screen);
         }
       
         xText.SetValue(mousex);
