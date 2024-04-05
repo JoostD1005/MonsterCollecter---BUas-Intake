@@ -35,6 +35,8 @@ public:
 	void Sell();
 	void Reset();
 
+	void DrawTile(int tx, int ty, Surface* screen, int x, int y);
+
 
 private:
 

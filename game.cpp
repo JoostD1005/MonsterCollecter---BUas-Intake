@@ -10,11 +10,12 @@
 #include "Refiller.hpp"
 #include <string>
 #include <format>
+#include <Windows.h>
 
 
 namespace Tmpl8
 {
-
+    Surface tiles("assets/background.png");
 
 
 
@@ -46,6 +47,15 @@ namespace Tmpl8
         screen->Clear(0x00ff00);
     }
 
+
+    static char map[6][39] = {
+        "aa ab aa ab aa ab aa ab aa ab aa ab",
+        "ba bb ba bb ba bb ba bb ba bb ba bb",
+        "aa ab aa ab aa ab aa ab aa ab aa ab",
+        "ba bb ba bb ba bb ba bb ba bb ba bb",
+        "aa ab aa ab aa ab aa ab aa ab aa ab",
+        "ba bb ba bb ba bb ba bb ba bb ba bb"
+    };
 
 
 
@@ -269,6 +279,14 @@ namespace Tmpl8
         prevButtonState = buttonState;
 
         //-------------------------------------------Drawing------------------------------------------------------------------------
+
+        for (int y = 0; y < 6; y++) // tilemap --> from the 3dGep Website.
+            for (int x = 0; x < 12; x++)
+            {
+                int tx = map[y][x * 3] - 'a';
+                int ty = map[y][x * 3 + 1] - 'a';
+                DrawTile(tx, ty, screen, x * 32, y * 32);
+            }
 
         for (const Monster* monster : monsters)
         {
@@ -583,5 +601,14 @@ namespace Tmpl8
 
     }
 
+    void Game::DrawTile(int tx, int ty, Surface* screen, int x, int y)
+    {
+        Pixel* src = tiles.GetBuffer() + 1 + tx * 33 + (1 + ty * 33) * 595;
+        Pixel* dst = screen->GetBuffer() + x + y * 800;
+
+        for (int i = 0; i < 32; i++, src += 595, dst += 800)
+            for (int j = 0; j < 32; j++)
+                dst[j] = src[j];
+    }
 
 };
