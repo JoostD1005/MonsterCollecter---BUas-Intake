@@ -48,13 +48,16 @@ namespace Tmpl8
     }
 
 
-    static char map[6][39] = {
-        "aa ab aa ab aa ab aa ab aa ab aa ab",
-        "ba bb ba bb ba bb ba bb ba bb ba bb",
-        "aa ab aa ab aa ab aa ab aa ab aa ab",
-        "ba bb ba bb ba bb ba bb ba bb ba bb",
-        "aa ab aa ab aa ab aa ab aa ab aa ab",
-        "ba bb ba bb ba bb ba bb ba bb ba bb"
+    static char map[9][51] = {
+        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
     };
 
 
@@ -64,8 +67,6 @@ namespace Tmpl8
         //-----Time Past--------------------------------------------------------
 
         screen->Clear(0);
-        screen->Bar(0, 450, 800, 512, 0xD9A066);
-        screen->Bar(0, 450, 800, 465, 0x8F563B);
         deltaTime = deltaTime / 1000;
 
         time = time + deltaTime;
@@ -78,6 +79,7 @@ namespace Tmpl8
                     monster->TimeSinceWater(deltaTime);
                     monster->Evolution();
                     monster->GetWorth();
+                    
 
                     if (monster->GetTimeSinceFood() > 2.0f)
                     {
@@ -90,7 +92,7 @@ namespace Tmpl8
                     }
 
 
-                    std::cout << monster->GetHunger() << ", " << monster->GetThirst() << "\n";
+                    std::cout << monster->GetTileIndex() << "\n";
 
                 }
 
@@ -130,31 +132,7 @@ namespace Tmpl8
             frameTime = 0.0f;
         }
 
-        //-------------------------------------------Text------------------------------------------------------------------------
-
-        cashText.SetValue(cash);
-        cashText.Print(screen);
-
-        monsterText.SetValue(monsters.size());
-        monsterText.Print(screen);
-
-        if (currentTarget != nullptr) // print worth of currentTarget
-        {
-            Label worthText = Label("Worth", currentTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
-            worthText.Print(screen);
-        }
-
-        if (lastTarget != nullptr) // print worth of lastTarget
-        {
-            Label worthLastText = Label("Worth last", lastTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
-            worthLastText.Print(screen);
-        }
-      
-        xText.SetValue(mousex);
-        yText.SetValue(mousey);
-
-        xText.Print(screen);
-        yText.Print(screen);
+       
 
         //===============Checking Collisions===========================================================
 
@@ -176,10 +154,19 @@ namespace Tmpl8
 
         if (currentTarget != nullptr && isLeftButtonDown && freeze == false)
         {
-            currentTarget->SetPosition({ mousex - (currentTarget->GetSprite()->GetWidth() / 2), mousey - (currentTarget->GetSprite()->GetHeight() / 2) });
+            float snapX = roundf(mousex / 50) * 50;
+            float snapY = roundf(mousey / 50) * 50;
+            
+            currentTarget->SetPosition({ snapX - (currentTarget->GetSprite()->GetWidth() / 2), snapY - (currentTarget->GetSprite()->GetHeight() / 2) });
         }
 
+        //-------------------------------------Monster Movement Without Mouse-------------------------------------------------------------------
 
+        for (Monster* monster : monsters)
+        {
+            monster->Move(monsters);
+            monster->SetPosition(monster->GetTileIndexPos());
+        }
 
         //-----------------------------Reffillers Movement + collision----------------------------------------------------------------------------
 
@@ -230,7 +217,7 @@ namespace Tmpl8
 
         //spawn monster1 if button is clicked
 
-        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton1().GetCollider()) == true && freeze == false)
+        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton1().GetCollider()) == true && buyWindowCalled == true && freeze == false)
         {
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
@@ -246,7 +233,7 @@ namespace Tmpl8
 
 
         //spawn monster2 if button is clicked
-        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton2().GetCollider()) == true && freeze == false)
+        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton2().GetCollider()) == true && buyWindowCalled == true && freeze == false)
         {
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
@@ -261,7 +248,7 @@ namespace Tmpl8
 
 
         //spawn monster3 if button is clicked
-        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton3().GetCollider()) == true && freeze == false)
+        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton3().GetCollider()) == true && buyWindowCalled == true && freeze == false)
         {
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
@@ -280,13 +267,16 @@ namespace Tmpl8
 
         //-------------------------------------------Drawing------------------------------------------------------------------------
 
-        for (int y = 0; y < 6; y++) // tilemap --> from the 3dGep Website.
-            for (int x = 0; x < 12; x++)
+        for (int y = 0; y < 9; y++) // tilemap --> from the 3DGep Website.
+            for (int x = 0; x < 16; x++)
             {
                 int tx = map[y][x * 3] - 'a';
                 int ty = map[y][x * 3 + 1] - 'a';
-                DrawTile(tx, ty, screen, x * 32, y * 32);
+                DrawTile(tx, ty, screen, x * 50, y * 50);
             }
+
+        screen->Bar(0, 450, 800, 512, 0xD9A066);
+        screen->Bar(0, 450, 800, 465, 0x8F563B);
 
         for (const Monster* monster : monsters)
         {
@@ -300,7 +290,32 @@ namespace Tmpl8
             screen->Box(refiller->GetCollider(), 0x00ff00); // colliderbox
         }
 
-        
+     
+        //-------------------------------------------Text------------------------------------------------------------------------
+
+        cashText.SetValue(cash);
+        cashText.Print(screen);
+
+        monsterText.SetValue(monsters.size());
+        monsterText.Print(screen);
+
+        if (currentTarget != nullptr) // print worth of currentTarget
+        {
+            Label worthText = Label("Worth", currentTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
+            worthText.Print(screen);
+        }
+
+        if (lastTarget != nullptr) // print worth of lastTarget
+        {
+            Label worthLastText = Label("Worth last", lastTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
+            worthLastText.Print(screen);
+        }
+
+        xText.SetValue(mousex);
+        yText.SetValue(mousey);
+
+        xText.Print(screen);
+        yText.Print(screen);
 
         //--------------------------------------Selling Window-----------------------------------------------------
         if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr && freeze == false) // draw button on screen
@@ -603,12 +618,16 @@ namespace Tmpl8
 
     void Game::DrawTile(int tx, int ty, Surface* screen, int x, int y)
     {
-        Pixel* src = tiles.GetBuffer() + 1 + tx * 33 + (1 + ty * 33) * 595;
+        Pixel* src = tiles.GetBuffer() + tx * 50 + (ty * 50) * 200;
         Pixel* dst = screen->GetBuffer() + x + y * 800;
 
-        for (int i = 0; i < 32; i++, src += 595, dst += 800)
-            for (int j = 0; j < 32; j++)
+        for (int i = 0; i < 50; i++, src += 200, dst += 800)
+        {
+            for (int j = 0; j < 50; j++)
+            {
                 dst[j] = src[j];
+            }
+        }
     }
 
 };

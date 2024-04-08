@@ -5,6 +5,8 @@
 #include "template.h"
 #include "AABBCollider.hpp"
 #include "ProgressBar.hpp"
+#include <vector>
+#include "MonsterAI.hpp"
 
 class Tmpl8::Sprite;
 
@@ -34,11 +36,20 @@ public:
 	const AABBCollider& GetCollider() const;
 	const ProgressBar& GetFoodBar() const;
 	const ProgressBar& GetWaterBar() const;
+	int GetTileIndex() const;
+	Tmpl8::vec2 GetTileIndexPos() const;
 
 	int GetWorth();
 
 
 	void TimeSinceSpawn();
+
+	//monster AI
+	void Move(std::vector<Monster*> monsters);
+	bool IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters);
+	std::vector<int> findAvailableSpaces(int currentTileIndex, std::vector<Monster*>& monsters);
+
+	void SetTileIndex(int tileIndex);
 
 	void SetHunger(float newHunger);
 	void SetThirst(float newThirst);
@@ -84,14 +95,11 @@ private:
 	int m_TimeSinceSpawn = 0;
 	int m_TimeNeededForEvo;
 
+	float m_TileIndex = 0;
+
 	 AABBCollider m_Collider;
 	 ProgressBar m_FoodBar;
 	 ProgressBar m_WaterBar;
-
-
-	Tmpl8::vec2 m_Position;
-
-	
 
 	Tmpl8::Sprite* m_pSprite = nullptr;
 

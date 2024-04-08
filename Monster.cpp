@@ -24,7 +24,6 @@ Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int t
     m_WaterBar.SetColour(0x0000ff); // Blue.
 
     std::cout << "new Monster Created!\n" << m_Hunger << "\n" << m_Thirst << "\n" << m_EvoStage << "\n" << m_Cost << "\n" << m_Stomach << "\n" << m_Hydration << "\n";
-    std::cout << m_Position.x << ", " << m_Position.y << "\n";
 }
 
 
@@ -84,11 +83,6 @@ int Monster::GetWorth()
     }
 }
 
-void Monster::TimeSinceSpawn()
-{
-    m_TimeSinceSpawn++;
-}
-
 float Monster::GetTimeSinceFood() const
 {
     return m_TimeSinceFood;
@@ -124,6 +118,16 @@ const ProgressBar& Monster::GetWaterBar() const
     return m_WaterBar;
 }
 
+int Monster::GetTileIndex() const
+{
+    return  roundf(roundf(m_Collider.GetPosition().y / 50 * 16) + (m_Collider.GetPosition().x / 50) - 6);
+}
+
+Tmpl8::vec2 Monster::GetTileIndexPos() const
+{
+    return { static_cast<float>((GetTileIndex() - (GetTileIndex() / 16) * 16) * 50), static_cast<float>((GetTileIndex() / 16) * 16 * 50 )};
+}
+
 
 Tmpl8::Sprite* Monster::GetSprite() const
 {
@@ -131,6 +135,16 @@ Tmpl8::Sprite* Monster::GetSprite() const
 }
 
 //set datamembers.---------------------------------------------------------------------------
+void Monster::TimeSinceSpawn()
+{
+    m_TimeSinceSpawn++;
+}
+
+
+void Monster::SetTileIndex(int tileIndex)
+{
+    m_TileIndex = tileIndex;
+}
 
 void Monster::Hunger(float deltaTime)
 {
@@ -228,6 +242,71 @@ void Monster::Evolution()
     }
 }
 
+//------------------------------Monster AI----------------------------------------------------------------------------
+
+void Monster::Move(std::vector<Monster*> monsters)
+{
+    for (Monster* monster : monsters)
+    {
+        int currentTileIndex = monster->GetTileIndex();
+        std::vector<int> availableSpaces = findAvailableSpaces(currentTileIndex, monsters);
+
+        if (availableSpaces.empty())
+        {
+            std::cout << "cannot move this monster: " << monster << "\n";
+            return;
+        }
+
+        bool goingToMove = roundf(rand());
+        int randomIndex = rand() % availableSpaces.size();
+
+        if (goingToMove)
+        {
+            int newTileIndex = availableSpaces[randomIndex];
+            monster->SetTileIndex(newTileIndex);
+        }
+    }
+}
+
+bool Monster::IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters)
+{
+    for (Monster* monster : monsters)
+    {
+        if (monster->GetTileIndex() == tileIndex)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+std::vector<int> Monster::findAvailableSpaces(int currentTileIndex, std::vector<Monster*>& monsters)
+{
+    std::vector<int> availableSpaces;
+
+    // Check left tile
+    if (!IsTileOccupied(currentTileIndex - 1, monsters)) {
+        availableSpaces.push_back(currentTileIndex - 1);
+    }
+    // Check right tile
+    if (!IsTileOccupied(currentTileIndex + 1, monsters)) {
+        availableSpaces.push_back(currentTileIndex + 1);
+    }
+    // Check top tile
+    if (!IsTileOccupied(currentTileIndex - 16, monsters)) {
+        availableSpaces.push_back(currentTileIndex - 16);
+    }
+    // Check bottom tile
+    if (!IsTileOccupied(currentTileIndex + 16, monsters)) {
+        availableSpaces.push_back(currentTileIndex + 16);
+    }
+
+    return availableSpaces;
+}
+
+
+//---------------------------------------------------------------------------------------------------------
 
 
 void Monster::Draw(Tmpl8::Surface* screen) const

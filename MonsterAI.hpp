@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <list>
+#include <vector>
 // i want the monsters to move randomly on the screen: 
 // option 1:
 // i need create a tile map, store data on wich tile the monster is placed, check al surrounding tiles for other monsters
@@ -16,13 +16,3 @@
 // pick a random from the list
 // 
 //
-
-class EnemyAI
-{
-public:
-
-	void move(std::list<char> list);
-
-
-private:
-};
