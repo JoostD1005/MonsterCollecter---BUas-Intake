@@ -16,6 +16,7 @@
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="MonsterAI.cpp" />
+    <ClCompile Include="IconLabel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="Window.hpp" />
     <ClInclude Include="Label.hpp" />
     <ClInclude Include="MonsterAI.hpp" />
+    <ClInclude Include="IconLabel.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

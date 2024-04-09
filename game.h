@@ -70,6 +70,9 @@ private:
 	Refiller* refillerTarget = nullptr;
 
 	int cash = 500;
+	int costMonster1 = 10;
+	int costMonster2 = 20;
+	int costMonster3 = 30;
 	
 	Button playAgainButton = Button("assets/playAgainButton.tga", 2, { 150, 350 });
 

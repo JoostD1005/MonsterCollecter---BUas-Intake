@@ -2,6 +2,7 @@
 #include "Monster.hpp"
 #include "surface.h"
 #include <iostream>
+#include <random>
 
 //Constructor.
 
@@ -74,7 +75,7 @@ int Monster::GetWorth()
 {
     if (m_Worth > 0)
     {
-        m_Worth = (m_Cost - m_Thirst - m_Hunger) * m_EvoStage;
+        m_Worth = roundf(m_Cost - m_Thirst  - m_Hunger) * m_EvoStage;
         return m_Worth;
     }
     else
@@ -273,10 +274,13 @@ void Monster::Move(std::vector<Monster*> monsters)
             return;
         }
 
-        bool goingToMove = roundf(rand());
-        int randomIndex = rand() % availableSpaces.size();
+       std::random_device rd;
+       std::mt19937 gen(rd());
+       std::bernoulli_distribution goingToMove(0.5);
 
-        if (goingToMove)
+       int randomIndex = std::uniform_int_distribution<int>(0, availableSpaces.size() - 1)(gen);
+
+        if (goingToMove(gen))
         {
             int newTileIndex = availableSpaces[randomIndex];
             if (newTileIndex > 0 && newTileIndex < 127)

@@ -80,6 +80,7 @@ Button BuyWindow::GetMonsterButton3() const
 
 
 
+
 //----------------class SellWindow : public Window------------------------------------------------------------------
 
 SellWindow::SellWindow(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos) :

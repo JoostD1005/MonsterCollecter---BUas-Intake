@@ -217,11 +217,10 @@ namespace Tmpl8
         {
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
-                if (cash > 10)
+                if (cash > costMonster1)
                 {
                     CreateMonster(1);
-                    std::cout << "\n" << monsters.size() << "\n";
-                    cash = cash - 10;
+                    cash = cash - costMonster1;
                 }
             }
 
@@ -234,10 +233,10 @@ namespace Tmpl8
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
-                if (cash > 20)
+                if (cash > costMonster2)
                 {
                     CreateMonster(2);
-                    cash = cash - 20;
+                    cash = cash - costMonster2;
                 }
             }
         }
@@ -249,10 +248,10 @@ namespace Tmpl8
 
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
-                if (cash > 30)
+                if (cash > costMonster3)
                 {
                     CreateMonster(3);
-                    cash = cash - 30;
+                    cash = cash - costMonster3;
                 }
             }
         }
@@ -327,7 +326,7 @@ namespace Tmpl8
             if ((SDL_BUTTON_LMASK) != 0) // check if pressed
             {
                 sellWindowCalled = true;
-                currentTarget->SetPosition({ static_cast<float>(400 - (currentTarget->GetSprite()->GetWidth() / 2)),static_cast<float>(220 - (currentTarget->GetSprite()->GetHeight() / 2)) });
+                currentTarget->SetPosition({ static_cast<float>(400 - (currentTarget->GetSprite()->GetWidth() / 2)),static_cast<float>(200 - (currentTarget->GetSprite()->GetHeight() / 2)) });
             }
         }
         else
@@ -346,6 +345,7 @@ namespace Tmpl8
             if (lastTarget != nullptr) // print worth of lastTarget
             {
                 screen->Print(std::format("Worth: {}", lastTarget->GetWorth()), 350, 280, 0xffffff, 2);
+                screen->Print(std::format("level: {}", lastTarget->GetEvoStage()), 350, 260, 0xffffff, 2);
             }
             
             freeze = true;
@@ -413,6 +413,10 @@ namespace Tmpl8
         if (buyWindowCalled) // checks if buy window is called and draws the window
         {
             m_BuyWindow.Draw(screen);
+            if (cash < costMonster1)  m_BuyWindow.GetLock1().Draw(screen);
+            if (cash < costMonster2)  m_BuyWindow.GetLock2().Draw(screen);
+            if (cash < costMonster3)  m_BuyWindow.GetLock3().Draw(screen);
+            
         }
 
 
@@ -559,15 +563,15 @@ namespace Tmpl8
 
         if (typeOfMonster == 1)
         {
-            newMonster = new Monster("assets/Slime.tga", 2, 0, 0, 1, 10, 5, 5, 10, 10);
+            newMonster = new Monster("assets/Slime.tga", 2, 0, 0, 1, costMonster1, 5, 5, 20, 10);
         }
         else if (typeOfMonster == 2)
         {
-            newMonster = new Monster("assets/Golem.tga", 2, 0, 0, 1, 20, 50, 50, 20, 20);
+            newMonster = new Monster("assets/Golem.tga", 2, 0, 0, 1, costMonster2, 50, 50, 50, 20);
         }
         else if (typeOfMonster == 3)
         {
-            newMonster = new Monster("assets/Slime2.tga", 2, 0, 0, 1, 30, 60, 60, 30, 30);
+            newMonster = new Monster("assets/Slime2.tga", 2, 0, 0, 1, costMonster3, 60, 60, 60, 30);
         }
         else
         {
