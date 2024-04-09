@@ -36,8 +36,7 @@ public:
 	const AABBCollider& GetCollider() const;
 	const ProgressBar& GetFoodBar() const;
 	const ProgressBar& GetWaterBar() const;
-	int GetTileIndex() const;
-	Tmpl8::vec2 GetTileIndexPos() const;
+	int GetTileIndex();
 
 	int GetWorth();
 
@@ -68,6 +67,7 @@ public:
 
 
 	void SetPosition(const Tmpl8::vec2& pos);
+	void SetPosition(const int tileIndex);
 
 	Tmpl8::vec2 CentrePosition() const;
 

@@ -118,14 +118,13 @@ const ProgressBar& Monster::GetWaterBar() const
     return m_WaterBar;
 }
 
-int Monster::GetTileIndex() const
+int Monster::GetTileIndex()
 {
-    return  roundf(roundf(m_Collider.GetPosition().y / 50 * 16) + (m_Collider.GetPosition().x / 50) - 6);
-}
+    int row = GetPosition().y / 50;
+    int col = GetPosition().x / 50;
 
-Tmpl8::vec2 Monster::GetTileIndexPos() const
-{
-    return { static_cast<float>((GetTileIndex() - (GetTileIndex() / 16) * 16) * 50), static_cast<float>((GetTileIndex() / 16) * 16 * 50 )};
+    m_TileIndex = row * 16 + col + 1;
+    return m_TileIndex;
 }
 
 
@@ -206,6 +205,23 @@ void Monster::SetPosition(const Tmpl8::vec2& pos)
     m_FoodBar.SetPos({ c.x - m_FoodBar.GetWidth() / 2.0f, c.y + 15.0f });
 }
 
+void Monster::SetPosition(const int tileIndex)
+{
+    int row = (tileIndex - 1) / 16;
+    int col = (tileIndex - 1) % 16;
+    float x = col * 50;
+    float y = row * 50;
+    std::cout << "nextTileIndex: " << tileIndex << "x: " << x << "y: " << y << "\n";
+
+    m_Collider.SetPosition({ x, y });
+
+    // Center the food and water bars below the monster.
+    auto c = Tmpl8::vec2{ x + m_Collider.GetWidth() / 2.0f, y + m_Collider.GetHeight() };
+
+    m_WaterBar.SetPos({ c.x - m_WaterBar.GetWidth() / 2.0f, c.y + 5.0f });
+    m_FoodBar.SetPos({ c.x - m_FoodBar.GetWidth() / 2.0f, c.y + 15.0f });
+}
+
 
 Tmpl8::vec2 Monster::CentrePosition() const
 {
@@ -246,14 +262,14 @@ void Monster::Evolution()
 
 void Monster::Move(std::vector<Monster*> monsters)
 {
-    for (Monster* monster : monsters)
-    {
-        int currentTileIndex = monster->GetTileIndex();
+        int currentTileIndex = GetTileIndex();
         std::vector<int> availableSpaces = findAvailableSpaces(currentTileIndex, monsters);
+
+        std::cout << "currentTileIndex: " << currentTileIndex << " x: " << GetPosition().x << " y: " << GetPosition().y << "\n";
 
         if (availableSpaces.empty())
         {
-            std::cout << "cannot move this monster: " << monster << "\n";
+            std::cout << "cannot move this monster: " << this << "\n";
             return;
         }
 
@@ -263,9 +279,12 @@ void Monster::Move(std::vector<Monster*> monsters)
         if (goingToMove)
         {
             int newTileIndex = availableSpaces[randomIndex];
-            monster->SetTileIndex(newTileIndex);
+            if (newTileIndex > 0 && newTileIndex < 127)
+            {
+                SetTileIndex(newTileIndex);
+                SetPosition(newTileIndex);
+            }
         }
-    }
 }
 
 bool Monster::IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters)

@@ -15,7 +15,7 @@
 
 namespace Tmpl8
 {
-    Surface tiles("assets/background.png");
+    Surface tiles("assets/background.tga");
 
 
 
@@ -107,6 +107,7 @@ namespace Tmpl8
                     for (Monster* monster : monsters)
                     {
                         monster->TimeSinceSpawn();
+                        monster->Move(monsters);
                     }
                 }
             
@@ -160,13 +161,8 @@ namespace Tmpl8
             currentTarget->SetPosition({ snapX - (currentTarget->GetSprite()->GetWidth() / 2), snapY - (currentTarget->GetSprite()->GetHeight() / 2) });
         }
 
-        //-------------------------------------Monster Movement Without Mouse-------------------------------------------------------------------
+       
 
-        for (Monster* monster : monsters)
-        {
-            monster->Move(monsters);
-            monster->SetPosition(monster->GetTileIndexPos());
-        }
 
         //-----------------------------Reffillers Movement + collision----------------------------------------------------------------------------
 
@@ -282,6 +278,12 @@ namespace Tmpl8
         {
             monster->Draw(screen);
             screen->Box(monster->GetCollider(), 0x00ff00); // colliderbox 
+        }
+
+        for (int i = 0; i < monsters.size(); i++)
+        {
+            Label monsterNumber = Label("M", i, monsters[i]->GetPosition(), 0xffffff, 1);
+            monsterNumber.Print(screen);
         }
 
         for (const Refiller* refiller : refillers)
