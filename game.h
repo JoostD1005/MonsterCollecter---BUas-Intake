@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <Windows.h>
 #include "Monster.hpp"
 #include "template.h"
 #include "AABBCollider.hpp"
@@ -12,6 +13,15 @@
 namespace Tmpl8 {
 
 class Surface;
+
+enum class State
+{
+	startScreen,
+	game,
+	gameOver,
+
+};
+
 class Game
 {
 public:
@@ -19,6 +29,11 @@ public:
 	void Init();
 	void Shutdown();
 	void Tick(float deltaTime);
+
+	void StartScreen(float deltaTime);
+	void GameScreen(float deltaTime);
+	void GameOverScreen(float deltaTime);
+
 	void MouseUp(int button);
 	void MouseDown(int button);
 	void MouseMove(int x, int y);
@@ -39,6 +54,8 @@ public:
 
 
 private:
+
+	State state = State::startScreen;
 
 	Surface* screen;
 
@@ -74,6 +91,7 @@ private:
 	int costMonster2 = 20;
 	int costMonster3 = 30;
 	
+	Button playButton = Button("assets/playAgainButton.tga", 2, { 350, 200 });
 	Button playAgainButton = Button("assets/playAgainButton.tga", 2, { 150, 350 });
 
 	//-----------------------------------------------------------------------------------

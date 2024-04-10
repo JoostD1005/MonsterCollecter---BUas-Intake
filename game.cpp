@@ -17,7 +17,17 @@ namespace Tmpl8
 {
     Surface tiles("assets/background.tga");
 
-
+    static char map[9][51] = {
+     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+    };
 
     void Game::Init()
     {
@@ -48,69 +58,93 @@ namespace Tmpl8
     }
 
 
-    static char map[9][51] = {
-        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-        "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-    };
-
-
-
     void Game::Tick(float deltaTime)
     {
         //-----Time Past--------------------------------------------------------
+        switch (state)
+        {
+        case State::startScreen :
+            StartScreen(deltaTime);
+            break;
+        case State::game :
+            GameScreen(deltaTime);
+            break;
+        case State::gameOver :
+            GameOverScreen(deltaTime);
+            break;
+        }
+
+    }
+
+    void Game::StartScreen(float deltaTime)
+    {
+        const int buttonPressed = buttonState & ~prevButtonState;
+        int buttonReleased = ~buttonState & prevButtonState;
+
+        screen->Clear(0);
+        playButton.Draw(screen);
+
+        if (CheckMouseCollision(playButton.GetCollider()) == true)
+        {
+            playButton.GetSprite()->SetFrame(1);
+
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                Reset();
+                state = State::game;
+            }
+        }
+        
+    }
+
+    void Game::GameScreen(float deltaTime)
+    {
 
         screen->Clear(0);
         deltaTime = deltaTime / 1000;
 
         time = time + deltaTime;
-        
-            if (freeze == false)
+
+        if (freeze == false)
+        {
+            for (Monster* monster : monsters)
             {
+                monster->TimeSinceFood(deltaTime);
+                monster->TimeSinceWater(deltaTime);
+                monster->Evolution();
+                monster->GetWorth();
+
+
+                if (monster->GetTimeSinceFood() > 2.0f)
+                {
+                    monster->Hunger(deltaTime);
+                }
+
+                if (monster->GetTimeSinceWater() > 2.0f)
+                {
+                    monster->Thirst(deltaTime);
+                }
+
+
+                std::cout << monster->GetTileIndex() << "\n";
+
+            }
+
+            if (time > 1)
+            {
+                cash++;
+                time = 0.0f;
+
+                secondsPast++;
+                std::cout << secondsPast << "\n";
+
                 for (Monster* monster : monsters)
                 {
-                    monster->TimeSinceFood(deltaTime);
-                    monster->TimeSinceWater(deltaTime);
-                    monster->Evolution();
-                    monster->GetWorth();
-                    
-
-                    if (monster->GetTimeSinceFood() > 2.0f)
-                    {
-                        monster->Hunger(deltaTime);
-                    }
-
-                    if (monster->GetTimeSinceWater() > 2.0f)
-                    {
-                        monster->Thirst(deltaTime);
-                    }
-
-
-                    std::cout << monster->GetTileIndex() << "\n";
-
+                    monster->TimeSinceSpawn();
+                    monster->Move(monsters);
                 }
+            }
 
-                if (time > 1)
-                {
-                    cash++;
-                    time = 0.0f;
-
-                    secondsPast++;
-                    std::cout << secondsPast << "\n";
-
-                    for (Monster* monster : monsters)
-                    {
-                        monster->TimeSinceSpawn();
-                        monster->Move(monsters);
-                    }
-                }
-            
 
         }
 
@@ -133,7 +167,7 @@ namespace Tmpl8
             frameTime = 0.0f;
         }
 
-       
+
 
         //===============Checking Collisions===========================================================
 
@@ -157,11 +191,11 @@ namespace Tmpl8
         {
             float snapX = roundf(mousex / 50) * 50;
             float snapY = roundf(mousey / 50) * 50;
-            
+
             currentTarget->SetPosition({ snapX - (currentTarget->GetSprite()->GetWidth() / 2), snapY - (currentTarget->GetSprite()->GetHeight() / 2) });
         }
 
-       
+
 
 
         //-----------------------------Reffillers Movement + collision----------------------------------------------------------------------------
@@ -182,7 +216,7 @@ namespace Tmpl8
         {
             refillerTarget->SetPos({ mousex - (refillerTarget->GetSprite()->GetWidth() / 2), mousey - (refillerTarget->GetSprite()->GetHeight() / 2) });
         }
-        
+
         if (refillerTarget == nullptr)
         {
             for (Refiller* refiller : refillers)
@@ -210,6 +244,171 @@ namespace Tmpl8
         }
 
         //--------------------------------------------------------------------------------------------------------------------
+
+
+        //-------------------------------------------Drawing------------------------------------------------------------------------
+
+        for (int y = 0; y < 9; y++) // tilemap --> from the 3DGep Website.
+            for (int x = 0; x < 16; x++)
+            {
+                int tx = map[y][x * 3] - 'a';
+                int ty = map[y][x * 3 + 1] - 'a';
+                DrawTile(tx, ty, screen, x * 50, y * 50);
+            }
+
+        screen->Bar(0, 450, 800, 512, 0xD9A066);
+        screen->Bar(0, 450, 800, 465, 0x8F563B);
+
+        for (const Monster* monster : monsters)
+        {
+            monster->Draw(screen);
+        }
+#if _DEBUG
+        for (int i = 0; i < monsters.size(); i++)
+        {
+            screen->Box(monsters[i]->GetCollider(), 0x00ff00); // colliderbox 
+            Label monsterNumber = Label("M", i, monsters[i]->GetPosition(), 0xffffff, 1);
+            monsterNumber.Print(screen);
+        }
+
+
+        xText.SetValue(mousex);
+        yText.SetValue(mousey);
+
+        xText.Print(screen);
+        yText.Print(screen);
+
+        screen->Line(mousex, 0, mousex, 511, 0xff0000);
+        screen->Line(0, mousey, 799, mousey, 0xff0000);
+#endif
+        for (const Refiller* refiller : refillers)
+        {
+            refiller->Draw(screen);
+            screen->Box(refiller->GetCollider(), 0x00ff00); // colliderbox
+        }
+
+
+        //-------------------------------------------Text------------------------------------------------------------------------
+
+        cashText.SetValue(cash);
+        cashText.Print(screen);
+
+        monsterText.SetValue(monsters.size());
+        monsterText.Print(screen);
+
+        if (currentTarget != nullptr) // print worth of currentTarget
+        {
+            Label worthText = Label("Worth", currentTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
+            worthText.Print(screen);
+        }
+
+        if (lastTarget != nullptr) // print worth of lastTarget
+        {
+            Label worthLastText = Label("Worth last", lastTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
+            worthLastText.Print(screen);
+        }
+
+        //--------------------------------------Selling Window-----------------------------------------------------
+        if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr && freeze == false) // draw button on screen
+        {
+            buttonSell.GetSprite()->SetFrame(1);
+            buttonSell.Draw(screen);
+            if ((SDL_BUTTON_LMASK) != 0) // check if pressed
+            {
+                sellWindowCalled = true;
+                currentTarget->SetPosition({ static_cast<float>(400 - (currentTarget->GetSprite()->GetWidth() / 2)),static_cast<float>(200 - (currentTarget->GetSprite()->GetHeight() / 2)) });
+            }
+        }
+        else
+        {
+            buttonSell.GetSprite()->SetFrame(0);
+            buttonSell.Draw(screen);
+        }
+
+
+
+        if (sellWindowCalled) // checks if sell window is called and draws it on the screen.
+        {
+            m_SellWindow.Draw(screen);
+
+
+            if (lastTarget != nullptr) // print worth of lastTarget
+            {
+                screen->Print(std::format("Worth: {}", lastTarget->GetWorth()), 350, 280, 0xffffff, 2);
+                screen->Print(std::format("level: {}", lastTarget->GetEvoStage()), 350, 260, 0xffffff, 2);
+            }
+
+            freeze = true;
+
+            if (currentTarget == nullptr && lastTarget != nullptr)
+            {
+                lastTarget->Draw(screen);
+            }
+
+        }
+
+        if (CheckMouseCollision(m_SellWindow.GetBackButton().GetCollider()) == true) // function to back out of selling
+        {
+            m_SellWindow.GetBackButton().GetSprite()->SetFrame(1);
+
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                sellWindowCalled = false;
+                freeze = false;
+            }
+        }
+        else
+        {
+            m_SellWindow.GetBackButton().GetSprite()->SetFrame(0);
+        }
+
+        if (CheckMouseCollision(m_SellWindow.GetSellButton().GetCollider()) == true) // collision logic for sellButton 2
+        {
+            m_SellWindow.GetSellButton().GetSprite()->SetFrame(1);
+
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                Sell();
+                sellWindowCalled = false;
+                freeze = false;
+                time = 0.0f;
+            }
+        }
+        else
+        {
+            m_SellWindow.GetSellButton().GetSprite()->SetFrame(0);
+        }
+
+        //------------------------------------------------------------------------------------------------------------
+
+
+        //-------------------------Buy Window----------------------------------------------------
+
+        if (CheckMouseCollision(buttonBuy.GetCollider()) == true && freeze == false)
+        {
+            buttonBuy.GetSprite()->SetFrame(1);
+            buttonBuy.Draw(screen);
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                buyWindowCalled = true;
+            }
+        }
+        else
+        {
+            buttonBuy.GetSprite()->SetFrame(0);
+            buttonBuy.Draw(screen);
+        }
+
+
+        if (buyWindowCalled) // checks if buy window is called and draws the window
+        {
+            m_BuyWindow.Draw(screen);
+            if (cash < costMonster1)  m_BuyWindow.GetLock1().Draw(screen);
+            if (cash < costMonster2)  m_BuyWindow.GetLock2().Draw(screen);
+            if (cash < costMonster3)  m_BuyWindow.GetLock3().Draw(screen);
+
+        }
+
 
         //spawn monster1 if button is clicked
 
@@ -256,170 +455,6 @@ namespace Tmpl8
             }
         }
 
-
-
-        prevButtonState = buttonState;
-
-        //-------------------------------------------Drawing------------------------------------------------------------------------
-
-        for (int y = 0; y < 9; y++) // tilemap --> from the 3DGep Website.
-            for (int x = 0; x < 16; x++)
-            {
-                int tx = map[y][x * 3] - 'a';
-                int ty = map[y][x * 3 + 1] - 'a';
-                DrawTile(tx, ty, screen, x * 50, y * 50);
-            }
-
-        screen->Bar(0, 450, 800, 512, 0xD9A066);
-        screen->Bar(0, 450, 800, 465, 0x8F563B);
-
-        for (const Monster* monster : monsters)
-        {
-            monster->Draw(screen);
-            screen->Box(monster->GetCollider(), 0x00ff00); // colliderbox 
-        }
-
-        for (int i = 0; i < monsters.size(); i++)
-        {
-            Label monsterNumber = Label("M", i, monsters[i]->GetPosition(), 0xffffff, 1);
-            monsterNumber.Print(screen);
-        }
-
-        for (const Refiller* refiller : refillers)
-        {
-            refiller->Draw(screen);
-            screen->Box(refiller->GetCollider(), 0x00ff00); // colliderbox
-        }
-
-     
-        //-------------------------------------------Text------------------------------------------------------------------------
-
-        cashText.SetValue(cash);
-        cashText.Print(screen);
-
-        monsterText.SetValue(monsters.size());
-        monsterText.Print(screen);
-
-        if (currentTarget != nullptr) // print worth of currentTarget
-        {
-            Label worthText = Label("Worth", currentTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
-            worthText.Print(screen);
-        }
-
-        if (lastTarget != nullptr) // print worth of lastTarget
-        {
-            Label worthLastText = Label("Worth last", lastTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
-            worthLastText.Print(screen);
-        }
-
-        xText.SetValue(mousex);
-        yText.SetValue(mousey);
-
-        xText.Print(screen);
-        yText.Print(screen);
-
-        //--------------------------------------Selling Window-----------------------------------------------------
-        if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr && freeze == false) // draw button on screen
-        {
-            buttonSell.GetSprite()->SetFrame(1);
-            buttonSell.Draw(screen);
-            if ((SDL_BUTTON_LMASK) != 0) // check if pressed
-            {
-                sellWindowCalled = true;
-                currentTarget->SetPosition({ static_cast<float>(400 - (currentTarget->GetSprite()->GetWidth() / 2)),static_cast<float>(200 - (currentTarget->GetSprite()->GetHeight() / 2)) });
-            }
-        }
-        else
-        {
-            buttonSell.GetSprite()->SetFrame(0);
-            buttonSell.Draw(screen);
-        }
-
-
-
-        if (sellWindowCalled) // checks if sell window is called and draws it on the screen.
-        {
-            m_SellWindow.Draw(screen);
-        
-
-            if (lastTarget != nullptr) // print worth of lastTarget
-            {
-                screen->Print(std::format("Worth: {}", lastTarget->GetWorth()), 350, 280, 0xffffff, 2);
-                screen->Print(std::format("level: {}", lastTarget->GetEvoStage()), 350, 260, 0xffffff, 2);
-            }
-            
-            freeze = true;
-
-            if (currentTarget == nullptr && lastTarget != nullptr)
-            {
-                lastTarget->Draw(screen);
-            }
-
-        }
-
-        if (CheckMouseCollision(m_SellWindow.GetBackButton().GetCollider()) == true) // function to back out of selling
-        {
-            m_SellWindow.GetBackButton().GetSprite()->SetFrame(1);
-
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
-            {
-                sellWindowCalled = false;
-                freeze = false;
-            }
-        }
-        else
-        {
-            m_SellWindow.GetBackButton().GetSprite()->SetFrame(0);
-        }
-
-        if (CheckMouseCollision(m_SellWindow.GetSellButton().GetCollider()) == true) // collision logic for sellButton 2
-        {
-            m_SellWindow.GetSellButton().GetSprite()->SetFrame(1);
-
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
-            {
-                Sell();
-                sellWindowCalled = false;
-                freeze = false;
-                time = 0.0f;
-            }
-        }
-        else
-        {
-            m_SellWindow.GetSellButton().GetSprite()->SetFrame(0);
-        }
-
-        //------------------------------------------------------------------------------------------------------------
-        
-        
-        //-------------------------Buy Window----------------------------------------------------
-
-        if (CheckMouseCollision(buttonBuy.GetCollider()) == true && freeze == false)
-        {
-            buttonBuy.GetSprite()->SetFrame(1);
-            buttonBuy.Draw(screen);
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
-            {
-                buyWindowCalled = true;
-            }
-        }
-        else
-        {
-            buttonBuy.GetSprite()->SetFrame(0);
-            buttonBuy.Draw(screen);
-        }
-
-
-        if (buyWindowCalled) // checks if buy window is called and draws the window
-        {
-            m_BuyWindow.Draw(screen);
-            if (cash < costMonster1)  m_BuyWindow.GetLock1().Draw(screen);
-            if (cash < costMonster2)  m_BuyWindow.GetLock2().Draw(screen);
-            if (cash < costMonster3)  m_BuyWindow.GetLock3().Draw(screen);
-            
-        }
-
-
         if (CheckMouseCollision(m_BuyWindow.GetBackButton().GetCollider()) == true)
         {
             m_BuyWindow.GetBackButton().GetSprite()->SetFrame(1);
@@ -433,7 +468,9 @@ namespace Tmpl8
         {
             m_BuyWindow.GetBackButton().GetSprite()->SetFrame(0);
         }
-     
+
+        prevButtonState = buttonState;
+
         //------------------------------------------------------------------------------------------------
         //================================================================================================
 
@@ -446,43 +483,45 @@ namespace Tmpl8
                 screen->Print("A Monster Died...", (ScreenWidth - 340) / 2, (ScreenHeight - 20) / 2, 0xffffff, 4);
 
                 freeze = true;
-               
-              
+
+
             }
         }
 
         //-------------------------------Game Over Screen--------------------------------------------------------------
         if (time >= 3 && sellWindowCalled == false)
         {
-            screen->Clear(0);
-            screen->Print("Game Over", (ScreenWidth - 225) / 2, (ScreenHeight - 25) / 2, 0xffffff, 5);
-            gameOverMonsterText.SetValue(monsters.size());
-            gameOverMonsterText.Print(screen);
-
-            playAgainButton.Draw(screen);
-
+            state = State::gameOver;
         }
-
-        if (CheckMouseCollision(playAgainButton.GetCollider()) == true)
-        {
-            playAgainButton.GetSprite()->SetFrame(1);
-
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
-            {
-                Reset();
-            }
-        }
-        else
-        {
-            playAgainButton.GetSprite()->SetFrame(0);
-        }
-        //---------------------------------------------------------------------------------------
-
-        screen->Line(mousex, 0, mousex, 511, 0xff0000);
-        screen->Line(0, mousey, 799, mousey, 0xff0000);
     }
 
+    void Game::GameOverScreen(float deltaTime)
+    {
+        const int buttonPressed = buttonState & ~prevButtonState;
+        int buttonReleased = ~buttonState & prevButtonState;
 
+        screen->Clear(0);
+        screen->Print("Game Over", (ScreenWidth - 225) / 2, (ScreenHeight - 25) / 2, 0xffffff, 5);
+        gameOverMonsterText.SetValue(monsters.size());
+        gameOverMonsterText.Print(screen);
+
+        playAgainButton.Draw(screen);
+
+    if (CheckMouseCollision(playAgainButton.GetCollider()) == true)
+    {
+        playAgainButton.GetSprite()->SetFrame(1);
+
+        if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+        {
+            Reset();
+            state = State::startScreen;
+        }
+    }
+    else
+    {
+        playAgainButton.GetSprite()->SetFrame(0);
+    }
+    }
 
     void Game::MouseUp(int button)
     {
@@ -622,7 +661,7 @@ namespace Tmpl8
 
     }
 
-    void Game::DrawTile(int tx, int ty, Surface* screen, int x, int y)
+    void Game::DrawTile(int tx, int ty, Surface* screen, int x, int y) // big inspo from 3dGep.Com fast Track part 11:tiles
     {
         Pixel* src = tiles.GetBuffer() + tx * 50 + (ty * 50) * 200;
         Pixel* dst = screen->GetBuffer() + x + y * 800;
