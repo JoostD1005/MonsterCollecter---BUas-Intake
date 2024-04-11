@@ -91,7 +91,10 @@ private:
 	int costMonster2 = 20;
 	int costMonster3 = 30;
 	
-	Button playButton = Button("assets/playAgainButton.tga", 2, { 350, 200 });
+	IconLabel startScreen = IconLabel("assets/startScreen.png", 1, { 0,0 });
+	Button playButton = Button("assets/playButton.tga", 2, { 336, 300 });
+	Button helpButton = Button("assets/buyButton.tga", 2, { 368, 380 });
+
 	Button playAgainButton = Button("assets/playAgainButton.tga", 2, { 150, 350 });
 
 	//-----------------------------------------------------------------------------------

@@ -82,7 +82,9 @@ namespace Tmpl8
         int buttonReleased = ~buttonState & prevButtonState;
 
         screen->Clear(0);
+        startScreen.Draw(screen);
         playButton.Draw(screen);
+        helpButton.Draw(screen);
 
         if (CheckMouseCollision(playButton.GetCollider()) == true)
         {
@@ -93,6 +95,10 @@ namespace Tmpl8
                 Reset();
                 state = State::game;
             }
+        }
+        else
+        {
+            playButton.GetSprite()->SetFrame(0);
         }
         
     }
