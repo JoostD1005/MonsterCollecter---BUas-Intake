@@ -72,6 +72,9 @@ namespace Tmpl8
         case State::gameOver :
             GameOverScreen(deltaTime);
             break;
+        case State::helpScreen :
+            HelpScreen(deltaTime);
+            break;
         }
 
     }
@@ -101,6 +104,19 @@ namespace Tmpl8
             playButton.GetSprite()->SetFrame(0);
         }
         
+        if (CheckMouseCollision(helpButton.GetCollider()) == true)
+        {
+            helpButton.GetSprite()->SetFrame(1);
+
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                state = State::helpScreen;
+            }
+        }
+        else
+        {
+            helpButton.GetSprite()->SetFrame(0);
+        }
     }
 
     void Game::GameScreen(float deltaTime)
@@ -336,15 +352,13 @@ namespace Tmpl8
         if (sellWindowCalled) // checks if sell window is called and draws it on the screen.
         {
             m_SellWindow.Draw(screen);
-
+            freeze = true;
 
             if (lastTarget != nullptr) // print worth of lastTarget
             {
                 screen->Print(std::format("Worth: {}", lastTarget->GetWorth()), 350, 280, 0xffffff, 2);
                 screen->Print(std::format("level: {}", lastTarget->GetEvoStage()), 350, 260, 0xffffff, 2);
             }
-
-            freeze = true;
 
             if (currentTarget == nullptr && lastTarget != nullptr)
             {
@@ -360,6 +374,7 @@ namespace Tmpl8
             if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
             {
                 sellWindowCalled = false;
+                time = 0.0f;
                 freeze = false;
             }
         }
@@ -376,8 +391,9 @@ namespace Tmpl8
             {
                 Sell();
                 sellWindowCalled = false;
-                freeze = false;
                 time = 0.0f;
+                freeze = false;
+               
             }
         }
         else
@@ -527,6 +543,29 @@ namespace Tmpl8
     {
         playAgainButton.GetSprite()->SetFrame(0);
     }
+    }
+
+    void Game::HelpScreen(float deltaTime)
+    {
+        const int buttonPressed = buttonState & ~prevButtonState;
+        int buttonReleased = ~buttonState & prevButtonState;
+
+        screen->Clear(0);
+        returnButton.Draw(screen);
+
+        if (CheckMouseCollision(returnButton.GetCollider()))
+        {
+            returnButton.GetSprite()->SetFrame(1);
+
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                state = State::startScreen;
+            }
+        }
+        else
+        {
+            returnButton.GetSprite()->SetFrame(0);
+        }
     }
 
     void Game::MouseUp(int button)

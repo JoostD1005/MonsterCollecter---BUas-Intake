@@ -75,7 +75,7 @@ int Monster::GetWorth()
 {
     if (m_Worth > 0)
     {
-        m_Worth = roundf(m_Cost - m_Thirst  - m_Hunger) * m_EvoStage;
+        m_Worth = roundf(m_Cost - (m_Thirst  + m_Hunger) * 0.5f) * m_EvoStage;
         return m_Worth;
     }
     else

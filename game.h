@@ -19,6 +19,7 @@ enum class State
 	startScreen,
 	game,
 	gameOver,
+	helpScreen,
 
 };
 
@@ -33,6 +34,7 @@ public:
 	void StartScreen(float deltaTime);
 	void GameScreen(float deltaTime);
 	void GameOverScreen(float deltaTime);
+	void HelpScreen(float deltaTime);
 
 	void MouseUp(int button);
 	void MouseDown(int button);
@@ -91,14 +93,18 @@ private:
 	int costMonster2 = 20;
 	int costMonster3 = 30;
 	
+	//startScreen buttons
 	IconLabel startScreen = IconLabel("assets/startScreen.png", 1, { 0,0 });
 	Button playButton = Button("assets/playButton.tga", 2, { 336, 300 });
-	Button helpButton = Button("assets/buyButton.tga", 2, { 368, 380 });
+	Button helpButton = Button("assets/helpButton.tga", 2, { 368, 380 });
 
+	//helpScreen buttons
+	Button returnButton = Button("assets/playButton.tga", 2, { 336,400 });
+
+	//Game Over Buttons
 	Button playAgainButton = Button("assets/playAgainButton.tga", 2, { 150, 350 });
 
-	//-----------------------------------------------------------------------------------
-
+	//game Buttons
 	Button buttonSell = Button("assets/sellButton.tga", 2, { 368, 472 });
 	bool sellWindowCalled = false;
 	SellWindow m_SellWindow = SellWindow("assets/sellWindow.png", 1, { 310, 166 });
