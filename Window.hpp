@@ -51,9 +51,9 @@ public:
 private:
 
 
-	Button m_BuyMonster1 = Button("assets/slime.tga", 2, {700, 80});
-	Button m_BuyMonster2 = Button("assets/Golem.tga", 2, {700, 208});
-	Button m_BuyMonster3 = Button("assets/slime2.tga", 2, {700, 336});
+	Button m_BuyMonster1 = Button("assets/slimeIdle.tga", 2, {700, 80});
+	Button m_BuyMonster2 = Button("assets/GolemIdle.tga", 2, {700, 208});
+	Button m_BuyMonster3 = Button("assets/kingSlimeIdle.tga", 2, {700, 336});
 
 	IconLabel m_Lock1 = IconLabel("assets/lock.png", 1, { 700, 80 });
 	IconLabel m_Lock2 = IconLabel("assets/lock.png", 1, { 700, 208 });

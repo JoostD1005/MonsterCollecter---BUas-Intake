@@ -244,6 +244,7 @@
     <ClInclude Include="IconLabel.hpp" />
     <ClInclude Include="Label.hpp" />
     <ClInclude Include="MonsterAI.hpp" />
+    <ClInclude Include="ParticleSystem.hpp" />
     <ClInclude Include="ProgressBar.hpp" />
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="game.h" />

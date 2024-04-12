@@ -647,15 +647,15 @@ namespace Tmpl8
 
         if (typeOfMonster == 1)
         {
-            newMonster = new Monster("assets/Slime.tga", 2, 0, 0, 1, costMonster1, 5, 5, 20, 10);
+            newMonster = new Monster("assets/SlimeIdle.tga", 2, 0, 0, 1, costMonster1, 5, 5, 20, 10);
         }
         else if (typeOfMonster == 2)
         {
-            newMonster = new Monster("assets/Golem.tga", 2, 0, 0, 1, costMonster2, 50, 50, 50, 20);
+            newMonster = new Monster("assets/GolemIdle.tga", 2, 0, 0, 1, costMonster2, 50, 50, 50, 20);
         }
         else if (typeOfMonster == 3)
         {
-            newMonster = new Monster("assets/Slime2.tga", 2, 0, 0, 1, costMonster3, 60, 60, 60, 30);
+            newMonster = new Monster("assets/kingSlimeIdle.tga", 2, 0, 0, 1, costMonster3, 60, 60, 60, 30);
         }
         else
         {

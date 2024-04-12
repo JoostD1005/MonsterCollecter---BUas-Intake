@@ -35,6 +35,7 @@
     <ClInclude Include="Label.hpp" />
     <ClInclude Include="MonsterAI.hpp" />
     <ClInclude Include="IconLabel.hpp" />
+    <ClInclude Include="ParticleSystem.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">
