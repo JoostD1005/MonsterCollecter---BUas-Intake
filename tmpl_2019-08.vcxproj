@@ -231,6 +231,8 @@
     <ClCompile Include="IconLabel.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="MonsterAI.cpp" />
+    <ClCompile Include="ParticleExplosion.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="ProgressBar.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Monster.cpp" />
@@ -244,6 +246,7 @@
     <ClInclude Include="IconLabel.hpp" />
     <ClInclude Include="Label.hpp" />
     <ClInclude Include="MonsterAI.hpp" />
+    <ClInclude Include="ParticleExplosion.hpp" />
     <ClInclude Include="ParticleSystem.hpp" />
     <ClInclude Include="ProgressBar.hpp" />
     <ClInclude Include="Button.hpp" />

@@ -209,6 +209,33 @@ void Surface::Box( int x1, int y1, int x2, int y2, Pixel c )
 	Line( (float)x1, (float)y1, (float)x1, (float)y2, c );
 }
 
+void Surface::Circle(float x, float y, float radius, Tmpl8::Pixel color)
+{
+	float sqrRadius = radius * radius;
+	Tmpl8::vec2 pos = Tmpl8::vec2(x, y);
+
+	int x1 = Tmpl8::Clamp<int>(((int)x - radius - 1), 0, ScreenWidth);
+	int y1 = Tmpl8::Clamp<int>(((int)y - radius - 1), 0, ScreenHeight);
+
+	int x2 = Tmpl8::Clamp<int>(((int)x + radius + 1), 0, ScreenWidth);
+	int y2 = Tmpl8::Clamp<int>(((int)y + radius + 1), 0, ScreenHeight);
+
+	for (int iy = y1; iy < y2; iy++)
+	{
+		for (int ix = x1; ix < x2; ix++)
+		{
+			float sqrDist = (Tmpl8::vec2(ix, iy) - pos).sqrLentgh();
+			if (sqrDist < sqrRadius)
+			{
+			
+				m_Buffer[ix + iy * m_Pitch] = color;
+
+			}
+
+		}
+	}
+}
+
 void Surface::Bar( int x1, int y1, int x2, int y2, Pixel c )
 {
 	x1 = Clamp(x1, 0, m_Width - 1);

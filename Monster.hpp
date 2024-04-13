@@ -7,6 +7,7 @@
 #include "ProgressBar.hpp"
 #include <vector>
 #include "MonsterAI.hpp"
+#include "ParticleExplosion.hpp"
 
 class Tmpl8::Sprite;
 
@@ -47,6 +48,9 @@ public:
 	void Move(std::vector<Monster*> monsters);
 	bool IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters);
 	std::vector<int> findAvailableSpaces(int currentTileIndex, std::vector<Monster*>& monsters);
+
+	void Dies();
+	void UpdateParticles(float deltaTime);
 
 	void SetTileIndex(int tileIndex);
 
@@ -100,6 +104,39 @@ private:
 	 AABBCollider m_Collider;
 	 ProgressBar m_FoodBar;
 	 ProgressBar m_WaterBar;
+
+	 ParticleProperties m_DieParticles
+	 {
+	 .velocity = { 0, 0},
+	 .velocityVariation = {1000, 1000},
+
+	 .colorBegin{255, 0, 0},
+	 .colorEnd{0, 0, 0},
+
+	 .sizeBegin = 4.0f,
+	 .sizeEnd = 2.0f,
+	 .SizeVariation = 0.5f,
+
+	 .lifeTime = 1.0f,
+	 };
+
+	 ParticleProperties m_EvolveParticles
+	 {
+	 .velocity = { 0, 0},
+	 .velocityVariation = {300,300},
+
+	 .colorBegin{0, 255, 0},
+	 .colorEnd{255, 255, 0},
+
+	 .sizeBegin = 4.0f,
+	 .sizeEnd = 2.0f,
+	 .SizeVariation = 0.5f,
+
+	 .lifeTime = 1.0f,
+	 };
+	 
+	 ParticleExplosion m_ParticleExplosionEvo{ m_EvolveParticles };
+	 ParticleExplosion m_ParticleExplosionDeath{m_DieParticles}; 
 
 	Tmpl8::Sprite* m_pSprite = nullptr;
 

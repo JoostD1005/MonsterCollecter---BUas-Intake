@@ -45,6 +45,7 @@ public:
 
 	Tmpl8::vec2 GetMousePosition() { return { mousex, mousey }; }
 
+	bool CheckButtonClicked(const Button& button);
 	bool CheckMouseCollision(const AABBCollider& object);
 
 	Monster* CreateMonster(int typeOfMonster);
@@ -128,6 +129,8 @@ private:
 
 	//game over text
 	Label gameOverMonsterText = Label("you Collected Monsters!", monsters.size(), { (ScreenWidth - 500) / 2, ((ScreenHeight - 25) / 2) + 50 }, 0xffffff, 4);
+
+
 
 
 

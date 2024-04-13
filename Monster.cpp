@@ -252,10 +252,12 @@ void Monster::Evolution()
     {
         m_EvoStage++;
         m_TimeNeededForEvo =  m_TimeNeededForEvo * 3;
+        m_ParticleExplosionEvo.Explode(CentrePosition(), 0.2f, 0.01f);
     }
     if (m_TimeSinceSpawn > m_TimeNeededForEvo && m_Hunger == 0 && m_Thirst == 0 && m_EvoStage < 3)
     {
         m_EvoStage++;
+        m_ParticleExplosionEvo.Explode(CentrePosition(), 0.2f, 0.01f);
     }
 }
 
@@ -328,6 +330,21 @@ std::vector<int> Monster::findAvailableSpaces(int currentTileIndex, std::vector<
     return availableSpaces;
 }
 
+void Monster::Dies()
+{
+    if (m_Alive)
+    {
+        m_ParticleExplosionDeath.Explode(CentrePosition(), 0.2f, 0.01f);
+    }
+    m_Alive = false;
+}
+
+void Monster::UpdateParticles(float deltaTime)
+{
+    m_ParticleExplosionDeath.Update(deltaTime);
+    m_ParticleExplosionEvo.Update(deltaTime);
+}
+
 
 //---------------------------------------------------------------------------------------------------------
 
@@ -343,6 +360,8 @@ void Monster::Draw(Tmpl8::Surface* screen) const
 
     m_FoodBar.Draw(screen);
     m_WaterBar.Draw(screen);
+    m_ParticleExplosionDeath.Draw(screen);
+    m_ParticleExplosionEvo.Draw(screen);
 }
 
 

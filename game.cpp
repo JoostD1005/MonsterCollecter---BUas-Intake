@@ -11,6 +11,7 @@
 #include <string>
 #include <format>
 #include <Windows.h>
+#include "ParticleSystem.hpp"
 
 
 namespace Tmpl8
@@ -53,6 +54,7 @@ namespace Tmpl8
         }
 
         monsters.clear();
+        refillers.clear();
 
         screen->Clear(0x00ff00);
     }
@@ -81,41 +83,20 @@ namespace Tmpl8
 
     void Game::StartScreen(float deltaTime)
     {
-        const int buttonPressed = buttonState & ~prevButtonState;
-        int buttonReleased = ~buttonState & prevButtonState;
-
         screen->Clear(0);
         startScreen.Draw(screen);
         playButton.Draw(screen);
         helpButton.Draw(screen);
 
-        if (CheckMouseCollision(playButton.GetCollider()) == true)
+        if (CheckButtonClicked(playButton))
         {
-            playButton.GetSprite()->SetFrame(1);
-
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
-            {
-                Reset();
-                state = State::game;
-            }
-        }
-        else
-        {
-            playButton.GetSprite()->SetFrame(0);
+            Reset();
+            state = State::game;
         }
         
-        if (CheckMouseCollision(helpButton.GetCollider()) == true)
+        if (CheckButtonClicked(helpButton))
         {
-            helpButton.GetSprite()->SetFrame(1);
-
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
-            {
-                state = State::helpScreen;
-            }
-        }
-        else
-        {
-            helpButton.GetSprite()->SetFrame(0);
+            state = State::helpScreen;
         }
     }
 
@@ -249,6 +230,8 @@ namespace Tmpl8
 
         for (Monster* monster : monsters)
         {
+            monster->UpdateParticles(deltaTime);
+
             if (CheckMouseCollision(monster->GetCollider()) == true && refillerTarget != nullptr)
             {
                 if (refillerTarget == refillers[0])
@@ -333,8 +316,7 @@ namespace Tmpl8
         //--------------------------------------Selling Window-----------------------------------------------------
         if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr && freeze == false) // draw button on screen
         {
-            buttonSell.GetSprite()->SetFrame(1);
-            buttonSell.Draw(screen);
+            buttonSell.GetSprite()->SetFrame(1);  
             if ((SDL_BUTTON_LMASK) != 0) // check if pressed
             {
                 sellWindowCalled = true;
@@ -344,9 +326,8 @@ namespace Tmpl8
         else
         {
             buttonSell.GetSprite()->SetFrame(0);
-            buttonSell.Draw(screen);
         }
-
+        buttonSell.Draw(screen);
 
 
         if (sellWindowCalled) // checks if sell window is called and draws it on the screen.
@@ -354,10 +335,10 @@ namespace Tmpl8
             m_SellWindow.Draw(screen);
             freeze = true;
 
-            if (lastTarget != nullptr) // print worth of lastTarget
+            if (lastTarget != nullptr) // print worth and level of lastTarget
             {
-                screen->Print(std::format("Worth: {}", lastTarget->GetWorth()), 350, 280, 0xffffff, 2);
                 screen->Print(std::format("level: {}", lastTarget->GetEvoStage()), 350, 260, 0xffffff, 2);
+                screen->Print(std::format("Worth: {}", lastTarget->GetWorth()), 350, 280, 0xffffff, 2);
             }
 
             if (currentTarget == nullptr && lastTarget != nullptr)
@@ -367,38 +348,19 @@ namespace Tmpl8
 
         }
 
-        if (CheckMouseCollision(m_SellWindow.GetBackButton().GetCollider()) == true) // function to back out of selling
+        if (CheckButtonClicked(m_SellWindow.GetBackButton())) // function to back out of selling
         {
-            m_SellWindow.GetBackButton().GetSprite()->SetFrame(1);
-
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
-            {
-                sellWindowCalled = false;
-                time = 0.0f;
-                freeze = false;
-            }
-        }
-        else
-        {
-            m_SellWindow.GetBackButton().GetSprite()->SetFrame(0);
+            sellWindowCalled = false;
+            time = 0.0f;
+            freeze = false;
         }
 
-        if (CheckMouseCollision(m_SellWindow.GetSellButton().GetCollider()) == true) // collision logic for sellButton 2
+        if (CheckButtonClicked(m_SellWindow.GetSellButton())) // collision logic for sellButton 2
         {
-            m_SellWindow.GetSellButton().GetSprite()->SetFrame(1);
-
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
-            {
-                Sell();
-                sellWindowCalled = false;
-                time = 0.0f;
-                freeze = false;
-               
-            }
-        }
-        else
-        {
-            m_SellWindow.GetSellButton().GetSprite()->SetFrame(0);
+            Sell();
+            sellWindowCalled = false;
+            time = 0.0f;
+            freeze = false;
         }
 
         //------------------------------------------------------------------------------------------------------------
@@ -406,20 +368,12 @@ namespace Tmpl8
 
         //-------------------------Buy Window----------------------------------------------------
 
-        if (CheckMouseCollision(buttonBuy.GetCollider()) == true && freeze == false)
+        if (CheckButtonClicked(buttonBuy) && freeze == false)
         {
-            buttonBuy.GetSprite()->SetFrame(1);
-            buttonBuy.Draw(screen);
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
-            {
                 buyWindowCalled = true;
-            }
         }
-        else
-        {
-            buttonBuy.GetSprite()->SetFrame(0);
-            buttonBuy.Draw(screen);
-        }
+
+        buttonBuy.Draw(screen);
 
 
         if (buyWindowCalled) // checks if buy window is called and draws the window
@@ -433,62 +387,38 @@ namespace Tmpl8
 
 
         //spawn monster1 if button is clicked
-
-        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton1().GetCollider()) == true && buyWindowCalled == true && freeze == false)
+        if (CheckButtonClicked(m_BuyWindow.GetMonsterButton1())&& buyWindowCalled && freeze == false)
         {
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            if (cash > costMonster1)
             {
-                if (cash > costMonster1)
-                {
-                    CreateMonster(1);
-                    cash = cash - costMonster1;
-                }
+                CreateMonster(1);
+                cash = cash - costMonster1;
             }
-
         }
-
 
         //spawn monster2 if button is clicked
-        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton2().GetCollider()) == true && buyWindowCalled == true && freeze == false)
+        if (CheckButtonClicked(m_BuyWindow.GetMonsterButton2()) && buyWindowCalled && freeze == false)
         {
-
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            if (cash > costMonster2)
             {
-                if (cash > costMonster2)
-                {
-                    CreateMonster(2);
-                    cash = cash - costMonster2;
-                }
+                CreateMonster(2);
+                cash = cash - costMonster2;
             }
         }
-
 
         //spawn monster3 if button is clicked
-        if (CheckMouseCollision(m_BuyWindow.GetMonsterButton3().GetCollider()) == true && buyWindowCalled == true && freeze == false)
+        if (CheckButtonClicked(m_BuyWindow.GetMonsterButton3()) && buyWindowCalled && freeze == false)
         {
-
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            if (cash > costMonster3)
             {
-                if (cash > costMonster3)
-                {
-                    CreateMonster(3);
-                    cash = cash - costMonster3;
-                }
+                CreateMonster(3);
+                cash = cash - costMonster3;
             }
         }
 
-        if (CheckMouseCollision(m_BuyWindow.GetBackButton().GetCollider()) == true)
+        if (CheckButtonClicked(m_BuyWindow.GetBackButton()))
         {
-            m_BuyWindow.GetBackButton().GetSprite()->SetFrame(1);
-
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
-            {
                 buyWindowCalled = false;
-            }
-        }
-        else
-        {
-            m_BuyWindow.GetBackButton().GetSprite()->SetFrame(0);
         }
 
         prevButtonState = buttonState;
@@ -497,10 +427,12 @@ namespace Tmpl8
         //================================================================================================
 
         //------------------check if monster Died---------------------------------------------------------
-        for (const Monster* monster : monsters)
+        for (Monster* monster : monsters)
         {
             if (monster->GetHunger() >= monster->GetStomach() || monster->GetThirst() >= monster->GetHydration())
             {
+                monster->Dies();
+
                 screen->Print("A Monster Died...", (ScreenWidth - 340) / 2 + 1, (ScreenHeight - 20) / 2 + 1, 0x000000, 4);
                 screen->Print("A Monster Died...", (ScreenWidth - 340) / 2, (ScreenHeight - 20) / 2, 0xffffff, 4);
 
@@ -509,6 +441,7 @@ namespace Tmpl8
 
             }
         }
+
 
         //-------------------------------Game Over Screen--------------------------------------------------------------
         if (time >= 3 && sellWindowCalled == false)
@@ -519,9 +452,6 @@ namespace Tmpl8
 
     void Game::GameOverScreen(float deltaTime)
     {
-        const int buttonPressed = buttonState & ~prevButtonState;
-        int buttonReleased = ~buttonState & prevButtonState;
-
         screen->Clear(0);
         screen->Print("Game Over", (ScreenWidth - 225) / 2, (ScreenHeight - 25) / 2, 0xffffff, 5);
         gameOverMonsterText.SetValue(monsters.size());
@@ -529,42 +459,21 @@ namespace Tmpl8
 
         playAgainButton.Draw(screen);
 
-    if (CheckMouseCollision(playAgainButton.GetCollider()) == true)
-    {
-        playAgainButton.GetSprite()->SetFrame(1);
-
-        if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+        if (CheckButtonClicked(playAgainButton))
         {
             Reset();
             state = State::startScreen;
         }
     }
-    else
-    {
-        playAgainButton.GetSprite()->SetFrame(0);
-    }
-    }
 
     void Game::HelpScreen(float deltaTime)
     {
-        const int buttonPressed = buttonState & ~prevButtonState;
-        int buttonReleased = ~buttonState & prevButtonState;
-
         screen->Clear(0);
         returnButton.Draw(screen);
 
-        if (CheckMouseCollision(returnButton.GetCollider()))
+        if (CheckButtonClicked(returnButton))
         {
-            returnButton.GetSprite()->SetFrame(1);
-
-            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
-            {
                 state = State::startScreen;
-            }
-        }
-        else
-        {
-            returnButton.GetSprite()->SetFrame(0);
         }
     }
 
@@ -618,6 +527,27 @@ namespace Tmpl8
 
 
 
+    bool Game::CheckButtonClicked(const Button& button)
+    {
+        const int buttonPressed = buttonState & ~prevButtonState;
+        int buttonReleased = ~buttonState & prevButtonState;
+
+        if (CheckMouseCollision(button.GetCollider()))
+        {
+            button.GetSprite()->SetFrame(1);
+
+            if ((buttonPressed & SDL_BUTTON_LMASK) != 0)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            button.GetSprite()->SetFrame(0);
+            return false;
+        }
+    }
+
     bool Game::CheckMouseCollision(const AABBCollider& object)
     {
 
@@ -647,7 +577,7 @@ namespace Tmpl8
 
         if (typeOfMonster == 1)
         {
-            newMonster = new Monster("assets/SlimeIdle.tga", 2, 0, 0, 1, costMonster1, 5, 5, 20, 10);
+            newMonster = new Monster("assets/SlimeIdle.tga", 2, 0, 0, 1, costMonster1, 5, 5, 5, 10);
         }
         else if (typeOfMonster == 2)
         {

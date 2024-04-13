@@ -17,6 +17,8 @@
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="MonsterAI.cpp" />
     <ClCompile Include="IconLabel.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="ParticleExplosion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -36,6 +38,7 @@
     <ClInclude Include="MonsterAI.hpp" />
     <ClInclude Include="IconLabel.hpp" />
     <ClInclude Include="ParticleSystem.hpp" />
+    <ClInclude Include="ParticleExplosion.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">
