@@ -37,17 +37,11 @@ public:
 	const AABBCollider& GetCollider() const;
 	const ProgressBar& GetFoodBar() const;
 	const ProgressBar& GetWaterBar() const;
+	MonsterAI GetMonsterAI() const;
 	int GetTileIndex();
-
 	int GetWorth();
 
-
 	void TimeSinceSpawn();
-
-	//monster AI
-	void Move(std::vector<Monster*> monsters);
-	bool IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters);
-	std::vector<int> findAvailableSpaces(int currentTileIndex, std::vector<Monster*>& monsters);
 
 	void Dies();
 	void UpdateParticles(float deltaTime);
@@ -104,6 +98,7 @@ private:
 	 AABBCollider m_Collider;
 	 ProgressBar m_FoodBar;
 	 ProgressBar m_WaterBar;
+	 MonsterAI m_MonsterAI;
 
 	 ParticleProperties m_DieParticles
 	 {

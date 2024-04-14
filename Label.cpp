@@ -15,6 +15,5 @@ Label::Label(std::string_view a_String, float value, Tmpl8::vec2 pos, Tmpl8::Pix
 void Label::Print(Tmpl8::Surface* screen)
 {
 	 // format the string to take a changing value
-		screen->Print(std::format("{}: {}", m_String, m_Value), m_Pos.x, m_Pos.y, m_Color, m_Width);
-
+	screen->Print(std::format("{}: {}", m_String, m_Value), m_Pos.x, m_Pos.y, m_Color, m_Width);
 }

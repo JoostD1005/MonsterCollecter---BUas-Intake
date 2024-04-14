@@ -39,6 +39,7 @@
     <ClInclude Include="IconLabel.hpp" />
     <ClInclude Include="ParticleSystem.hpp" />
     <ClInclude Include="ParticleExplosion.hpp" />
+    <ClInclude Include="Animation.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

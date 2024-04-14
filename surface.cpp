@@ -84,7 +84,7 @@ Surface::~Surface()
 	}
 }
 
-int Clamp(int x, int min, int max)
+int Surface::Clamp(int x, int min, int max)
 {
 	return x < min ? min : x > max ? max : x;
 }

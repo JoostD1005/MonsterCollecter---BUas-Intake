@@ -16,7 +16,7 @@
 
 namespace Tmpl8
 {
-    Surface tiles("assets/background.tga");
+    Surface tiles("assets/background.png");
 
     static char map[9][51] = {
      "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
@@ -144,7 +144,7 @@ namespace Tmpl8
                 for (Monster* monster : monsters)
                 {
                     monster->TimeSinceSpawn();
-                    monster->Move(monsters);
+                    monster->GetMonsterAI().Move(monsters, monster);
                 }
             }
 
@@ -194,11 +194,15 @@ namespace Tmpl8
         {
             float snapX = roundf(mousex / 50) * 50;
             float snapY = roundf(mousey / 50) * 50;
-
-            currentTarget->SetPosition({ snapX - (currentTarget->GetSprite()->GetWidth() / 2), snapY - (currentTarget->GetSprite()->GetHeight() / 2) });
+            if (snapX - (currentTarget->GetSprite()->GetWidth() / 2) > 0 && snapY - (currentTarget->GetSprite()->GetHeight() / 2) > 0)
+            {
+                currentTarget->SetPosition({ snapX - (currentTarget->GetSprite()->GetWidth() / 2), snapY - (currentTarget->GetSprite()->GetHeight() / 2) });
+            }
         }
-
-
+        if (lastTarget != nullptr)
+        {
+            lastTarget->SetPosition(lastTarget->GetTileIndex());
+        }
 
 
         //-----------------------------Reffillers Movement + collision----------------------------------------------------------------------------
@@ -273,7 +277,10 @@ namespace Tmpl8
         {
             screen->Box(monsters[i]->GetCollider(), 0x00ff00); // colliderbox 
             Label monsterNumber = Label("M", i, monsters[i]->GetPosition(), 0xffffff, 1);
-            monsterNumber.Print(screen);
+            if (monsters[i]->GetPosition().x > 0 && monsters[i]->GetPosition().y > 0)
+            {
+                monsterNumber.Print(screen);
+            }
         }
 
 

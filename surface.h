@@ -80,6 +80,7 @@ public:
 	void Bar( int x1, int y1, int x2, int y2, Pixel color );
 	void Bar( float x1, float y1, float x2, float y2, Pixel color );
 	void Resize( Surface* a_Orig );
+	static int Clamp(int x, int min, int max);
 private:
 	// Attributes
 	Pixel* m_Buffer{nullptr};	

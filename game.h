@@ -100,7 +100,7 @@ private:
 	Button helpButton = Button("assets/helpButton.tga", 2, { 368, 380 });
 
 	//helpScreen buttons
-	Button returnButton = Button("assets/playButton.tga", 2, { 336,400 });
+	Button returnButton = Button("assets/returnButton.tga", 2, { 308,400 });
 
 	//Game Over Buttons
 	Button playAgainButton = Button("assets/playAgainButton.tga", 2, { 150, 350 });

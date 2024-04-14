@@ -119,6 +119,11 @@ const ProgressBar& Monster::GetWaterBar() const
     return m_WaterBar;
 }
 
+MonsterAI Monster::GetMonsterAI() const
+{
+    return m_MonsterAI;
+}
+
 int Monster::GetTileIndex()
 {
     int row = GetPosition().y / 50;
@@ -261,75 +266,6 @@ void Monster::Evolution()
     }
 }
 
-//------------------------------Monster AI----------------------------------------------------------------------------
-
-void Monster::Move(std::vector<Monster*> monsters)
-{
-        int currentTileIndex = GetTileIndex();
-        std::vector<int> availableSpaces = findAvailableSpaces(currentTileIndex, monsters);
-
-        std::cout << "currentTileIndex: " << currentTileIndex << " x: " << GetPosition().x << " y: " << GetPosition().y << "\n";
-
-        if (availableSpaces.empty())
-        {
-            std::cout << "cannot move this monster: " << this << "\n";
-            return;
-        }
-
-       std::random_device rd;
-       std::mt19937 gen(rd());
-       std::bernoulli_distribution goingToMove(0.5);
-
-       int randomIndex = std::uniform_int_distribution<int>(0, availableSpaces.size() - 1)(gen);
-
-        if (goingToMove(gen))
-        {
-            int newTileIndex = availableSpaces[randomIndex];
-            if (newTileIndex > 0 && newTileIndex < 127)
-            {
-                SetTileIndex(newTileIndex);
-                SetPosition(newTileIndex);
-            }
-        }
-}
-
-bool Monster::IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters)
-{
-    for (Monster* monster : monsters)
-    {
-        if (monster->GetTileIndex() == tileIndex)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-std::vector<int> Monster::findAvailableSpaces(int currentTileIndex, std::vector<Monster*>& monsters)
-{
-    std::vector<int> availableSpaces;
-
-    // Check left tile
-    if (!IsTileOccupied(currentTileIndex - 1, monsters)) {
-        availableSpaces.push_back(currentTileIndex - 1);
-    }
-    // Check right tile
-    if (!IsTileOccupied(currentTileIndex + 1, monsters)) {
-        availableSpaces.push_back(currentTileIndex + 1);
-    }
-    // Check top tile
-    if (!IsTileOccupied(currentTileIndex - 16, monsters)) {
-        availableSpaces.push_back(currentTileIndex - 16);
-    }
-    // Check bottom tile
-    if (!IsTileOccupied(currentTileIndex + 16, monsters)) {
-        availableSpaces.push_back(currentTileIndex + 16);
-    }
-
-    return availableSpaces;
-}
-
 void Monster::Dies()
 {
     if (m_Alive)
@@ -344,6 +280,7 @@ void Monster::UpdateParticles(float deltaTime)
     m_ParticleExplosionDeath.Update(deltaTime);
     m_ParticleExplosionEvo.Update(deltaTime);
 }
+
 
 
 //---------------------------------------------------------------------------------------------------------

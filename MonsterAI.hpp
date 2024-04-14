@@ -16,3 +16,13 @@
 // pick a random from the list
 // 
 //
+
+class Monster;
+
+class MonsterAI
+{
+public:
+	void Move(std::vector<Monster*>& monsters, Monster* monster);
+	bool IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters);
+	std::vector<int> findAvailableSpaces(int currentTileIndex, std::vector<Monster*>& monsters);
+};
