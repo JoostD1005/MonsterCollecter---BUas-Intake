@@ -144,7 +144,11 @@ namespace Tmpl8
                 for (Monster* monster : monsters)
                 {
                     monster->TimeSinceSpawn();
-                    monster->GetMonsterAI().Move(monsters, monster);
+                    if (monster->GetPosition().x == monster->GetNextPosition().x && monster->GetPosition().y == monster->GetNextPosition().y)
+                    {
+                        monster->GetMonsterAI().NextPosition(monsters, monster);
+                        monster->Move(deltaTime);
+                    }
                 }
             }
 
@@ -152,11 +156,11 @@ namespace Tmpl8
         }
 
         frameTime = frameTime + deltaTime;
-        if (frameTime > 0.25f)
+        if (frameTime > 0.15f)
         {
             for (Monster* monster : monsters)
             {
-                int i = 0;
+                int i = monster->GetSprite()->GetFrame();
                 if (monster->GetSprite()->GetFrame() < monster->GetNumFrames() - 1)
                 {
                     monster->GetSprite()->SetFrame(i + 1);
@@ -272,6 +276,7 @@ namespace Tmpl8
         {
             monster->Draw(screen);
         }
+
 #if _DEBUG
         for (int i = 0; i < monsters.size(); i++)
         {
@@ -283,7 +288,6 @@ namespace Tmpl8
             }
         }
 
-
         xText.SetValue(mousex);
         yText.SetValue(mousey);
 
@@ -293,6 +297,7 @@ namespace Tmpl8
         screen->Line(mousex, 0, mousex, 511, 0xff0000);
         screen->Line(0, mousey, 799, mousey, 0xff0000);
 #endif
+
         for (const Refiller* refiller : refillers)
         {
             refiller->Draw(screen);
@@ -584,15 +589,18 @@ namespace Tmpl8
 
         if (typeOfMonster == 1)
         {
-            newMonster = new Monster("assets/SlimeIdle.tga", 2, 0, 0, 1, costMonster1, 5, 5, 5, 10);
+            newMonster = new Monster("assets/slimeIdle.tga", 2, 0, 0, 1, costMonster1, 5, 5, 5, 10);
+           // newMonster->SetWalkingAnimation("assets/slimeJumping.tga", 5, newMonster->GetPosition());
         }
         else if (typeOfMonster == 2)
         {
             newMonster = new Monster("assets/GolemIdle.tga", 2, 0, 0, 1, costMonster2, 50, 50, 50, 20);
+           // newMonster->SetWalkingAnimation("assets/golemWalking.tga", 5, newMonster->GetPosition());
         }
         else if (typeOfMonster == 3)
         {
             newMonster = new Monster("assets/kingSlimeIdle.tga", 2, 0, 0, 1, costMonster3, 60, 60, 60, 30);
+           // newMonster->SetWalkingAnimation("assets/slimeKingJumping.tga", 5, newMonster->GetPosition());
         }
         else
         {
@@ -602,7 +610,7 @@ namespace Tmpl8
         if (newMonster != nullptr)
         {
             // Place the new monster in the center of the screen.
-            newMonster->SetPosition({ ScreenWidth / 2.0f, ScreenHeight / 2.0f });
+            newMonster->SetPosition({400,300});
             monsters.push_back(newMonster);
         }
 

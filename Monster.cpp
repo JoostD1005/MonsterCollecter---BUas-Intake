@@ -21,6 +21,8 @@ Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int t
 
     m_Collider.SetSize(static_cast<float>( m_pSprite->GetWidth() ), static_cast<float>( m_pSprite->GetHeight() ) );
 
+    m_NextPosition = GetPosition();
+
     m_FoodBar.SetColour(0x00ff00); // Green.
     m_WaterBar.SetColour(0x0000ff); // Blue.
 
@@ -99,6 +101,11 @@ const Tmpl8::vec2& Monster::GetPosition() const
     return m_Collider.GetPosition();
 }
 
+const Tmpl8::vec2& Monster::GetNextPosition() const
+{
+    return m_NextPosition;
+}
+
 Tmpl8::vec2 Monster::GetSize() const
 {
     return { static_cast<float>(m_pSprite->GetWidth()), static_cast<float>(m_pSprite->GetHeight()) };
@@ -151,6 +158,16 @@ void Monster::SetTileIndex(int tileIndex)
     m_TileIndex = tileIndex;
 }
 
+void Monster::SetNextPosition(const int tileIndex)
+{
+    int row = (tileIndex - 1) / 16;
+    int col = (tileIndex - 1) % 16;
+    float x = col * 50;
+    float y = row * 50;
+    
+    m_NextPosition = { x, y };
+}
+
 void Monster::Hunger(float deltaTime)
 {
     SetHunger(m_Hunger + deltaTime);
@@ -199,6 +216,27 @@ void Monster::SetCollider(const AABBCollider collider)
 {
     m_Collider = collider;
 }
+
+void Monster::Move(float deltaTime)
+{
+    Tmpl8::vec2 currentPos = GetPosition();
+    Tmpl8::vec2 direction = { m_NextPosition.x - currentPos.x , m_NextPosition.y - currentPos.y };
+    float directionLength = sqrt(direction.x * direction.x + direction.y * direction.y);
+    // Check if the monster has reached its destination
+    if (directionLength > 0.01f) // You can adjust this threshold as needed
+    {
+        // Normalize direction to maintain constant speed
+        direction = { direction.x / directionLength, direction.y / directionLength };
+
+        // Calculate velocity based on direction and speed
+        Tmpl8::vec2 velocity = direction * m_Speed * deltaTime;
+
+        // Update position
+        currentPos += velocity;
+        SetPosition(currentPos);
+    }
+}
+
 
 void Monster::SetPosition(const Tmpl8::vec2& pos)
 {

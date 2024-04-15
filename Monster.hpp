@@ -8,6 +8,7 @@
 #include <vector>
 #include "MonsterAI.hpp"
 #include "ParticleExplosion.hpp"
+#include "Animation.hpp"
 
 class Tmpl8::Sprite;
 
@@ -17,7 +18,6 @@ public:
 	//constructor & destructor
 
 	Monster(const char* fileName, unsigned int numFrames, int hunger = 0, int thirst = 0, int evoStage = 1, int cost = 0, int stomach = 0, int hydration = 0, int timeNeededForEvo = 0 , int worth = 0);
-	//Monster(int hunger = 0, int thirst = 0, int evoStage = 1, int cost = 0, int stomach = 0, int hydration = 0, int worth = 0);
 
 	~Monster();
 
@@ -33,6 +33,7 @@ public:
 	float GetTimeSinceWater() const;
 	Tmpl8::Sprite* GetSprite() const;
 	const Tmpl8::vec2& GetPosition() const;
+	const Tmpl8::vec2& GetNextPosition() const;
 	Tmpl8::vec2 GetSize() const;
 	const AABBCollider& GetCollider() const;
 	const ProgressBar& GetFoodBar() const;
@@ -47,6 +48,7 @@ public:
 	void UpdateParticles(float deltaTime);
 
 	void SetTileIndex(int tileIndex);
+	void SetNextPosition(const int tileIndex);
 
 	void SetHunger(float newHunger);
 	void SetThirst(float newThirst);
@@ -60,9 +62,9 @@ public:
 	void TimeSinceFood(float deltaTime);
 	void TimeSinceWater(float deltaTime);
 
-
 	void SetCollider(const AABBCollider collider);
 
+	void Move(float deltaTime);
 
 	void SetPosition(const Tmpl8::vec2& pos);
 	void SetPosition(const int tileIndex);
@@ -93,13 +95,15 @@ private:
 	int m_TimeSinceSpawn = 0;
 	int m_TimeNeededForEvo;
 
+	float m_Speed = 1.1f;
+
 	float m_TileIndex = 0;
+	Tmpl8::vec2 m_NextPosition;
 
 	 AABBCollider m_Collider;
 	 ProgressBar m_FoodBar;
 	 ProgressBar m_WaterBar;
 	 MonsterAI m_MonsterAI;
-
 	 ParticleProperties m_DieParticles
 	 {
 	 .velocity = { 0, 0},

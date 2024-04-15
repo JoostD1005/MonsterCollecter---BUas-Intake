@@ -3,7 +3,8 @@
 #include <random>
 
 
-void MonsterAI::Move(std::vector<Monster*>& monsters, Monster* monster)
+
+void MonsterAI::NextPosition(std::vector<Monster*>& monsters, Monster* monster)
 {
     int currentTileIndex = monster->GetTileIndex();
     std::vector<int> availableSpaces = findAvailableSpaces(currentTileIndex, monsters);
@@ -28,7 +29,7 @@ void MonsterAI::Move(std::vector<Monster*>& monsters, Monster* monster)
         if (newTileIndex > 0 && newTileIndex < 127)
         {
             monster->SetTileIndex(newTileIndex);
-            monster->SetPosition(newTileIndex);
+            monster->SetNextPosition(newTileIndex);
         }
     }
  

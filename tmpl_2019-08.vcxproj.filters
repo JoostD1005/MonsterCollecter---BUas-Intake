@@ -19,6 +19,7 @@
     <ClCompile Include="IconLabel.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="ParticleExplosion.cpp" />
+    <ClCompile Include="Animation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
