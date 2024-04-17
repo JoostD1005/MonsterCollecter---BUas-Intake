@@ -12,8 +12,27 @@ Label::Label(std::string_view a_String, float value, Tmpl8::vec2 pos, Tmpl8::Pix
 
 }
 
+Label::Label(std::string_view a_String, float value, int tileIndex, Tmpl8::Pixel color, int width) :
+	m_String(a_String),
+	m_Value(value),
+	m_Color(color),
+	m_Width(width)
+{
+	SetPos(tileIndex);
+}
+
 void Label::Print(Tmpl8::Surface* screen)
 {
 	 // format the string to take a changing value
 	screen->Print(std::format("{}: {}", m_String, m_Value), m_Pos.x, m_Pos.y, m_Color, m_Width);
+}
+
+
+void Label::SetPos(const int tileIndex)
+{
+	int row = (tileIndex) / 16;
+	int col = (tileIndex) % 16;
+	float x = col * 50;
+	float y = row * 50;
+	SetPos({ x, y });
 }

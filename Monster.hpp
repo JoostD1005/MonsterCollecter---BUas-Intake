@@ -39,6 +39,7 @@ public:
 	const ProgressBar& GetFoodBar() const;
 	const ProgressBar& GetWaterBar() const;
 	MonsterAI GetMonsterAI() const;
+	int GetNextTileIndex() const;
 	int GetTileIndex();
 	int GetWorth();
 
@@ -48,6 +49,8 @@ public:
 	void UpdateParticles(float deltaTime);
 
 	void SetTileIndex(int tileIndex);
+	void SetTileIndex(Tmpl8::vec2 position);
+	void SetNextTileIndex(int tileIndex);
 	void SetNextPosition(const int tileIndex);
 
 	void SetHunger(float newHunger);
@@ -95,9 +98,10 @@ private:
 	int m_TimeSinceSpawn = 0;
 	int m_TimeNeededForEvo;
 
-	float m_Speed = 1.1f;
+	float m_Speed = 10.f;
 
-	float m_TileIndex = 0;
+	int m_TileIndex = 0;
+	int m_NextTileIndex = 0;
 	Tmpl8::vec2 m_NextPosition;
 
 	 AABBCollider m_Collider;

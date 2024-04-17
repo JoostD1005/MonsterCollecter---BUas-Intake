@@ -4,7 +4,7 @@
 
 
 
-void MonsterAI::NextPosition(std::vector<Monster*>& monsters, Monster* monster)
+void MonsterAI::NextTile(std::vector<Monster*>& monsters, Monster* monster)
 {
     int currentTileIndex = monster->GetTileIndex();
     std::vector<int> availableSpaces = findAvailableSpaces(currentTileIndex, monsters);
@@ -19,7 +19,7 @@ void MonsterAI::NextPosition(std::vector<Monster*>& monsters, Monster* monster)
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::bernoulli_distribution goingToMove(0.5);
+    std::bernoulli_distribution goingToMove(0.5f);
 
     int randomIndex = std::uniform_int_distribution<int>(0, availableSpaces.size() - 1)(gen);
 
@@ -28,8 +28,7 @@ void MonsterAI::NextPosition(std::vector<Monster*>& monsters, Monster* monster)
         int newTileIndex = availableSpaces[randomIndex];
         if (newTileIndex > 0 && newTileIndex < 127)
         {
-            monster->SetTileIndex(newTileIndex);
-            monster->SetNextPosition(newTileIndex);
+            monster->SetNextTileIndex(newTileIndex);
         }
     }
  
@@ -50,7 +49,6 @@ bool MonsterAI::IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters)
 
 std::vector<int> MonsterAI::findAvailableSpaces(int currentTileIndex, std::vector<Monster*>& monsters)
 {
-    std::vector<int> availableSpaces;
 
     std::vector<std::pair<int, int>> ranges = {
         {1, 15}, {17, 31}, {33, 47}, {49, 63},

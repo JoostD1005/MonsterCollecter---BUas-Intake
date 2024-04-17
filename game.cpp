@@ -37,6 +37,12 @@ namespace Tmpl8
         Refiller* refill2 = new Refiller("assets/water.png", 1, { 147, 472 });
         refillers.push_back(refill1);
         refillers.push_back(refill2);
+
+        for (int i = 0; i < 128; i++)
+        {
+            Label* gridLabel = new Label("", i, i, 0x0, 1);
+            gridLabels.push_back(gridLabel);
+        }
     }
 
 
@@ -52,7 +58,14 @@ namespace Tmpl8
         {
             delete refiller;
         }
-
+        
+#if _DEBUG
+        for (Label* gridLabel : gridLabels)
+        {
+            delete gridLabel;
+        }
+#endif
+        
         monsters.clear();
         refillers.clear();
 
@@ -118,18 +131,32 @@ namespace Tmpl8
                 monster->GetWorth();
 
 
-                if (monster->GetTimeSinceFood() > 2.0f)
-                {
-                    monster->Hunger(deltaTime);
-                }
+                //if (monster->GetTimeSinceFood() > 2.0f)
+                //{
+                //    monster->Hunger(deltaTime);
+                //}
 
-                if (monster->GetTimeSinceWater() > 2.0f)
-                {
-                    monster->Thirst(deltaTime);
-                }
+                //if (monster->GetTimeSinceWater() > 2.0f)
+                //{
+                //    monster->Thirst(deltaTime);
+                //}
 
 
                 std::cout << monster->GetTileIndex() << "\n";
+
+                if (time >= 1)
+                {
+                    monster->TimeSinceSpawn();
+                }
+                if (monster->GetTileIndex() != monster->GetNextTileIndex())
+                {
+                    monster->Move(deltaTime);
+                }
+
+                if (monster->GetTileIndex() == monster->GetNextTileIndex())
+                {
+                    monster->GetMonsterAI().NextTile(monsters, monster);
+                }
 
             }
 
@@ -140,15 +167,9 @@ namespace Tmpl8
 
                 secondsPast++;
                 std::cout << secondsPast << "\n";
-
                 for (Monster* monster : monsters)
                 {
                     monster->TimeSinceSpawn();
-                    if (monster->GetPosition().x == monster->GetNextPosition().x && monster->GetPosition().y == monster->GetNextPosition().y)
-                    {
-                        monster->GetMonsterAI().NextPosition(monsters, monster);
-                        monster->Move(deltaTime);
-                    }
                 }
             }
 
@@ -198,6 +219,7 @@ namespace Tmpl8
         {
             float snapX = roundf(mousex / 50) * 50;
             float snapY = roundf(mousey / 50) * 50;
+
             if (snapX - (currentTarget->GetSprite()->GetWidth() / 2) > 0 && snapY - (currentTarget->GetSprite()->GetHeight() / 2) > 0)
             {
                 currentTarget->SetPosition({ snapX - (currentTarget->GetSprite()->GetWidth() / 2), snapY - (currentTarget->GetSprite()->GetHeight() / 2) });
@@ -276,12 +298,12 @@ namespace Tmpl8
         {
             monster->Draw(screen);
         }
-
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////
 #if _DEBUG
         for (int i = 0; i < monsters.size(); i++)
         {
             screen->Box(monsters[i]->GetCollider(), 0x00ff00); // colliderbox 
-            Label monsterNumber = Label("M", i, monsters[i]->GetPosition(), 0xffffff, 1);
+            Label monsterNumber = Label("M  ", monsters[i]->GetNextTileIndex(), monsters[i]->GetPosition(), 0xffffff, 1);
             if (monsters[i]->GetPosition().x > 0 && monsters[i]->GetPosition().y > 0)
             {
                 monsterNumber.Print(screen);
@@ -296,8 +318,14 @@ namespace Tmpl8
 
         screen->Line(mousex, 0, mousex, 511, 0xff0000);
         screen->Line(0, mousey, 799, mousey, 0xff0000);
-#endif
 
+        for (Label* gridLabel : gridLabels)
+        {
+            gridLabel->Print(screen);
+        }
+
+#endif
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
         for (const Refiller* refiller : refillers)
         {
             refiller->Draw(screen);
@@ -609,8 +637,8 @@ namespace Tmpl8
 
         if (newMonster != nullptr)
         {
-            // Place the new monster in the center of the screen.
-            newMonster->SetPosition({400,300});
+            newMonster->SetPosition(73);
+            newMonster->SetNextTileIndex(73);// sets position of new monster to tileIndex 73.
             monsters.push_back(newMonster);
         }
 

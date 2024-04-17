@@ -131,12 +131,17 @@ MonsterAI Monster::GetMonsterAI() const
     return m_MonsterAI;
 }
 
+int Monster::GetNextTileIndex() const
+{
+    return m_NextTileIndex;
+}
+
 int Monster::GetTileIndex()
 {
     int row = GetPosition().y / 50;
     int col = GetPosition().x / 50;
 
-    m_TileIndex = row * 16 + col + 1;
+    m_TileIndex = row * 16 + col;
     return m_TileIndex;
 }
 
@@ -158,10 +163,24 @@ void Monster::SetTileIndex(int tileIndex)
     m_TileIndex = tileIndex;
 }
 
+void Monster::SetNextTileIndex(int tileIndex)
+{
+    m_NextTileIndex = tileIndex;
+    SetNextPosition(tileIndex);
+}
+
+void Monster::SetTileIndex(Tmpl8::vec2 position)
+{
+    int row = position.y / 50;
+    int col = position.x / 50;
+
+    m_TileIndex = row * 16 + col + 1;
+}
+
 void Monster::SetNextPosition(const int tileIndex)
 {
-    int row = (tileIndex - 1) / 16;
-    int col = (tileIndex - 1) % 16;
+    int row = (tileIndex) / 16;
+    int col = (tileIndex) % 16;
     float x = col * 50;
     float y = row * 50;
     
@@ -220,21 +239,23 @@ void Monster::SetCollider(const AABBCollider collider)
 void Monster::Move(float deltaTime)
 {
     Tmpl8::vec2 currentPos = GetPosition();
+
     Tmpl8::vec2 direction = { m_NextPosition.x - currentPos.x , m_NextPosition.y - currentPos.y };
     float directionLength = sqrt(direction.x * direction.x + direction.y * direction.y);
-    // Check if the monster has reached its destination
-    if (directionLength > 0.01f) // You can adjust this threshold as needed
+    if (directionLength > 0.01f)
     {
         // Normalize direction to maintain constant speed
         direction = { direction.x / directionLength, direction.y / directionLength };
-
-        // Calculate velocity based on direction and speed
         Tmpl8::vec2 velocity = direction * m_Speed * deltaTime;
-
-        // Update position
         currentPos += velocity;
-        SetPosition(currentPos);
     }
+    SetPosition(currentPos);
+
+    if (abs(currentPos.x - m_NextPosition.x) < 2.0f && abs(currentPos.y - m_NextPosition.y) < 2.0f)
+    {
+        SetPosition(m_NextPosition);
+    }
+
 }
 
 
@@ -251,8 +272,8 @@ void Monster::SetPosition(const Tmpl8::vec2& pos)
 
 void Monster::SetPosition(const int tileIndex)
 {
-    int row = (tileIndex - 1) / 16;
-    int col = (tileIndex - 1) % 16;
+    int row = (tileIndex) / 16;
+    int col = (tileIndex) % 16;
     float x = col * 50;
     float y = row * 50;
     std::cout << "nextTileIndex: " << tileIndex << "x: " << x << "y: " << y << "\n";

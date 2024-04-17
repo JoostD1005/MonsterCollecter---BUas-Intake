@@ -89,6 +89,10 @@ private:
 	Monster* lastTarget = nullptr;
 	Refiller* refillerTarget = nullptr;
 
+#if _DEBUG
+	std::vector<Label*>gridLabels;
+#endif
+
 	int cash = 500;
 	int costMonster1 = 10;
 	int costMonster2 = 20;
