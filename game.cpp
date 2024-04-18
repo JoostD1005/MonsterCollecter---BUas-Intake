@@ -37,12 +37,13 @@ namespace Tmpl8
         Refiller* refill2 = new Refiller("assets/water.png", 1, { 147, 472 });
         refillers.push_back(refill1);
         refillers.push_back(refill2);
-
+#if _DEBUG
         for (int i = 0; i < 128; i++)
         {
             Label* gridLabel = new Label("", i, i, 0x0, 1);
             gridLabels.push_back(gridLabel);
         }
+#endif
     }
 
 
@@ -148,14 +149,22 @@ namespace Tmpl8
                 {
                     monster->TimeSinceSpawn();
                 }
+
                 if (monster->GetTileIndex() != monster->GetNextTileIndex())
                 {
                     monster->Move(deltaTime);
                 }
+                else
+                {
+                    monster->SetState(AnimState::Idle);
+                }
 
-                if (monster->GetTileIndex() == monster->GetNextTileIndex())
+
+                moveTime += deltaTime;
+                if (monster->GetTileIndex() == monster->GetNextTileIndex() && moveTime > 0.5f)
                 {
                     monster->GetMonsterAI().NextTile(monsters, monster);
+                    moveTime = 0.0f;
                 }
 
             }
@@ -177,21 +186,12 @@ namespace Tmpl8
         }
 
         frameTime = frameTime + deltaTime;
-        if (frameTime > 0.15f)
+        if (frameTime > 0.10f)
         {
             for (Monster* monster : monsters)
             {
-                int i = monster->GetSprite()->GetFrame();
-                if (monster->GetSprite()->GetFrame() < monster->GetNumFrames() - 1)
-                {
-                    monster->GetSprite()->SetFrame(i + 1);
-                }
-                else if (monster->GetSprite()->GetFrame() == monster->GetNumFrames() - 1)
-                {
-                    monster->GetSprite()->SetFrame(0);
-                }
+                monster->DoAnimation(deltaTime);
             }
-
             frameTime = 0.0f;
         }
 
@@ -223,8 +223,11 @@ namespace Tmpl8
             if (snapX - (currentTarget->GetSprite()->GetWidth() / 2) > 0 && snapY - (currentTarget->GetSprite()->GetHeight() / 2) > 0)
             {
                 currentTarget->SetPosition({ snapX - (currentTarget->GetSprite()->GetWidth() / 2), snapY - (currentTarget->GetSprite()->GetHeight() / 2) });
+                currentTarget->SetTileIndex({ snapX, snapY });
+                currentTarget->SetNextTileIndex(currentTarget->GetTileIndex());
             }
         }
+
         if (lastTarget != nullptr)
         {
             lastTarget->SetPosition(lastTarget->GetTileIndex());
@@ -567,7 +570,7 @@ namespace Tmpl8
 
 
 
-    bool Game::CheckButtonClicked(const Button& button)
+    bool Game::CheckButtonClicked(Button button)
     {
         const int buttonPressed = buttonState & ~prevButtonState;
         int buttonReleased = ~buttonState & prevButtonState;
@@ -617,18 +620,21 @@ namespace Tmpl8
 
         if (typeOfMonster == 1)
         {
-            newMonster = new Monster("assets/slimeIdle.tga", 2, 0, 0, 1, costMonster1, 5, 5, 5, 10);
-           // newMonster->SetWalkingAnimation("assets/slimeJumping.tga", 5, newMonster->GetPosition());
+            newMonster = new Monster("assets/slimeIdle.tga", 2, 0, 0, 1, costMonster1, 10, 10, 15, 10);
+            newMonster->SetMovingAnimation("assets/slimeJumping.tga", 5);
+            newMonster->SetMovingAnimFrames(5);
         }
         else if (typeOfMonster == 2)
         {
-            newMonster = new Monster("assets/GolemIdle.tga", 2, 0, 0, 1, costMonster2, 50, 50, 50, 20);
-           // newMonster->SetWalkingAnimation("assets/golemWalking.tga", 5, newMonster->GetPosition());
+            newMonster = new Monster("assets/GolemIdle.tga", 2, 0, 0, 1, costMonster2, 17, 17, 30, 25);
+            newMonster->SetMovingAnimation("assets/golemWalking.tga", 5);
+            newMonster->SetMovingAnimFrames(5);
         }
         else if (typeOfMonster == 3)
         {
-            newMonster = new Monster("assets/kingSlimeIdle.tga", 2, 0, 0, 1, costMonster3, 60, 60, 60, 30);
-           // newMonster->SetWalkingAnimation("assets/slimeKingJumping.tga", 5, newMonster->GetPosition());
+            newMonster = new Monster("assets/kingSlimeIdle.tga", 2, 0, 0, 1, costMonster3, 30, 30, 45, 50);
+            newMonster->SetMovingAnimation("assets/kingSlimeJumping.tga", 5);
+            newMonster->SetMovingAnimFrames(5);
         }
         else
         {
@@ -637,8 +643,8 @@ namespace Tmpl8
 
         if (newMonster != nullptr)
         {
-            newMonster->SetPosition(73);
-            newMonster->SetNextTileIndex(73);// sets position of new monster to tileIndex 73.
+            newMonster->SetPosition({401,201});
+            newMonster->SetNextTileIndex(72);// sets position of new monster to tileIndex 72.
             monsters.push_back(newMonster);
         }
 

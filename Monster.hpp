@@ -12,6 +12,12 @@
 
 class Tmpl8::Sprite;
 
+enum class AnimState
+{
+	Idle,
+	Moving,
+};
+
 class Monster
 {
 public:
@@ -46,7 +52,14 @@ public:
 	void TimeSinceSpawn();
 
 	void Dies();
+
 	void UpdateParticles(float deltaTime);
+
+	void SetState(const AnimState& state);
+	void DoAnimation(float deltaTime);
+
+	void SetMovingAnimation(const char* fileName, unsigned int numFrames);
+	void SetMovingAnimFrames(int numFrames);
 
 	void SetTileIndex(int tileIndex);
 	void SetTileIndex(Tmpl8::vec2 position);
@@ -94,11 +107,10 @@ private:
 	bool m_Alive = true;
 	float m_TimeSinceFood = 0;
 	float m_TimeSinceWater = 0;
-	int m_NumFrames;
 	int m_TimeSinceSpawn = 0;
 	int m_TimeNeededForEvo;
 
-	float m_Speed = 10.f;
+	float m_Speed = 50.f;
 
 	int m_TileIndex = 0;
 	int m_NextTileIndex = 0;
@@ -142,8 +154,12 @@ private:
 	 ParticleExplosion m_ParticleExplosionDeath{m_DieParticles}; 
 
 	Tmpl8::Sprite* m_pSprite = nullptr;
+	Tmpl8::Sprite* m_pMovingSprite = nullptr;
+	Tmpl8::Sprite* m_pTempSprite = nullptr;
 
-	
+	int m_NumFrames;
+	int m_NumMovingFrames = 0;
+	int m_NumTempFrames = 0;
 
 
 };

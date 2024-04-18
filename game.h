@@ -45,7 +45,7 @@ public:
 
 	Tmpl8::vec2 GetMousePosition() { return { mousex, mousey }; }
 
-	bool CheckButtonClicked(const Button& button);
+	bool CheckButtonClicked(Button button);
 	bool CheckMouseCollision(const AABBCollider& object);
 
 	Monster* CreateMonster(int typeOfMonster);
@@ -72,6 +72,7 @@ private:
 
 	float time = 0.0f;
 	float frameTime = 0.0f;
+	float moveTime = 0.0f;
 	int secondsPast = 0;
 
 	Tmpl8::vec2 previousMousePos;
@@ -95,8 +96,8 @@ private:
 
 	int cash = 500;
 	int costMonster1 = 10;
-	int costMonster2 = 20;
-	int costMonster3 = 30;
+	int costMonster2 = 25;
+	int costMonster3 = 50;
 	
 	//startScreen buttons
 	IconLabel startScreen = IconLabel("assets/startScreen.png", 1, { 0,0 });

@@ -59,8 +59,8 @@ void BuyWindow::Draw(Tmpl8::Surface* screen) const
   
 
     screen->Print("cost: 10", 700, 144, 0x000000);
-    screen->Print("cost: 20", 700, 272, 0x000000);
-    screen->Print("cost: 30", 700, 400, 0x000000);
+    screen->Print("cost: 25", 700, 272, 0x000000);
+    screen->Print("cost: 50", 700, 400, 0x000000);
 }
 
 Button BuyWindow::GetMonsterButton1() const

@@ -33,7 +33,12 @@ Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int t
 Monster::~Monster()
 {
     delete m_pSprite;
-    m_pSprite = 0;
+    m_pSprite = nullptr;
+
+    delete m_pMovingSprite;
+    m_pMovingSprite = nullptr;
+
+    m_pTempSprite = nullptr;
 
 }
 
@@ -174,7 +179,7 @@ void Monster::SetTileIndex(Tmpl8::vec2 position)
     int row = position.y / 50;
     int col = position.x / 50;
 
-    m_TileIndex = row * 16 + col + 1;
+    m_TileIndex = row * 16 + col;
 }
 
 void Monster::SetNextPosition(const int tileIndex)
@@ -238,6 +243,8 @@ void Monster::SetCollider(const AABBCollider collider)
 
 void Monster::Move(float deltaTime)
 {
+    SetState(AnimState::Moving);
+
     Tmpl8::vec2 currentPos = GetPosition();
 
     Tmpl8::vec2 direction = { m_NextPosition.x - currentPos.x , m_NextPosition.y - currentPos.y };
@@ -272,8 +279,8 @@ void Monster::SetPosition(const Tmpl8::vec2& pos)
 
 void Monster::SetPosition(const int tileIndex)
 {
-    int row = (tileIndex) / 16;
     int col = (tileIndex) % 16;
+    int row = (tileIndex) / 16;
     float x = col * 50;
     float y = row * 50;
     std::cout << "nextTileIndex: " << tileIndex << "x: " << x << "y: " << y << "\n";
@@ -340,6 +347,47 @@ void Monster::UpdateParticles(float deltaTime)
     m_ParticleExplosionEvo.Update(deltaTime);
 }
 
+void Monster::SetState(const AnimState& state)
+{
+    switch (state)
+    {
+    case AnimState::Idle:
+        m_pTempSprite = m_pSprite;
+        m_NumTempFrames = m_NumFrames;
+        break;
+    case AnimState::Moving:
+        m_pTempSprite = m_pMovingSprite;
+        m_NumTempFrames = m_NumMovingFrames;
+        break;
+
+    }
+}
+
+void Monster::DoAnimation(float deltaTime)
+{
+    if (m_pTempSprite == nullptr){ return; }
+
+    int frame = m_pTempSprite->GetFrame();
+    if (m_pTempSprite->GetFrame() < m_NumTempFrames - 1)
+    {
+        m_pTempSprite->SetFrame(frame + 1);
+    }
+    else if (m_pTempSprite->GetFrame() == m_NumTempFrames - 1)
+    {
+        m_pSprite->SetFrame(0);
+    }
+}
+
+void Monster::SetMovingAnimation(const char* fileName, unsigned int numFrames)
+{
+    m_pMovingSprite = new Tmpl8::Sprite(new Tmpl8::Surface(fileName), numFrames);
+}
+
+void Monster::SetMovingAnimFrames(int numFrames)
+{
+    m_NumMovingFrames = numFrames;
+}
+
 
 
 //---------------------------------------------------------------------------------------------------------
@@ -347,10 +395,10 @@ void Monster::UpdateParticles(float deltaTime)
 
 void Monster::Draw(Tmpl8::Surface* screen) const
 {
-    if (m_pSprite != nullptr)
+    if (m_pTempSprite != nullptr)
     {
         const auto pos = m_Collider.GetPosition();
-        m_pSprite->Draw(screen, static_cast<int>(pos.x), static_cast<int>(pos.y));
+        m_pTempSprite->Draw(screen, static_cast<int>(pos.x), static_cast<int>(pos.y));
         // screen->Box(m_Collider, 0xff0000);
     }
 

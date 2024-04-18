@@ -38,7 +38,7 @@ bool MonsterAI::IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters)
 {
     for (Monster* monster : monsters)
     {
-        if (monster->GetTileIndex() == tileIndex)
+        if (monster->GetTileIndex() == tileIndex && monster->GetNextTileIndex() ==tileIndex)
         {
             return true;
         }
@@ -51,8 +51,8 @@ std::vector<int> MonsterAI::findAvailableSpaces(int currentTileIndex, std::vecto
 {
 
     std::vector<std::pair<int, int>> ranges = {
-        {1, 15}, {17, 31}, {33, 47}, {49, 63},
-        {65, 79}, {81, 95}, {97, 111}, {113, 127}
+        {0, 14}, {16, 30}, {32, 46}, {48, 62},
+        {64, 78}, {80, 94}, {96, 110}, {112, 126}
     };
 
     for(auto& range : ranges)
