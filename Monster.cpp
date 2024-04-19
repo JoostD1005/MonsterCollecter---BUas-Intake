@@ -368,13 +368,13 @@ void Monster::DoAnimation(float deltaTime)
     if (m_pTempSprite == nullptr){ return; }
 
     int frame = m_pTempSprite->GetFrame();
-    if (m_pTempSprite->GetFrame() < m_NumTempFrames - 1)
+    if (frame == m_NumTempFrames - 1)
+    {
+        m_pTempSprite->SetFrame(0);
+    }
+    if (frame < m_NumTempFrames - 1)
     {
         m_pTempSprite->SetFrame(frame + 1);
-    }
-    else if (m_pTempSprite->GetFrame() == m_NumTempFrames - 1)
-    {
-        m_pSprite->SetFrame(0);
     }
 }
 

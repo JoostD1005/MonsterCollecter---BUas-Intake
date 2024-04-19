@@ -19,7 +19,7 @@ namespace Tmpl8
     Surface tiles("assets/background.png");
 
     static char map[9][51] = {
-     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+     "aa aa aa aa aa ab aa aa aa aa aa aa aa aa aa aa",
      "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
      "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
      "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
@@ -132,15 +132,15 @@ namespace Tmpl8
                 monster->GetWorth();
 
 
-                //if (monster->GetTimeSinceFood() > 2.0f)
-                //{
-                //    monster->Hunger(deltaTime);
-                //}
+                if (monster->GetTimeSinceFood() > 2.0f)
+                {
+                    monster->Hunger(deltaTime);
+                }
 
-                //if (monster->GetTimeSinceWater() > 2.0f)
-                //{
-                //    monster->Thirst(deltaTime);
-                //}
+                if (monster->GetTimeSinceWater() > 2.0f)
+                {
+                    monster->Thirst(deltaTime);
+                }
 
 
                 std::cout << monster->GetTileIndex() << "\n";
@@ -154,7 +154,7 @@ namespace Tmpl8
                 {
                     monster->Move(deltaTime);
                 }
-                else
+                else 
                 {
                     monster->SetState(AnimState::Idle);
                 }
@@ -196,9 +196,6 @@ namespace Tmpl8
         }
 
 
-
-        //===============Checking Collisions===========================================================
-
         const int buttonPressed = buttonState & ~prevButtonState;
         int buttonReleased = ~buttonState & prevButtonState;
 
@@ -217,21 +214,23 @@ namespace Tmpl8
 
         if (currentTarget != nullptr && isLeftButtonDown && freeze == false)
         {
-            float snapX = roundf(mousex / 50) * 50;
-            float snapY = roundf(mousey / 50) * 50;
-
-            if (snapX - (currentTarget->GetSprite()->GetWidth() / 2) > 0 && snapY - (currentTarget->GetSprite()->GetHeight() / 2) > 0)
+            int row = mousey / 50;
+            int col = mousex / 50;
+            int tileIndex = row * 16 + col;
+            
+            if (tileIndex <= 127)
             {
-                currentTarget->SetPosition({ snapX - (currentTarget->GetSprite()->GetWidth() / 2), snapY - (currentTarget->GetSprite()->GetHeight() / 2) });
-                currentTarget->SetTileIndex({ snapX, snapY });
-                currentTarget->SetNextTileIndex(currentTarget->GetTileIndex());
+                currentTarget->SetPosition(tileIndex);
+                currentTarget->SetNextTileIndex(tileIndex);
+            }
+            
+            if(tileIndex > 127)
+            {
+                currentTarget->SetPosition(tileIndex - 16);
+                currentTarget->SetNextTileIndex(tileIndex - 16);
             }
         }
 
-        if (lastTarget != nullptr)
-        {
-            lastTarget->SetPosition(lastTarget->GetTileIndex());
-        }
 
 
         //-----------------------------Reffillers Movement + collision----------------------------------------------------------------------------
@@ -281,7 +280,6 @@ namespace Tmpl8
             }
         }
 
-        //--------------------------------------------------------------------------------------------------------------------
 
 
         //-------------------------------------------Drawing------------------------------------------------------------------------
@@ -301,12 +299,23 @@ namespace Tmpl8
         {
             monster->Draw(screen);
         }
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        for (const Refiller* refiller : refillers)
+        {
+            refiller->Draw(screen);
+        }
+
+        ///////////////////////////////drawing debug stuff////////////////////////////////////////////////////////////
 #if _DEBUG
         for (int i = 0; i < monsters.size(); i++)
         {
-            screen->Box(monsters[i]->GetCollider(), 0x00ff00); // colliderbox 
-            Label monsterNumber = Label("M  ", monsters[i]->GetNextTileIndex(), monsters[i]->GetPosition(), 0xffffff, 1);
+            screen->Box(monsters[i]->GetCollider(), 0x00ff00); // colliderbox for monsters
+            if (i < refillers.size())
+            {
+                screen->Box(refillers[i]->GetCollider(), 0x00ff00); // colliderbox for refillers
+            }
+
+            Label monsterNumber = Label("M  ", monsters[i]->GetNextTileIndex(), monsters[i]->GetPosition(), 0xffffff, 1); // prints next tile above monster
             if (monsters[i]->GetPosition().x > 0 && monsters[i]->GetPosition().y > 0)
             {
                 monsterNumber.Print(screen);
@@ -324,16 +333,10 @@ namespace Tmpl8
 
         for (Label* gridLabel : gridLabels)
         {
-            gridLabel->Print(screen);
+            gridLabel->Print(screen); //prints the number of the tile above the tile
         }
 
 #endif
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        for (const Refiller* refiller : refillers)
-        {
-            refiller->Draw(screen);
-            screen->Box(refiller->GetCollider(), 0x00ff00); // colliderbox
-        }
 
 
         //-------------------------------------------Text------------------------------------------------------------------------
@@ -355,6 +358,7 @@ namespace Tmpl8
             Label worthLastText = Label("Worth last", lastTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
             worthLastText.Print(screen);
         }
+
 
         //--------------------------------------Selling Window-----------------------------------------------------
         if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr && freeze == false) // draw button on screen
@@ -405,8 +409,6 @@ namespace Tmpl8
             time = 0.0f;
             freeze = false;
         }
-
-        //------------------------------------------------------------------------------------------------------------
 
 
         //-------------------------Buy Window----------------------------------------------------
@@ -466,9 +468,6 @@ namespace Tmpl8
 
         prevButtonState = buttonState;
 
-        //------------------------------------------------------------------------------------------------
-        //================================================================================================
-
         //------------------check if monster Died---------------------------------------------------------
         for (Monster* monster : monsters)
         {
@@ -480,11 +479,8 @@ namespace Tmpl8
                 screen->Print("A Monster Died...", (ScreenWidth - 340) / 2, (ScreenHeight - 20) / 2, 0xffffff, 4);
 
                 freeze = true;
-
-
             }
         }
-
 
         //-------------------------------Game Over Screen--------------------------------------------------------------
         if (time >= 3 && sellWindowCalled == false)
@@ -493,6 +489,7 @@ namespace Tmpl8
         }
     }
 
+   
     void Game::GameOverScreen(float deltaTime)
     {
         screen->Clear(0);
@@ -587,8 +584,8 @@ namespace Tmpl8
         else
         {
             button.GetSprite()->SetFrame(0);
-            return false;
         }
+            return false;
     }
 
     bool Game::CheckMouseCollision(const AABBCollider& object)
