@@ -13,12 +13,12 @@ const Tmpl8::vec2& ProgressBar::GetPos() const
 void ProgressBar::Draw(Tmpl8::Surface* screen) const
 {
     m_BackgroundBar->Draw(screen, static_cast<int>(m_Pos.x), static_cast<int>(m_Pos.y));
-    float width = 58.0f * m_Value;
+    float width = 58.0f * m_Value; // the bar sprite empty space is 58px.
     screen->Bar(m_Pos.x + 3.0f, m_Pos.y + 3.0f, m_Pos.x + 3.0f + width, m_Pos.y + 5.0f, m_Color);
 }
 
 
-void ProgressBar::SetPos(const Tmpl8::vec2& pos) //redo without the reference. maybe do this in monster or game file?
+void ProgressBar::SetPos(const Tmpl8::vec2& pos)
 {
     m_Pos = pos;
 }

@@ -24,8 +24,6 @@ public:
 
 	void SetCollider(const AABBCollider collider);
 
-	void SetFrameNum(unsigned int frameNum);
-
 	void Draw(Tmpl8::Surface* screen) const;
 
 

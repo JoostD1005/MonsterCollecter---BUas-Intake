@@ -62,10 +62,12 @@ private:
 
 	Surface* screen;
 
-
 	std::vector<Monster*> monsters;
-	std::vector<Button*> buttons;
 	std::vector<Refiller*> refillers;
+
+#if _DEBUG
+	std::vector<Label*>gridLabels;
+#endif
 
 	float mousex;
 	float mousey;
@@ -90,55 +92,52 @@ private:
 	Monster* lastTarget = nullptr;
 	Refiller* refillerTarget = nullptr;
 
-#if _DEBUG
-	std::vector<Label*>gridLabels;
-#endif
-
-	int cash = 500;
-	int costMonster1 = 10;
-	int costMonster2 = 25;
-	int costMonster3 = 50;
+	int cash = 100;
+	int costMonster1 = 20;
+	int costMonster2 = 50;
+	int costMonster3 = 100;
 	
-	//startScreen buttons
 	IconLabel startScreen = IconLabel("assets/startScreen.png", 1, { 0,0 });
+	IconLabel blankScreen = IconLabel("assets/blankScreen.png", 1, { 0,0 });
+
+	//startScreen buttons
 	Button playButton = Button("assets/playButton.tga", 2, { 336, 300 });
 	Button helpButton = Button("assets/helpButton.tga", 2, { 368, 380 });
+	Button exitButton = Button("assets/exitButton.tga", 2, { 368, 420 });
 
 	//helpScreen buttons
-	Button returnButton = Button("assets/returnButton.tga", 2, { 308,400 });
+	Button returnButton = Button("assets/returnButton.tga", 2, { 308,120 });
 
 	//Game Over Buttons
-	Button playAgainButton = Button("assets/playAgainButton.tga", 2, { 150, 350 });
+	Button playAgainButton = Button("assets/playAgainButton.tga", 2, { 333, 350 });
 
 	//game Buttons
+	// sell menu buttons
 	Button buttonSell = Button("assets/sellButton.tga", 2, { 368, 472 });
 	bool sellWindowCalled = false;
 	SellWindow m_SellWindow = SellWindow("assets/sellWindow.png", 1, { 310, 166 });
 
-	//------------------------------------------------------------------------------------
-
+	
+	// buy menu buttons
 	Button buttonBuy = Button("assets/buyButton.tga", 2, { 636, 472 });
 	bool buyWindowCalled = false;
 	BuyWindow m_BuyWindow = BuyWindow("assets/buyWindow.png", 1, { 670, 35 });
+
+	//exit menu
+	Button buttonExit = Button("assets/backButton.tga", 2, { 10,10 });
+	bool exitWindowCalled = false;
+	ExitWindow m_ExitWindow = ExitWindow("assets/sellWindow.png", 1, { 310, 166 });
 
 	//------------------------------------------------------------------------------------
 
 	bool freeze = false;
 
 	// Text
-	Label cashText = Label("cash", cash, { 5, 5 }, 0xffffff, 2);
-	Label monsterText = Label("monster", monsters.size(), { 5, 20 }, 0xffffff, 2);
+	Label cashText = Label("cash", cash, { 10, 480 }, 0x0, 2);
+	Label monsterText = Label("Monsters Collected", monsters.size(), { (ScreenWidth - 345) / 2, 10 }, 0x0, 3);
 
 	Label xText = Label("x", mousex, { 5, 80 }, 0xffffff, 1);
 	Label yText = Label("y", mousey, { 50, 80 }, 0xffffff, 1);
-
-	//game over text
-	Label gameOverMonsterText = Label("you Collected Monsters!", monsters.size(), { (ScreenWidth - 500) / 2, ((ScreenHeight - 25) / 2) + 50 }, 0xffffff, 4);
-
-
-
-
-
 
 };
 

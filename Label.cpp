@@ -12,7 +12,7 @@ Label::Label(std::string_view a_String, float value, Tmpl8::vec2 pos, Tmpl8::Pix
 
 }
 
-Label::Label(std::string_view a_String, float value, int tileIndex, Tmpl8::Pixel color, int width) :
+Label::Label(std::string_view a_String, float value, int tileIndex, Tmpl8::Pixel color, int width) : // a second constructor to add labels to a tilemap.
 	m_String(a_String),
 	m_Value(value),
 	m_Color(color),

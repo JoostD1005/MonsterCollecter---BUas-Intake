@@ -57,6 +57,6 @@ private:
 		bool Active = false;
 	};
 
-	std::vector<Particle> m_Particles; //all the particles
+	std::vector<Particle> m_Particles; //all the particles 
 
 };

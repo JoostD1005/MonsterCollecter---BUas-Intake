@@ -66,13 +66,13 @@ public:
 	void BlendCopyTo( Surface* a_Dst, int a_X, int a_Y );
 	void ScaleColor( unsigned int a_Scale );
 	void Box( int x1, int y1, int x2, int y2, Pixel color );
-	void Box(const AABBCollider& aabb, Pixel color)
+	void Box(const AABBCollider& aabb, Pixel color) // draws a box around the collider
 	{
 	    Box(static_cast<int>( aabb.GetPosition().x ),
 			static_cast<int>( aabb.GetPosition().y ),
 			static_cast<int>( aabb.GetPosition().x + aabb.GetWidth() ),
 			static_cast<int>( aabb.GetPosition().y + aabb.GetHeight() ),
-			color );
+			color ); 
 	}
 
 	void Circle(float x, float y, float radius, Tmpl8::Pixel color); // Kuroxy from the 3DGep discord gave this to me.

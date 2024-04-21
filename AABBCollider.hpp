@@ -2,7 +2,7 @@
 
 #include "template.h"
 
-class AABBCollider
+class AABBCollider //basic collision detection using Axis-Aligned Bounding Boxxes.
 {
 public:
 	AABBCollider() = default;

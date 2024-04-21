@@ -3,7 +3,7 @@
 #include "surface.h"
 
 
-class IconLabel
+class IconLabel // a label for sprites. to make it easy to add sprites that don't belong to a game object.
 {
 public:
 

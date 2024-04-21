@@ -46,7 +46,6 @@ void Window::SetCalled(bool called)
 BuyWindow::BuyWindow(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos) :
     Window(fileName, numFrames, pos)
 {
-  //  SetBackButtonPos();
 }
 
 void BuyWindow::Draw(Tmpl8::Surface* screen) const
@@ -58,25 +57,11 @@ void BuyWindow::Draw(Tmpl8::Surface* screen) const
     m_BackButton.Draw(screen);
   
 
-    screen->Print("cost: 10", 700, 144, 0x000000);
-    screen->Print("cost: 25", 700, 272, 0x000000);
-    screen->Print("cost: 50", 700, 400, 0x000000);
+    screen->Print("cost: 20", 710, 154, 0x000000);
+    screen->Print("cost: 50", 710, 282, 0x000000);
+    screen->Print("cost: 100", 710, 410, 0x000000);
 }
 
-Button BuyWindow::GetMonsterButton1() const
-{
-    return m_BuyMonster1;
-}
-
-Button BuyWindow::GetMonsterButton2() const
-{
-    return m_BuyMonster2;
-}
-
-Button BuyWindow::GetMonsterButton3() const
-{
-    return m_BuyMonster3;
-}
 
 
 
@@ -86,7 +71,6 @@ Button BuyWindow::GetMonsterButton3() const
 SellWindow::SellWindow(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos) :
     Window(fileName, numFrames, pos)
 {
-  //  SetBackButtonPos();
 }
 
 
@@ -98,7 +82,18 @@ void SellWindow::Draw(Tmpl8::Surface* screen) const
     
 }
 
-Button SellWindow::GetSellButton() const
+
+//--------------class ExitWindow : public Window--------------------------------------------------------------------
+ExitWindow::ExitWindow(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos) :
+    Window(fileName, numFrames, pos)
 {
-    return m_SellButton;
 }
+
+void ExitWindow::Draw(Tmpl8::Surface* screen) const
+{
+    m_pSprite->Draw(screen, m_Pos.x, m_Pos.y);
+    m_ExitButton.Draw(screen);
+    m_BackButton.Draw(screen);
+
+}
+

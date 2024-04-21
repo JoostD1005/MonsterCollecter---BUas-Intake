@@ -4,7 +4,7 @@
 
 
 
-void MonsterAI::NextTile(std::vector<Monster*>& monsters, Monster* monster)
+void MonsterAI::NextTile(std::vector<Monster*>& monsters, Monster* monster) // sets the next tile the monster is going to move to.
 {
     int currentTileIndex = monster->GetTileIndex();
     std::vector<int> availableSpaces = findAvailableSpaces(currentTileIndex, monsters);
@@ -17,11 +17,11 @@ void MonsterAI::NextTile(std::vector<Monster*>& monsters, Monster* monster)
         return;
     }
 
-    std::random_device rd;
+    std::random_device rd; // randomizer. wanted to try something different than Rand().
     std::mt19937 gen(rd());
-    std::bernoulli_distribution goingToMove(0.5f);
+    std::bernoulli_distribution goingToMove(0.5f); // returns true or false 50/50.
 
-    int randomIndex = std::uniform_int_distribution<int>(0, availableSpaces.size() - 1)(gen);
+    int randomIndex = std::uniform_int_distribution<int>(0, availableSpaces.size() - 1)(gen); // returns a random place to move to from the availableSpaces. 
 
     if (goingToMove(gen))
     {
@@ -34,7 +34,7 @@ void MonsterAI::NextTile(std::vector<Monster*>& monsters, Monster* monster)
  
 }
 
-bool MonsterAI::IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters)
+bool MonsterAI::IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters) // checks if a tile is occupied by a different monster.
 {
     for (Monster* monster : monsters)
     {
@@ -48,9 +48,10 @@ bool MonsterAI::IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters)
 }
 
 std::vector<int> MonsterAI::findAvailableSpaces(int currentTileIndex, std::vector<Monster*>& monsters)
+//checks if the tiles left, right, above en beneath the current monster are free to move to.
 {
 
-    std::vector<std::pair<int, int>> ranges = {
+    std::vector<std::pair<int, int>> ranges = { // all positions on the map that the monster can move to.
         {0, 14}, {16, 30}, {32, 46}, {48, 62},
         {64, 78}, {80, 94}, {96, 110}, {112, 126}
     };

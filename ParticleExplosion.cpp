@@ -6,7 +6,7 @@ ParticleExplosion::ParticleExplosion(ParticleProperties particleProperties) : //
 
 }
 
-void ParticleExplosion::Explode(Tmpl8::vec2 explosionPos, float explosionDuration, float spawnRate)
+void ParticleExplosion::Explode(Tmpl8::vec2 explosionPos, float explosionDuration, float spawnRate) // sets the parameters
 {
 	m_ExplosionPos = explosionPos;
 	m_ExplosionDuration = explosionDuration;

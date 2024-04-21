@@ -1,7 +1,7 @@
 #pragma once
 #include "ParticleSystem.hpp"
 
-class ParticleExplosion
+class ParticleExplosion //a class that shoots a vector of particles into random direction from a single point.
 {
 public:
 	ParticleExplosion() = default;

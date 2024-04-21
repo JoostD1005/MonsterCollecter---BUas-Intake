@@ -4,12 +4,9 @@
 #include "surface.h"
 
 
-class ProgressBar 
+class ProgressBar // a bar that can be filled up and decrease. 
 {
 public:
-
-	/*deplete Bar;
-	replennish Bar;*/
 
 	Tmpl8::Sprite* GetSprite() const;
 
@@ -23,6 +20,7 @@ public:
 	void SetColour(Tmpl8::Pixel colour);
 
 	float GetValue() const;
+
 	// Set the value of the food/water bar.
 	// 1.0f == full, 0.0f == empty.
 	void SetValue(float value);
@@ -32,10 +30,9 @@ public:
 private:
 	Tmpl8::Sprite* m_BackgroundBar = new Tmpl8::Sprite(new Tmpl8::Surface("assets/bar.png"), 1);
 
-	/*depledingBar;*/
-
 	Tmpl8::vec2 m_Pos{0};
 	Tmpl8::Pixel m_Color{0};
-	// Percentage of bar...
+
+	// Percentage of bar.
 	float m_Value = 1.0f;
 };

@@ -4,7 +4,7 @@
 #include "surface.h"
 #include "AABBCollider.hpp"
 
-class Refiller
+class Refiller // object used to fill progressBar.
 {
 public: 
 

@@ -29,13 +29,13 @@ void ParticleSystem::Update(float deltaTime)
 
 		particle.CurrentSize = (particle.SizeEnd - particle.SizeBegin) * lifeTimePercentage + particle.SizeBegin; // sets the size of the particle
 
-		int r = (particle.ColorEnd.x - particle.ColorBegin.x) * lifeTimePercentage + particle.ColorBegin.x; // sets the color of the particle
+		int r = (particle.ColorEnd.x - particle.ColorBegin.x) * lifeTimePercentage + particle.ColorBegin.x;
 
 		int g = (particle.ColorEnd.y - particle.ColorBegin.y) * lifeTimePercentage + particle.ColorBegin.y;
 
 		int b = (particle.ColorEnd.z - particle.ColorBegin.z) * lifeTimePercentage + particle.ColorBegin.z;
 
-		particle.Color = (r << 16) | (g << 8) | b;
+		particle.Color = (r << 16) | (g << 8) | b;  // sets the color of the particle
 	}
 
 	std::sort(m_Particles.begin(), m_Particles.end(), [](const Particle& lhs, const Particle& rhs) // sorts the vector from oldest to youngest, so that the oldest is drawn first

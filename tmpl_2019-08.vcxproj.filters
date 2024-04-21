@@ -19,7 +19,6 @@
     <ClCompile Include="IconLabel.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="ParticleExplosion.cpp" />
-    <ClCompile Include="Animation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -40,7 +39,6 @@
     <ClInclude Include="IconLabel.hpp" />
     <ClInclude Include="ParticleSystem.hpp" />
     <ClInclude Include="ParticleExplosion.hpp" />
-    <ClInclude Include="Animation.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

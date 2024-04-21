@@ -3,7 +3,7 @@
 #include <string_view>
 #include <string>
 
-class Label
+class Label // a class to print text with changing values.
 {
 public:
 

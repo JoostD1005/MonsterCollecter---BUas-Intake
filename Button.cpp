@@ -46,7 +46,6 @@ void Button::Draw(Tmpl8::Surface* screen) const
 	{
 		const auto pos = m_Collider.GetPosition();
 		m_pSprite->Draw(screen, static_cast<int>(pos.x), static_cast<int>(pos.y));
-		// screen->Box(m_Collider, 0xff0000);
 	}
 }
 

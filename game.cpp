@@ -19,22 +19,22 @@ namespace Tmpl8
     Surface tiles("assets/background.png");
 
     static char map[9][51] = {
-     "aa aa aa aa aa ab aa aa aa aa aa aa aa aa aa aa",
-     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
-     "aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa aa",
+     "ba ca da ca ba ca da ba da ba ba ca da ba ca da",
+     "ba da ba ba ca da ba ca da ca ba ca da ba ca da",
+     "da ba ca ca ca da ba ba da ca ba da ba da ca ca",
+     "ba ca da ca ba ca da ba da ba ba ca da ba ca da",
+     "ba da ba ba ca da ba ca da ca ba ca da ba ca da",
+     "da ba ca ca ca da ba ba da ca ba da ba da ca ca",
+     "ba ca da ca ba ca da ba da ba ba ca da ba ca da",
+     "ba da ba ba ca da ba ca da ca ba ca da ba ca da",
+     "da ba ca ca ca da ba ba da ca ba da ba da ca ca"
     };
 
     void Game::Init()
     {
 
-        Refiller* refill1 = new Refiller("assets/food.png", 1, { 100, 472 });
-        Refiller* refill2 = new Refiller("assets/water.png", 1, { 147, 472 });
+        Refiller* refill1 = new Refiller("assets/food.png", 1, { 200, 472 });
+        Refiller* refill2 = new Refiller("assets/water.png", 1, { 247, 472 });
         refillers.push_back(refill1);
         refillers.push_back(refill2);
 #if _DEBUG
@@ -101,6 +101,7 @@ namespace Tmpl8
         startScreen.Draw(screen);
         playButton.Draw(screen);
         helpButton.Draw(screen);
+        exitButton.Draw(screen);
 
         if (CheckButtonClicked(playButton))
         {
@@ -111,6 +112,11 @@ namespace Tmpl8
         if (CheckButtonClicked(helpButton))
         {
             state = State::helpScreen;
+        }
+
+        if (CheckButtonClicked(exitButton))
+        {
+            exit(0);
         }
     }
 
@@ -161,7 +167,7 @@ namespace Tmpl8
 
 
                 moveTime += deltaTime;
-                if (monster->GetTileIndex() == monster->GetNextTileIndex() && moveTime > 0.5f)
+                if (monster->GetTileIndex() == monster->GetNextTileIndex() && moveTime > 1.0f)
                 {
                     monster->GetMonsterAI().NextTile(monsters, monster);
                     moveTime = 0.0f;
@@ -226,8 +232,8 @@ namespace Tmpl8
             
             if(tileIndex > 127)
             {
-                currentTarget->SetPosition(tileIndex - 16);
-                currentTarget->SetNextTileIndex(tileIndex - 16);
+                currentTarget->SetPosition(127 - (16 - (tileIndex % 16)));
+                currentTarget->SetNextTileIndex(127 - (16 - (tileIndex % 16)));
             }
         }
 
@@ -294,6 +300,8 @@ namespace Tmpl8
 
         screen->Bar(0, 450, 800, 512, 0xD9A066);
         screen->Bar(0, 450, 800, 465, 0x8F563B);
+        screen->Box(199, 471, 233, 505, 0x0);
+        screen->Box(246 , 471, 280, 505, 0x0);
 
         for (const Monster* monster : monsters)
         {
@@ -336,6 +344,12 @@ namespace Tmpl8
             gridLabel->Print(screen); //prints the number of the tile above the tile
         }
 
+        if (lastTarget != nullptr) // print worth of lastTarget
+        {
+            Label worthLastText = Label("Worth last", lastTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
+            worthLastText.Print(screen);
+        }
+
 #endif
 
 
@@ -349,16 +363,9 @@ namespace Tmpl8
 
         if (currentTarget != nullptr) // print worth of currentTarget
         {
-            Label worthText = Label("Worth", currentTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
+            Label worthText = Label("Monster Worth", currentTarget->GetWorth(), { 5, 35 }, 0x0, 2);
             worthText.Print(screen);
         }
-
-        if (lastTarget != nullptr) // print worth of lastTarget
-        {
-            Label worthLastText = Label("Worth last", lastTarget->GetWorth(), { 5, 35 }, 0xffffff, 2);
-            worthLastText.Print(screen);
-        }
-
 
         //--------------------------------------Selling Window-----------------------------------------------------
         if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr && freeze == false) // draw button on screen
@@ -384,8 +391,8 @@ namespace Tmpl8
 
             if (lastTarget != nullptr) // print worth and level of lastTarget
             {
-                screen->Print(std::format("level: {}", lastTarget->GetEvoStage()), 350, 260, 0xffffff, 2);
-                screen->Print(std::format("Worth: {}", lastTarget->GetWorth()), 350, 280, 0xffffff, 2);
+                screen->Print(std::format("level: {}", lastTarget->GetEvoStage()), 350, 260, 0x0, 2);
+                screen->Print(std::format("Worth: {}", lastTarget->GetWorth()), 350, 280, 0x0, 2);
             }
 
             if (currentTarget == nullptr && lastTarget != nullptr)
@@ -395,14 +402,14 @@ namespace Tmpl8
 
         }
 
-        if (CheckButtonClicked(m_SellWindow.GetBackButton())) // function to back out of selling
+        if (CheckButtonClicked(m_SellWindow.GetBackButton()) && sellWindowCalled) // function to back out of selling
         {
             sellWindowCalled = false;
             time = 0.0f;
             freeze = false;
         }
 
-        if (CheckButtonClicked(m_SellWindow.GetSellButton())) // collision logic for sellButton 2
+        if (CheckButtonClicked(m_SellWindow.GetSellButton()) && sellWindowCalled) // collision logic for sellButton 2
         {
             Sell();
             sellWindowCalled = false;
@@ -466,6 +473,31 @@ namespace Tmpl8
                 buyWindowCalled = false;
         }
 
+
+        //---------------exit Window---------------------------------------------------------------------
+        if (CheckButtonClicked(buttonExit) && freeze == false)
+        {
+           exitWindowCalled = true;
+        }
+
+        buttonExit.Draw(screen);
+
+        if (exitWindowCalled)
+        {
+            m_ExitWindow.Draw(screen);
+        }
+
+        if (CheckButtonClicked(m_ExitWindow.GetExitButton()) && exitWindowCalled)
+        {
+            state = State::startScreen;
+        }
+
+        if (CheckButtonClicked(m_ExitWindow.GetBackButton()))
+        {
+            exitWindowCalled = false;
+        }
+
+
         prevButtonState = buttonState;
 
         //------------------check if monster Died---------------------------------------------------------
@@ -492,10 +524,9 @@ namespace Tmpl8
    
     void Game::GameOverScreen(float deltaTime)
     {
-        screen->Clear(0);
-        screen->Print("Game Over", (ScreenWidth - 225) / 2, (ScreenHeight - 25) / 2, 0xffffff, 5);
-        gameOverMonsterText.SetValue(monsters.size());
-        gameOverMonsterText.Print(screen);
+        blankScreen.Draw(screen);
+        screen->Print("Game Over", (ScreenWidth - 270) / 2, (ScreenHeight - 30) / 2, 0x0, 5);
+        screen->Print(std::format("You Collected {} Monsters!", monsters.size()),(ScreenWidth - 625) / 2, (ScreenHeight - 25) / 2 + 50 , 0x0, 4);
 
         playAgainButton.Draw(screen);
 
@@ -508,8 +539,12 @@ namespace Tmpl8
 
     void Game::HelpScreen(float deltaTime)
     {
-        screen->Clear(0);
+        blankScreen.Draw(screen);
         returnButton.Draw(screen);
+        screen->Print("open the buy menu to buy new monsters.", 40, 20, 0x0, 2);
+        screen->Print("drag a monster over the sell button to open the sell menu.", 40, 40, 0x0, 2);
+        screen->Print("feed and water your monsters to keep them alive.", 40, 60, 0x0, 2);
+        screen->Print("Collect as many Monsters as possible!", 40, 80, 0x0, 2);
 
         if (CheckButtonClicked(returnButton))
         {
@@ -605,8 +640,6 @@ namespace Tmpl8
             }
         }
 
-
-
         return false;
     }
 
@@ -617,20 +650,20 @@ namespace Tmpl8
 
         if (typeOfMonster == 1)
         {
-            newMonster = new Monster("assets/slimeIdle.tga", 2, 0, 0, 1, costMonster1, 10, 10, 15, 10);
+            newMonster = new Monster("assets/slimeIdle.tga", 2, 0, 0, 1, costMonster1, 10, 10, 20);
             newMonster->SetMovingAnimation("assets/slimeJumping.tga", 5);
             newMonster->SetMovingAnimFrames(5);
         }
         else if (typeOfMonster == 2)
         {
-            newMonster = new Monster("assets/GolemIdle.tga", 2, 0, 0, 1, costMonster2, 17, 17, 30, 25);
+            newMonster = new Monster("assets/GolemIdle.tga", 2, 0, 0, 1, costMonster2, 17, 17, 60);
             newMonster->SetMovingAnimation("assets/golemWalking.tga", 5);
             newMonster->SetMovingAnimFrames(5);
         }
         else if (typeOfMonster == 3)
         {
-            newMonster = new Monster("assets/kingSlimeIdle.tga", 2, 0, 0, 1, costMonster3, 30, 30, 45, 50);
-            newMonster->SetMovingAnimation("assets/kingSlimeJumping.tga", 5);
+            newMonster = new Monster("assets/mushroomIdle.tga", 2, 0, 0, 1, costMonster3, 30, 30, 100);
+            newMonster->SetMovingAnimation("assets/mushroomJumping.tga", 5);
             newMonster->SetMovingAnimFrames(5);
         }
         else
@@ -672,13 +705,14 @@ namespace Tmpl8
     void Game::Reset()
     {
         monsters.clear();
-        cash = 500;
+        cash = 100;
         time = 0.0f;
         frameTime = 0.0f;
         secondsPast = 0;
         freeze = false;
         sellWindowCalled = false;
         buyWindowCalled = false;
+        exitWindowCalled = false;
 
     }
 

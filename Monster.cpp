@@ -5,7 +5,6 @@
 #include <random>
 
 //Constructor.
-
 Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int thirst, int evoStage, int cost, int stomach, int hydration, int timeNeededForEvo, int worth) :
     m_Hunger(hunger),
     m_Thirst(thirst),
@@ -13,7 +12,7 @@ Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int t
     m_Cost(cost),
     m_Stomach(stomach),
     m_Hydration(hydration),
-    m_Worth(worth),
+    m_Worth(cost),
     m_TimeNeededForEvo(timeNeededForEvo),
     m_pSprite{ new Tmpl8::Sprite(new Tmpl8::Surface(fileName), numFrames) },
     m_NumFrames(numFrames)
@@ -29,7 +28,7 @@ Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int t
     std::cout << "new Monster Created!\n" << m_Hunger << "\n" << m_Thirst << "\n" << m_EvoStage << "\n" << m_Cost << "\n" << m_Stomach << "\n" << m_Hydration << "\n";
 }
 
-
+//destructor. deletes all the pointers of the class
 Monster::~Monster()
 {
     delete m_pSprite;
@@ -156,12 +155,13 @@ Tmpl8::Sprite* Monster::GetSprite() const
     return m_pSprite;
 }
 
-//set datamembers.---------------------------------------------------------------------------
-void Monster::TimeSinceSpawn()
+
+Tmpl8::vec2 Monster::CentrePosition() const
 {
-    m_TimeSinceSpawn++;
+    return GetPosition() + GetSize() * 0.5f;
 }
 
+//set datamembers.---------------------------------------------------------------------------
 
 void Monster::SetTileIndex(int tileIndex)
 {
@@ -192,16 +192,6 @@ void Monster::SetNextPosition(const int tileIndex)
     m_NextPosition = { x, y };
 }
 
-void Monster::Hunger(float deltaTime)
-{
-    SetHunger(m_Hunger + deltaTime);
-}
-
-void Monster::Thirst(float deltaTime)
-{
-    SetThirst(m_Thirst + deltaTime);
-       
-}
 void Monster::SetHunger(float newHunger)
 {
     m_Hunger = newHunger;
@@ -224,47 +214,20 @@ void Monster::SetTimeSinceWater(float time)
     m_TimeSinceWater = time;
 }
 
-void Monster::TimeSinceFood(float deltaTime)
-{
-    m_TimeSinceFood = m_TimeSinceFood + deltaTime;
-}
-
-void Monster::TimeSinceWater(float deltaTime)
-{
-    m_TimeSinceWater = m_TimeSinceWater + deltaTime;
-}
-
-
-
 void Monster::SetCollider(const AABBCollider collider)
 {
     m_Collider = collider;
 }
 
-void Monster::Move(float deltaTime)
+void Monster::SetMovingAnimation(const char* fileName, unsigned int numFrames)
 {
-    SetState(AnimState::Moving);
-
-    Tmpl8::vec2 currentPos = GetPosition();
-
-    Tmpl8::vec2 direction = { m_NextPosition.x - currentPos.x , m_NextPosition.y - currentPos.y };
-    float directionLength = sqrt(direction.x * direction.x + direction.y * direction.y);
-    if (directionLength > 0.01f)
-    {
-        // Normalize direction to maintain constant speed
-        direction = { direction.x / directionLength, direction.y / directionLength };
-        Tmpl8::vec2 velocity = direction * m_Speed * deltaTime;
-        currentPos += velocity;
-    }
-    SetPosition(currentPos);
-
-    if (abs(currentPos.x - m_NextPosition.x) < 2.0f && abs(currentPos.y - m_NextPosition.y) < 2.0f)
-    {
-        SetPosition(m_NextPosition);
-    }
-
+    m_pMovingSprite = new Tmpl8::Sprite(new Tmpl8::Surface(fileName), numFrames);
 }
 
+void Monster::SetMovingAnimFrames(int numFrames)
+{
+    m_NumMovingFrames = numFrames;
+}
 
 void Monster::SetPosition(const Tmpl8::vec2& pos)
 {
@@ -294,13 +257,34 @@ void Monster::SetPosition(const int tileIndex)
     m_FoodBar.SetPos({ c.x - m_FoodBar.GetWidth() / 2.0f, c.y + 15.0f });
 }
 
+//time Related functions.----------------------------------------------------------------------
 
-Tmpl8::vec2 Monster::CentrePosition() const
+void Monster::TimeSinceSpawn()
 {
-    return GetPosition() + GetSize() * 0.5f;
+    m_TimeSinceSpawn++;
 }
 
-//Special opperations definitions
+void Monster::Hunger(float deltaTime)
+{
+    SetHunger(m_Hunger + deltaTime);
+}
+
+void Monster::Thirst(float deltaTime)
+{
+    SetThirst(m_Thirst + deltaTime);
+       
+}
+
+void Monster::TimeSinceFood(float deltaTime)
+{
+    m_TimeSinceFood = m_TimeSinceFood + deltaTime;
+}
+
+void Monster::TimeSinceWater(float deltaTime)
+{
+    m_TimeSinceWater = m_TimeSinceWater + deltaTime;
+}
+
 void Monster::DieOfHunger(int stomach, int hunger)
 {
     if (hunger >= stomach)
@@ -341,6 +325,33 @@ void Monster::Dies()
     m_Alive = false;
 }
 
+
+//moving of the monster.
+void Monster::Move(float deltaTime)
+{
+    SetState(AnimState::Moving);
+
+    Tmpl8::vec2 currentPos = GetPosition();
+
+    Tmpl8::vec2 direction = { m_NextPosition.x - currentPos.x , m_NextPosition.y - currentPos.y };
+    float directionLength = sqrt(direction.x * direction.x + direction.y * direction.y);
+    if (directionLength > 0.01f)
+    {
+        // Normalize direction to maintain constant speed
+        direction = { direction.x / directionLength, direction.y / directionLength };
+        Tmpl8::vec2 velocity = direction * m_Speed * deltaTime;
+        currentPos += velocity;
+    }
+    SetPosition(currentPos);
+
+    if (abs(currentPos.x - m_NextPosition.x) < 2.0f && abs(currentPos.y - m_NextPosition.y) < 2.0f) // snaps the position to the next position on the tile map if it is in range.
+    {
+        SetPosition(m_NextPosition);
+    }
+
+}
+
+//animation stuff.
 void Monster::UpdateParticles(float deltaTime)
 {
     m_ParticleExplosionDeath.Update(deltaTime);
@@ -378,28 +389,18 @@ void Monster::DoAnimation(float deltaTime)
     }
 }
 
-void Monster::SetMovingAnimation(const char* fileName, unsigned int numFrames)
-{
-    m_pMovingSprite = new Tmpl8::Sprite(new Tmpl8::Surface(fileName), numFrames);
-}
-
-void Monster::SetMovingAnimFrames(int numFrames)
-{
-    m_NumMovingFrames = numFrames;
-}
 
 
 
 //---------------------------------------------------------------------------------------------------------
 
-
+//drawing
 void Monster::Draw(Tmpl8::Surface* screen) const
 {
     if (m_pTempSprite != nullptr)
     {
         const auto pos = m_Collider.GetPosition();
         m_pTempSprite->Draw(screen, static_cast<int>(pos.x), static_cast<int>(pos.y));
-        // screen->Box(m_Collider, 0xff0000);
     }
 
     m_FoodBar.Draw(screen);
