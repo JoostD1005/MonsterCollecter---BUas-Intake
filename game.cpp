@@ -118,6 +118,8 @@ namespace Tmpl8
         {
             exit(0);
         }
+
+        prevButtonState = buttonState;
     }
 
     void Game::GameScreen(float deltaTime)
@@ -489,6 +491,7 @@ namespace Tmpl8
 
         if (CheckButtonClicked(m_ExitWindow.GetExitButton()) && exitWindowCalled)
         {
+
             state = State::startScreen;
         }
 
@@ -535,6 +538,8 @@ namespace Tmpl8
             Reset();
             state = State::startScreen;
         }
+
+        prevButtonState = buttonState;
     }
 
     void Game::HelpScreen(float deltaTime)
@@ -550,6 +555,8 @@ namespace Tmpl8
         {
                 state = State::startScreen;
         }
+
+        prevButtonState = buttonState;
     }
 
     void Game::MouseUp(int button)

@@ -64,7 +64,7 @@ private:
 };
 
 
-class SellWindow : public Window
+class SellWindow : public Window //monster sell window
 {
 public:
 
@@ -81,7 +81,7 @@ private:
 
 };
 
-class ExitWindow : public Window
+class ExitWindow : public Window // the window to exit the game back to the start screen
 {
 public:
 	ExitWindow(const char* fileName, unsigned int numFrames, Tmpl8::vec2 pos);
