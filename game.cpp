@@ -151,7 +151,7 @@ namespace Tmpl8
                 }
 
 
-                std::cout << monster->GetTileIndex() << "\n";
+              //  std::cout << monster->GetTileIndex() << "\n";
 
                 if (time >= 1)
                 {
@@ -177,13 +177,17 @@ namespace Tmpl8
 
             }
 
-            if (time > 1)
+            if (time > 1.0f && !monsters.empty())
             {
                 cash++;
+            }
+
+            if (time > 1)
+            {
                 time = 0.0f;
 
                 secondsPast++;
-                std::cout << secondsPast << "\n";
+                //std::cout << secondsPast << "\n";
                 for (Monster* monster : monsters)
                 {
                     monster->TimeSinceSpawn();
@@ -443,7 +447,7 @@ namespace Tmpl8
         //spawn monster1 if button is clicked
         if (CheckButtonClicked(m_BuyWindow.GetMonsterButton1())&& buyWindowCalled && freeze == false)
         {
-            if (cash > costMonster1)
+            if (cash >= costMonster1)
             {
                 CreateMonster(1);
                 cash = cash - costMonster1;
@@ -453,7 +457,7 @@ namespace Tmpl8
         //spawn monster2 if button is clicked
         if (CheckButtonClicked(m_BuyWindow.GetMonsterButton2()) && buyWindowCalled && freeze == false)
         {
-            if (cash > costMonster2)
+            if (cash >= costMonster2)
             {
                 CreateMonster(2);
                 cash = cash - costMonster2;
@@ -463,7 +467,7 @@ namespace Tmpl8
         //spawn monster3 if button is clicked
         if (CheckButtonClicked(m_BuyWindow.GetMonsterButton3()) && buyWindowCalled && freeze == false)
         {
-            if (cash > costMonster3)
+            if (cash >= costMonster3)
             {
                 CreateMonster(3);
                 cash = cash - costMonster3;
@@ -546,7 +550,8 @@ namespace Tmpl8
         screen->Print("open the buy menu to buy new monsters.", 40, 20, 0x0, 2);
         screen->Print("drag a monster over the sell button to open the sell menu.", 40, 40, 0x0, 2);
         screen->Print("feed and water your monsters to keep them alive.", 40, 60, 0x0, 2);
-        screen->Print("Collect as many Monsters as possible!", 40, 80, 0x0, 2);
+        screen->Print("keep them long enough to see them evolve.", 40, 80, 0x0, 2);
+        screen->Print("Collect as many Monsters as possible!", 40, 100, 0x0, 2);
 
         if (CheckButtonClicked(returnButton))
         {

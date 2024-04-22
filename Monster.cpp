@@ -25,7 +25,7 @@ Monster::Monster(const char* fileName, unsigned int numFrames, int hunger, int t
     m_FoodBar.SetColour(0x00ff00); // Green.
     m_WaterBar.SetColour(0x0000ff); // Blue.
 
-    std::cout << "new Monster Created!\n" << m_Hunger << "\n" << m_Thirst << "\n" << m_EvoStage << "\n" << m_Cost << "\n" << m_Stomach << "\n" << m_Hydration << "\n";
+  // std::cout << "new Monster Created!\n" << m_Hunger << "\n" << m_Thirst << "\n" << m_EvoStage << "\n" << m_Cost << "\n" << m_Stomach << "\n" << m_Hydration << "\n";
 }
 
 //destructor. deletes all the pointers of the class
@@ -246,7 +246,7 @@ void Monster::SetPosition(const int tileIndex)
     int row = (tileIndex) / 16;
     float x = col * 50;
     float y = row * 50;
-    std::cout << "nextTileIndex: " << tileIndex << "x: " << x << "y: " << y << "\n";
+    //std::cout << "nextTileIndex: " << tileIndex << "x: " << x << "y: " << y << "\n";
 
     m_Collider.SetPosition({ x, y });
 

@@ -9,11 +9,11 @@ void MonsterAI::NextTile(std::vector<Monster*>& monsters, Monster* monster) // s
     int currentTileIndex = monster->GetTileIndex();
     std::vector<int> availableSpaces = findAvailableSpaces(currentTileIndex, monsters);
 
-    std::cout << "currentTileIndex: " << currentTileIndex << " x: " << monster->GetPosition().x << " y: " << monster->GetPosition().y << "\n";
+   // std::cout << "currentTileIndex: " << currentTileIndex << " x: " << monster->GetPosition().x << " y: " << monster->GetPosition().y << "\n";
 
     if (availableSpaces.empty())
     {
-        std::cout << "cannot move this monster: " << this << "\n";
+     //   std::cout << "cannot move this monster: " << this << "\n";
         return;
     }
 
@@ -59,7 +59,7 @@ std::vector<int> MonsterAI::findAvailableSpaces(int currentTileIndex, std::vecto
     for(auto& range : ranges)
         if (currentTileIndex >= range.first && currentTileIndex <= range.second)
         {
-            std::cout << "Current Range: " << range.first << " - " << range.second << std::endl;
+           // std::cout << "Current Range: " << range.first << " - " << range.second << std::endl;
             // Check left tile
             if (!IsTileOccupied(currentTileIndex - 1, monsters) && (currentTileIndex - 1) >= range.first)
             {
@@ -72,14 +72,14 @@ std::vector<int> MonsterAI::findAvailableSpaces(int currentTileIndex, std::vecto
             }
             // Check top tile
             int topTileIndex = currentTileIndex - 16;
-            std::cout << "Top Tile Index: " << topTileIndex << std::endl;
+          //  std::cout << "Top Tile Index: " << topTileIndex << std::endl;
             if (!IsTileOccupied(topTileIndex, monsters))
             {
                 availableSpaces.push_back(topTileIndex);
             }
             // Check bottom tile
             int bottomTileIndex = currentTileIndex + 16;
-            std::cout << "Bottom Tile Index: " << bottomTileIndex << std::endl;
+         //   std::cout << "Bottom Tile Index: " << bottomTileIndex << std::endl;
             if (!IsTileOccupied(bottomTileIndex, monsters))
             {
                 availableSpaces.push_back(bottomTileIndex);
