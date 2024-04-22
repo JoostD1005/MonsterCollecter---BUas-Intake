@@ -93,6 +93,7 @@ namespace Tmpl8
             break;
         }
 
+        prevButtonState = buttonState;
     }
 
     void Game::StartScreen(float deltaTime)
@@ -119,7 +120,6 @@ namespace Tmpl8
             exit(0);
         }
 
-        prevButtonState = buttonState;
     }
 
     void Game::GameScreen(float deltaTime)
@@ -501,8 +501,6 @@ namespace Tmpl8
         }
 
 
-        prevButtonState = buttonState;
-
         //------------------check if monster Died---------------------------------------------------------
         for (Monster* monster : monsters)
         {
@@ -539,7 +537,6 @@ namespace Tmpl8
             state = State::startScreen;
         }
 
-        prevButtonState = buttonState;
     }
 
     void Game::HelpScreen(float deltaTime)
@@ -556,7 +553,6 @@ namespace Tmpl8
                 state = State::startScreen;
         }
 
-        prevButtonState = buttonState;
     }
 
     void Game::MouseUp(int button)
