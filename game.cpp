@@ -547,11 +547,12 @@ namespace Tmpl8
     {
         blankScreen.Draw(screen);
         returnButton.Draw(screen);
-        screen->Print("open the buy menu to buy new monsters.", 40, 20, 0x0, 2);
-        screen->Print("drag a monster over the sell button to open the sell menu.", 40, 40, 0x0, 2);
-        screen->Print("feed and water your monsters to keep them alive.", 40, 60, 0x0, 2);
-        screen->Print("keep them long enough to see them evolve.", 40, 80, 0x0, 2);
-        screen->Print("Collect as many Monsters as possible!", 40, 100, 0x0, 2);
+        screen->Print("Press PLAY to start.", 40, 20, 0x0, 2);
+        screen->Print("open the buy menu to buy new monsters.", 40, 40, 0x0, 2);
+        screen->Print("drag a monster over the sell button to open the sell menu.", 40, 60, 0x0, 2);
+        screen->Print("feed and water your monsters to keep them alive.", 40, 80, 0x0, 2);
+        screen->Print("keep them long enough to see them evolve.", 40, 100, 0x0, 2);
+        screen->Print("Collect as many Monsters as possible!", 40, 120, 0x0, 2);
 
         if (CheckButtonClicked(returnButton))
         {

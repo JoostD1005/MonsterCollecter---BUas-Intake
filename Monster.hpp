@@ -62,8 +62,6 @@ public:
 
 	void TimeSinceSpawn();
 
-	void Dies();
-
 	void UpdateParticles(float deltaTime);
 
 	// animation logic
@@ -94,6 +92,7 @@ public:
 	void TimeSinceWater(float deltaTime);
 	void DieOfHunger(int stomach, int hunger);
 	void DieOfThirst(int hydration, int thirst);
+	void Dies();
 
 	//set collider height and width of the monster sprite.
 	void SetCollider(const AABBCollider collider);

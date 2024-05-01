@@ -77,13 +77,10 @@ private:
 	float moveTime = 0.0f;
 	int secondsPast = 0;
 
-	Tmpl8::vec2 previousMousePos;
 	Tmpl8::vec2 currentMousePos = { mousex, mousey };
 
 	bool isLeftButtonDown = false;
 	bool isRightButtonDown = false;
-
-	Tmpl8::vec2 delta;
 
 	int buttonState = 0;
 	int prevButtonState = 0;
@@ -97,6 +94,8 @@ private:
 	int costMonster2 = 50;
 	int costMonster3 = 100;
 	
+	bool freeze = false;
+
 	IconLabel startScreen = IconLabel("assets/startScreen.png", 1, { 0,0 });
 	IconLabel blankScreen = IconLabel("assets/blankScreen.png", 1, { 0,0 });
 
@@ -106,7 +105,7 @@ private:
 	Button exitButton = Button("assets/exitButton.tga", 2, { 368, 420 });
 
 	//helpScreen buttons
-	Button returnButton = Button("assets/returnButton.tga", 2, { 308,120 });
+	Button returnButton = Button("assets/returnButton.tga", 2, { 308,150 });
 
 	//Game Over Buttons
 	Button playAgainButton = Button("assets/playAgainButton.tga", 2, { 333, 350 });
@@ -130,7 +129,6 @@ private:
 
 	//------------------------------------------------------------------------------------
 
-	bool freeze = false;
 
 	// Text
 	Label cashText = Label("cash", cash, { 10, 480 }, 0x0, 2);
@@ -140,8 +138,4 @@ private:
 	Label yText = Label("y", mousey, { 50, 80 }, 0xffffff, 1);
 
 };
-
-
-
-
 }; // namespace Tmpl8
