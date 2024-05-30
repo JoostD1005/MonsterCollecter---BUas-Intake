@@ -209,7 +209,7 @@ void Surface::Box( int x1, int y1, int x2, int y2, Pixel c )
 	Line( (float)x1, (float)y1, (float)x1, (float)y2, c );
 }
 
-void Surface::Circle(float x, float y, float radius, Tmpl8::Pixel color)
+void Surface::Circle(float x, float y, float radius, Tmpl8::Pixel color) // kuroxy gave me this
 {
 	float sqrRadius = radius * radius;
 	Tmpl8::vec2 pos = Tmpl8::vec2(x, y);
