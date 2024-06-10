@@ -39,7 +39,7 @@ public:
 	Tmpl8::Sprite* GetSprite() const;
 	int GetNumFrames() const;
 
-	//position related acces
+	//position related access
 	const Tmpl8::vec2& GetPosition() const;
 	const Tmpl8::vec2& GetNextPosition() const;
 	Tmpl8::vec2 CentrePosition() const;
@@ -90,8 +90,6 @@ public:
 	void SetTimeSinceWater(float time);
 	void TimeSinceFood(float deltaTime);
 	void TimeSinceWater(float deltaTime);
-	void DieOfHunger(int stomach, int hunger);
-	void DieOfThirst(int hydration, int thirst);
 	void Dies();
 
 	//set collider height and width of the monster sprite.

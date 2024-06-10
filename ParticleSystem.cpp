@@ -38,7 +38,7 @@ void ParticleSystem::Update(float deltaTime)
 		particle.Color = (r << 16) | (g << 8) | b;  // sets the color of the particle
 	}
 
-	std::sort(m_Particles.begin(), m_Particles.end(), [](const Particle& lhs, const Particle& rhs) // sorts the vector from oldest to youngest, so that the oldest is drawn first
+	std::sort(m_Particles.begin(), m_Particles.end(), [](const Particle& lhs, const Particle& rhs) // sorts the vector from oldest to youngest, so that the oldest is drawn first -- (lefthandside, righthandside)
 		{
 			return lhs.LifeRemaining < rhs.LifeRemaining;
 		});

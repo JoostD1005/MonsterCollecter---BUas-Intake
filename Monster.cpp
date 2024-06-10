@@ -285,21 +285,6 @@ void Monster::TimeSinceWater(float deltaTime)
     m_TimeSinceWater = m_TimeSinceWater + deltaTime;
 }
 
-void Monster::DieOfHunger(int stomach, int hunger)
-{
-    if (hunger >= stomach)
-    {
-        m_Alive = false;
-    }
-}
-
-void Monster::DieOfThirst(int hydration, int thirst)
-{
-    if (thirst >= hydration)
-    {
-        m_Alive = false;
-    }
-}
 
 void Monster::Evolution()
 {

@@ -38,7 +38,7 @@ bool MonsterAI::IsTileOccupied(int tileIndex, std::vector<Monster*>& monsters) /
 {
     for (Monster* monster : monsters)
     {
-        if (monster->GetTileIndex() == tileIndex && monster->GetNextTileIndex() ==tileIndex)
+        if (monster->GetTileIndex() == tileIndex && monster->GetNextTileIndex() == tileIndex)
         {
             return true;
         }

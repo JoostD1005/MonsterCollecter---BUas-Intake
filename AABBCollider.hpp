@@ -2,6 +2,9 @@
 
 #include "template.h"
 
+
+//inspo: https://www.youtube.com/watch?v=l2iCYCLi6MU
+
 class AABBCollider //basic collision detection using Axis-Aligned Bounding Boxxes.
 {
 public:

@@ -93,7 +93,9 @@ namespace Tmpl8
             break;
         }
 
+
         prevButtonState = buttonState;
+
     }
 
     void Game::StartScreen(float deltaTime)
@@ -377,11 +379,9 @@ namespace Tmpl8
         if (CheckMouseCollision(buttonSell.GetCollider()) == true && currentTarget != nullptr && freeze == false) // draw button on screen
         {
             buttonSell.GetSprite()->SetFrame(1);  
-            if ((SDL_BUTTON_LMASK) != 0) // check if pressed
-            {
+
                 sellWindowCalled = true;
                 currentTarget->SetPosition({ static_cast<float>(400 - (currentTarget->GetSprite()->GetWidth() / 2)),static_cast<float>(200 - (currentTarget->GetSprite()->GetHeight() / 2)) });
-            }
         }
         else
         {

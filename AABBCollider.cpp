@@ -37,7 +37,7 @@ void AABBCollider::SetSize(float width, float height)
 	m_Size.y = height;
 }
 
-bool AABBCollider::CheckCollision(const AABBCollider& other) const // checks if the boxes intersect.
+bool AABBCollider::CheckCollision(const AABBCollider& other) const // checks if the boxes intersect. // isn't used in the game
 {
 	Tmpl8::vec2 otherPosition = other.GetPosition();
 	Tmpl8::vec2 otherHalfSize = other.GetHalfSize();
@@ -51,7 +51,7 @@ bool AABBCollider::CheckCollision(const AABBCollider& other) const // checks if 
 	float intersectX = abs(deltaX) - (otherHalfSize.x + thisHalfSize.x);
 	float intersectY = abs(deltaY) - (otherHalfSize.y + thisHalfSize.y);
 
-	return (intersectX < 0.0f || intersectY < 0.0f);
+	return (intersectX < 0.0f && intersectY < 0.0f);
 }
 
 
